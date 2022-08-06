@@ -1,0 +1,8 @@
+.universalInput{
+    display: inline-block;
+    margin: 0 10px 0 0;
+}
+.modified{
+    outline: none;
+    border-radius: 0 5px 0 5px;
+}

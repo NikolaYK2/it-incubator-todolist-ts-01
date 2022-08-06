@@ -1,0 +1,40 @@
+h3{
+    color: brown;
+}
+
+
+.error {
+    border: 2px solid red;
+    border-radius: 0 5px 0 5px;
+}
+
+.block {
+    height: 30px;
+    border: none;
+    color: red;
+
+
+}
+
+/*=======Button active filter=======================*/
+.active {
+    background: url("https://phonoteka.org/uploads/posts/2022-01/1642990537_71-phonoteka-org-p-krasnii-fon-abstraktsiya-71.jpg")center center/cover no-repeat;
+    border-radius: 0 5px 0 5px;
+    border: none;
+}
+/*//==============text tasks===============================*/
+.text{
+    color: aliceblue;
+}
+/*//======input active task=======================================*/
+.activeTask{
+    opacity: 0.3;
+}
+
+li{
+    margin: 0 0 10px 0;
+}
+
+input{
+    cursor: pointer;
+}

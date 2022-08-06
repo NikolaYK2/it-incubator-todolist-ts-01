@@ -1,8 +1,9 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
-import {Button} from "./components/Button";
+import React, {ChangeEvent, KeyboardEvent, MouseEvent, useState} from "react";
+import {Button} from "./components/button/Button";
 import {filterValueType} from "./App";
-import {FullInput} from "./components/FullInput";
-import {UniversalInput} from "./components/UniversalInput";
+import {FullInput} from "./components/fullInputButton/FullInput";
+import {UniversalInput} from "./components/input/UniversalInput";
+import s from "./Todolist.module.css";
 
 type TasksPropsType = {
     id: string,
@@ -14,9 +15,10 @@ export type TodolistPropsType = {
     tasks: TasksPropsType[]
     deleteTask: (idId: string) => void,
     addTask: (addTitle: string) => void
-    callBackButtonAdd: () => void
     // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
-    setFilterValue:(filterValue: filterValueType)=>void
+    setFilterValue: (filterValue: filterValueType) => void
+    checkedTask: (newId: string, value: boolean) => void
+    filterValue?: filterValueType,
     //void - ничиег оне возвращает
 }
 
@@ -26,10 +28,10 @@ export const Todolist = (props: TodolistPropsType) => {
     const [addTitle, setAddTitle] = useState('')
 //
     // //Удаление ==============================================================
-    const onClickHandlerDelete=(elTask:string)=>{
+    const onClickHandlerDelete = (elTask: string) => {
         props.deleteTask(elTask)
     }
-
+//===============================================================================
     //Фильтр ==================================================
     // const [filterValue, setFilterValue] = useState("All");
     //
@@ -44,23 +46,49 @@ export const Todolist = (props: TodolistPropsType) => {
     const changeTasksFilterHandler = (filterValue: filterValueType) => {
         props.setFilterValue(filterValue);
     }
+
     //===========Добавление таски==================================================
     const onClickHandlerAddTask = () => {
-        props.addTask(addTitle)
-        setAddTitle('')
+        if (addTitle !== '') {
+            props.addTask(addTitle.trim())//trim()- убираем пробелы вначале и конце
+            setAddTitle('')
+        } else {
+            setError('Заполни полe Чувак!')
+        }
     }
 //===========================================================
+    //============CHecked===============================
+    const checkedTaskHandler = (newId: string, value: boolean) => {
+        props.checkedTask(newId, value)
+    }
+    //=====Ошибка в случаи попытка отправки пустого поля========================
+    let [error, setError] = useState<string | null>(null)
 
+    const errorStop = error ? s.error : '';
+//=====================================================================
+    //=================FOcus button filter===================================
+    const buttonAll =  props.filterValue === "All" ? s.active : '';
+    const buttonActive =  props.filterValue === "Active" ? s.active : '';
+    const buttonCompleted =  props.filterValue === "Completed" ? s.active : '';
+    // =======================================================================
     return (
         <div>
             <h3>{props.title}</h3>
-{/*
+            {/*
             ниверсальный включает в себе и инпут и баттон
 */}
             {/*<FullInput setAddTitle={setAddTitle} addTitle={addTitle} addTask={props.addTask}/>*/}
             {/*<FullInput  addTask={props.addTask} setAddTitle={setAddTitle} addTitle={addTitle}/>*/}
-            <UniversalInput setAddTitle={setAddTitle}  addTitle={addTitle} callback={onClickHandlerAddTask}/>
-            <Button name='+' callBack={()=>onClickHandlerAddTask()}/>
+            <div className={s.block}>
+                <UniversalInput setAddTitle={setAddTitle}
+                                addTitle={addTitle}
+                                callback={onClickHandlerAddTask}
+                                setError={setError}
+                                style={errorStop}/>
+
+                <Button name='+' callBack={() => onClickHandlerAddTask()}/>
+                {error && <div className={`${errorStop} ${s.block}`}>{error}</div>}
+            </div>
             {/*<div>*/}
             {/*    <input*/}
             {/*        value={addTitle}*/}
@@ -77,20 +105,22 @@ export const Todolist = (props: TodolistPropsType) => {
                     //     props.deleteTask(elTask.id)
                     // }
                     return (
-                        <li key={elTask.id}>
+                        <li key={elTask.id} className={elTask.isDone ? s.activeTask : ''}>
                             {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничег опередать на верх*!/*/}
-                            <Button name='x' callBack={()=>onClickHandlerDelete(elTask.id)}/>
+                            <Button name='x' callBack={() => onClickHandlerDelete(elTask.id)}/>
                             {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button>*/}
                             {/*можем передать на верх*/}
-                            <input type="checkbox" checked={elTask.isDone}/>
-                            <span>{elTask.title}</span></li>
+                            <input type="checkbox" checked={elTask.isDone}
+                                   onChange={(event) => checkedTaskHandler(elTask.id, event.currentTarget.checked)}/>
+                            <span className={s.text}>{elTask.title}</span>
+                        </li>
                     );
                 })}
             </ul>
             <div>
-                <Button name='All' callBack={()=>changeTasksFilterHandler("All")}/>
-                <Button name='Active' callBack={()=>changeTasksFilterHandler("Active")}/>
-                <Button name='Completed' callBack={()=>changeTasksFilterHandler("Completed")}/>
+                <Button name='All' callBack={() => changeTasksFilterHandler("All")} style={buttonAll}/>
+                <Button name='Active' callBack={() => changeTasksFilterHandler("Active") } style={buttonActive}/>
+                <Button name='Completed' callBack={() => changeTasksFilterHandler("Completed")} style={buttonCompleted}/>
                 {/*<button onClick={() => changeTasksFilter("All")}>All</button>*/}
                 {/*<button onClick={() => changeTasksFilter("Active")}>Active</button>*/}
                 {/*<button onClick={() => changeTasksFilter("Completed")}>Completed</button>*/}

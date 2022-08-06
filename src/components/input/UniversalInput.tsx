@@ -1,16 +1,21 @@
 import React, {ChangeEvent, KeyboardEvent} from 'react';
+import s from "./UniversalInput.module.css";
 
 
 type UniversalInputType={
     setAddTitle:(addTitle: string)=>void,
     addTitle:string,
     callback:()=>void,
+    setError:(value: null)=>void,
+    style: string,
 }
 
 export const UniversalInput = (props:UniversalInputType) => {
 //добавления значений в инпут============================
     const onChangeHandlerAddTask = (event: ChangeEvent<HTMLInputElement>) => {
-        props.setAddTitle(event.currentTarget.value)
+        props.setError(null)
+        props.setAddTitle(event.currentTarget.value);
+
     }
     //Кнопка ввода ENter==================================================
     const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -20,14 +25,14 @@ export const UniversalInput = (props:UniversalInputType) => {
     }
 
     return (
-        <>
+        <div className={s.universalInput}>
             <input
                 value={props.addTitle}
                 onChange={onChangeHandlerAddTask}
                 onKeyDown={onKeyDownHandler}
+                className={`${props.style} ${s.modified}`}
             />
-
-        </>
+        </div>
     );
 };
 

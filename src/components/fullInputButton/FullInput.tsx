@@ -1,6 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import {Button} from "./Button";
-import {UniversalInput} from "./UniversalInput";
+import {Button} from "../button/Button";
+import {UniversalInput} from "../input/UniversalInput";
 
 type FullInputType={
     addTask:(addTitle: string)=>void,
