@@ -13,7 +13,7 @@ type UniversalInputType={
 export const UniversalInput = (props:UniversalInputType) => {
 //добавления значений в инпут============================
     const onChangeHandlerAddTask = (event: ChangeEvent<HTMLInputElement>) => {
-        props.setError(null)
+        props.setError(null)//Когда начинаем писать, ошибка пропадает / можно это прописать и в onKey
         props.setAddTitle(event.currentTarget.value);
 
     }

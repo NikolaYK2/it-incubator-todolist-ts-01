@@ -11,6 +11,7 @@ type TasksPropsType = {
     isDone: boolean,
 }
 export type TodolistPropsType = {
+    changeStatus:(taskId: string, isDone: boolean)=>void,
     title: string,
     tasks: TasksPropsType[]
     deleteTask: (idId: string) => void,
@@ -49,7 +50,7 @@ export const Todolist = (props: TodolistPropsType) => {
 
     //===========Добавление таски==================================================
     const onClickHandlerAddTask = () => {
-        if (addTitle !== '') {
+        if (addTitle.trim() !== '') {//что-б и пробелы не считались за символы, убираем
             props.addTask(addTitle.trim())//trim()- убираем пробелы вначале и конце
             setAddTitle('')
         } else {
@@ -58,8 +59,10 @@ export const Todolist = (props: TodolistPropsType) => {
     }
 //===========================================================
     //============CHecked===============================
-    const checkedTaskHandler = (newId: string, value: boolean) => {
-        props.checkedTask(newId, value)
+    const changeStatus = (taskId: string, isDone: boolean) => {
+        props.checkedTask(taskId, isDone)
+    // const checkedTaskHandler = (newId: string, value: boolean) => {
+    //     props.checkedTask(newId, value)
     }
     //=====Ошибка в случаи попытка отправки пустого поля========================
     let [error, setError] = useState<string | null>(null)
@@ -67,6 +70,7 @@ export const Todolist = (props: TodolistPropsType) => {
     const errorStop = error ? s.error : '';
 //=====================================================================
     //=================FOcus button filter===================================
+    //filterValue - добавили фильтр из локального стейка
     const buttonAll =  props.filterValue === "All" ? s.active : '';
     const buttonActive =  props.filterValue === "Active" ? s.active : '';
     const buttonCompleted =  props.filterValue === "Completed" ? s.active : '';
@@ -110,9 +114,12 @@ export const Todolist = (props: TodolistPropsType) => {
                             <Button name='x' callBack={() => onClickHandlerDelete(elTask.id)}/>
                             {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button>*/}
                             {/*можем передать на верх*/}
-                            <input type="checkbox" checked={elTask.isDone}
-                                   onChange={(event) => checkedTaskHandler(elTask.id, event.currentTarget.checked)}/>
-                            <span className={s.text}>{elTask.title}</span>
+                            <label>
+                                <input type="checkbox" checked={elTask.isDone}
+                                       onChange={(event) => changeStatus(elTask.id, event.currentTarget.checked)}/>
+                                       {/*onChange={(event) => checkedTaskHandler(elTask.id, event.currentTarget.checked)}/>*/}
+                                <span className={s.text}>{elTask.title}</span>
+                            </label>
                         </li>
                     );
                 })}

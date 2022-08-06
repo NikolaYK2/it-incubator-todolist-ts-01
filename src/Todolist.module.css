@@ -28,13 +28,10 @@ h3{
 }
 /*//======input active task=======================================*/
 .activeTask{
-    opacity: 0.3;
+    opacity: 0.5;
 }
 
 li{
     margin: 0 0 10px 0;
 }
 
-input{
-    cursor: pointer;
-}
