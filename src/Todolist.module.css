@@ -1,4 +1,4 @@
-h3{
+h3 {
     color: brown;
 }
 
@@ -18,20 +18,34 @@ h3{
 
 /*=======Button active filter=======================*/
 .active {
-    background: url("https://phonoteka.org/uploads/posts/2022-01/1642990537_71-phonoteka-org-p-krasnii-fon-abstraktsiya-71.jpg")center center/cover no-repeat;
+    background: url("https://phonoteka.org/uploads/posts/2022-01/1642990537_71-phonoteka-org-p-krasnii-fon-abstraktsiya-71.jpg") center center/cover no-repeat;
     border-radius: 0 5px 0 5px;
     border: none;
 }
+
 /*//==============text tasks===============================*/
-.text{
+.text {
     color: aliceblue;
 }
+
 /*//======input active task=======================================*/
-.activeTask{
+.activeTask {
     opacity: 0.5;
 }
 
-li{
+li {
     margin: 0 0 10px 0;
+}
+
+.tasksNull {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: url("https://i09.fotocdn.net/s114/c2b44597d216de02/public_pin_l/2573276787.jpg") 0 0/cover no-repeat;
+    width: 190px;
+    height: 90px;
+    margin-left: -40px;
+    box-shadow: 0 0 8px 15px black inset;
+    color: brown;
 }
 
