@@ -21,7 +21,7 @@ function App() {
     const [todoLists, setTodoLists] = useState<TodolistType[]>([
         {id: todolistID_1, title: 'What to learn', filter: 'All',},
         {id: todolistID_2, title: 'What to buy', filter: 'All',},
-    ])
+    ]);
 
     const [tasks, setTasks] = useState<taskStateType>({//tasks переменная в которой лежат данные, в данном случаи обьекты
         [todolistID_1]: [
@@ -38,7 +38,7 @@ function App() {
         ],
     })
 
-//Удаление таски ==================================
+//Удаление таски ===============================================================================================================
     const deleteTask = (tId: string, todolistID: string) => {
         // tasks = tasks.filter((el) => el.id !== elId)
         // setTasks(tasks.filter((el) => el.id !== elId));//для обычного массива методы
@@ -51,12 +51,20 @@ function App() {
         //Сокращенный вариант ================================================
         setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
     }
-//=============================================================
+//===============================================================================================================================
 
-//=======Добавление таски======================================================
+    //=======Delete todolist========================================================================================================
+    const deleteTodolist = (todolistID: string) => {
+        setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
+        delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
+    }
+//====================================================================================================================================
+
+
+//=======Добавление таски=====================================================================================================
     const addTask = (addTitle: string, todolistID: string) => {
         // setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
-//Acc. масс. =================================================================================
+//Acc. масс. =====================================================================
 //const todoListsTasks = tasks[todolistID];
         // const updatedTasks = [{id: v1(), title: addTitle, isDone: false}, ...todoListsTasks];
         // const copyTasks = {...tasks};
@@ -68,23 +76,9 @@ function App() {
         // В объекте есть св-в[todolistID] в которое вносим изм.
         // [todolistID]: [кладем сюда новый массив и все старые таски]Закидываем старые 4 таксик ...tasks[todolistID + одну новую {id: v1(), title: addTitle, isDone: false}
     }
-    //===================================================================
-//=======Delete todolist========================================================================
-    const deleteTodolist = (todolistID: string) => {
-        setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
-        delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
-    }
-//======================================================================================
+    //========================================================================================================================
 
-    //==============CHekbox=========================================
-    const checkedTask = (newId: string, value: boolean, todolistID: string) => {
-        // setTasks(tasks.map(task => task.id === newId ? {...task, isDone: value} : task))
-        setTasks({
-            ...tasks,
-            [todolistID]: tasks[todolistID].map(task => task.id === newId ? {...task, isDone: value} : task)
-        })
-    }
-//========Checked find====================================================================================
+//========Checked find====================================================================================================
 //     const changeStatus = (taskId: string, isDone: boolean) => {
 //         let task = tasks.find((t) => t.id === taskId);//find - найди элемент массива t.id который равный true или false  и поменяй
 //         if(task) {
@@ -92,51 +86,49 @@ function App() {
 //         }
 //         setFilter([...tasks])
 //     }
-// ========Checked map=============================
-    const changeStatus = (taskId: string, isDone: boolean, todolistID: string) => {
+// ========Checked map========================================================================================================
+    const changeStatus = (taskId: string, isDone: boolean, todolistID: string) => {//отображения статуса таски true или false
         //     let task = tasks.map((t) => t.id === taskId ? {...t, /*isDone: isDone - это*/ isDone} : t);
         // }
         //======Ассациативный ================
         setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, isDone} : t)})
     }
-    // =============================================================================================
+    // ==============================================================================================================================
 
-// =====================Фильтрация=================================================================
-    const [filterValue, setFilterValue] = useState<filterValueType>("All");
-
+// =====================Фильтрация==================================================================================================
+    const [filter, setFilter] = useState<filterValueType>("All");
+    const changeTasksFilter = (filter: filterValueType, todoListsID: string) => {
+        //     setFilterValue(filterValue);
+        setTodoLists(todoLists.map(tl => tl.id === todoListsID ? {...tl, filter} : tl))
+    }
+//====================================================================================================================================
     const todoListsComponents = todoLists.map(tl => {
-
-        //=========================ФиДЬТРАЦИЯ==============================
+        //=========================ФиЛЬТРАЦИЯ==============================
         let filterTasks = tasks[tl.id];
-        if (filterValue === 'Active') {
+        if (tl.filter === "Active") {
             // filterTasks = tasks.filter((el) => el.isDone);
             //Ассоциативный ===================================================
-            filterTasks = tasks[tl.id].filter((el) => el.isDone);
+            filterTasks = tasks[tl.id].filter(t => t.isDone);
         }
-        if (filterValue === 'Completed') {
+        if (tl.filter === "Completed") {
             // filterTasks = tasks.filter(el => !el.isDone);
             //Ассоциативный ===================================================
-            filterTasks = tasks[tl.id].filter(el => !el.isDone);
+            filterTasks = tasks[tl.id].filter(t => !t.isDone);
         }
-        // const changeTasksFilter = (filterValue: filterValueType, todoListsID: string) => {
-        //     //     setFilterValue(filterValue);
-        //     setTodoLists(todoLists.map(tl => tl.id === todoListsID ? {...tl, filterValue} : tl))
-        // }
         //==================================================================
         return (
             <Todolist
                 key={tl.id}
                 todoListID={tl.id}
                 title={tl.title}//Название проекта
-                filterValue={tl.filter}
+                filter={tl.filter}
                 tasks={filterTasks}
 
                 changeStatus={changeStatus}
                 deleteTask={deleteTask}
+                deleteTodolist={deleteTodolist}
                 addTask={addTask}
-                setFilterValue={setFilterValue}
-                checkedTask={checkedTask}
-                // changeTasksFilter={changeTasksFilter}
+                changeTasksFilter={changeTasksFilter}
             />
 
         )

@@ -15,37 +15,40 @@ export type TodolistPropsType = {
     title: string,
     tasks: TasksPropsType[],
     deleteTask: (idId: string, id: string) => void,
+    deleteTodolist:(id: string)=>void
     addTask: (addTitle: string, id: string) => void
     // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
-    setFilterValue: (filterValue: filterValueType, id: string) => void
-    checkedTask: (newId: string, value: boolean, id: string) => void
-    filterValue?: filterValueType,
+    changeTasksFilter: (filter: filterValueType, id: string) => void
+    filter: filterValueType,
     //void - ничиег оне возвращает
 }
 
 export const Todolist = (props: TodolistPropsType) => {
 
     // //Удаление таски==============================================================
-    const onClickHandlerDelete = (elTask: string) => {
-        props.deleteTask(elTask, props.todoListID)
+    const onClickHandlerDelete = (Task: string) => {
+        props.deleteTask(Task, props.todoListID)
+    }
+    // delete todolist=======================================
+    const onClickHandlerDeleteTodolist =()=>{
+        props.deleteTodolist(props.todoListID);
     }
     //Если лист тасок остался пустой
     const taskListItems = props.tasks.length
-        ? props.tasks.map(elTask => {//elTasks - элемент каждого обьекта в массиве
+        ? props.tasks.map(Task => {//elTasks - элемент каждого обьекта в массиве
             // //Удаление ==============================================================
             // const onClickHandlerDelete=()=>{
             //     props.deleteTask(elTask.id)
             // }
             return (
-                <li key={elTask.id} className={elTask.isDone ? s.activeTask : ''}>
+                <li key={Task.id} className={Task.isDone ? s.activeTask : ''}>
                     {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
                     {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
-                    <Button name='x' callBack={() => onClickHandlerDelete(elTask.id)}/>
+                    <Button name='x' callBack={() => onClickHandlerDelete(Task.id)}/>
                     <label>
-                        <input type="checkbox" checked={elTask.isDone}
-                               onChange={(event) => changeStatus(elTask.id, event.currentTarget.checked, props.todoListID)}/>
-                        {/*onChange={(event) => checkedTaskHandler(elTask.id, event.currentTarget.checked)}/>*/}
-                        <span className={s.text}>{elTask.title}</span>
+                        <input type="checkbox" checked={Task.isDone}
+                               onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>
+                        <span className={s.text}>{Task.title}</span>
                     </label>
                 </li>
             );
@@ -54,18 +57,8 @@ export const Todolist = (props: TodolistPropsType) => {
 
 //===============================================================================
 //Фильтр ==================================================
-// const [filterValue, setFilterValue] = useState("All");
-//
-// let filterTasks = props.tasks;
-// if (filterValue === 'Active') {
-//     filterTasks = props.tasks.filter((el) => el.isDone);
-// }
-// if (filterValue === 'Completed') {
-//     filterTasks = props.tasks.filter(el => !el.isDone);
-//
-// }
-    const changeTasksFilterHandler = (filterValue: filterValueType) => {
-        props.setFilterValue(filterValue, props.todoListID);
+    const changeTasksFilterHandler = (filter: filterValueType,) => {
+        props.changeTasksFilter(filter, props.todoListID);
     }
 
 //===========Добавление таски==================================================
@@ -82,10 +75,8 @@ export const Todolist = (props: TodolistPropsType) => {
     }
 //===========================================================
 //============CHecked===============================
-    const changeStatus = (taskId: string, isDone: boolean, id: string) => {
-        props.checkedTask(taskId, isDone, id)
-        // const checkedTaskHandler = (newId: string, value: boolean) => {
-        //     props.checkedTask(newId, value)
+    const changeStatusHandler = (taskId: string, filter: boolean,) => {
+        props.changeStatus(taskId, filter, props.todoListID)
     }
 //=====State Ошибка в случаи попытка отправки пустого поля========================
     let [error, setError] = useState<string | null>(null)
@@ -93,14 +84,14 @@ export const Todolist = (props: TodolistPropsType) => {
 //=====================================================================
 //=================Focus button filter===================================
 //filterValue - добавили фильтр из локального стейка
-    const buttonAll = props.filterValue === "All" ? s.active : '';
-    const buttonActive = props.filterValue === "Active" ? s.active : '';
-    const buttonCompleted = props.filterValue === "Completed" ? s.active : '';
+    const buttonAll = props.filter === "All" ? s.active : '';
+    const buttonActive = props.filter === "Active" ? s.active : '';
+    const buttonCompleted = props.filter === "Completed" ? s.active : '';
 // =======================================================================
     return (
         <div>
             <h3>{props.title}</h3>
-            <button>x</button>
+            <button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>
             {/*ниверсальный включает в себе и инпут и баттон*/}
             {/*<FullInput setAddTitle={setAddTitle} addTitle={addTitle} addTask={props.addTask}/>*/}
             {/*<FullInput  addTask={props.addTask} setAddTitle={setAddTitle} addTitle={addTitle}/>*/}

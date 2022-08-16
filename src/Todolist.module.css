@@ -1,7 +1,15 @@
 h3 {
+    display: inline-block;
     color: brown;
-}
+    margin: 0 10px 0 0;
 
+    }
+    .todolistTitle{
+        opacity: 0.9;
+        border: none;
+        border-radius: 0 5px 0 5px;
+
+}
 
 .error {
     border: 2px solid red;
@@ -45,7 +53,8 @@ li {
     width: 190px;
     height: 90px;
     margin-left: -40px;
-    box-shadow: 0 0 8px 15px black inset;
+    box-shadow: 0 0 5px 5px black inset, 0 0 10px 10px black;
     color: brown;
+    font-weight: 800;
 }
 
