@@ -8,6 +8,7 @@ type UniversalInputType={
     callback:()=>void,
     setError:(value: null)=>void,
     style: string,
+
 }
 
 export const UniversalInput = (props:UniversalInputType) => {

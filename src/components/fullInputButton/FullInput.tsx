@@ -1,59 +1,59 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {Button} from "../button/Button";
 import {UniversalInput} from "../input/UniversalInput";
+import s from "../../Todolist.module.css";
 
-type FullInputType={
-    addTask:(addTitle: string)=>void,
-    setAddTitle:(addTitle: string)=>void,
-    addTitle:string,
+type FullInputType = {
+    addItem: (addTitle: string) => void,
 }
-// type FullInputType={
-//     addTask:(addTitle: string)=>void,
-//     setAddTitle:(el: string)=>void,
-//     addTitle: string,
-// }
-
 
 
 export const FullInput = (props: FullInputType) => {
-    //=======Добавление таски======================================================
-    // const [addTitle, setAddTitle] = useState('')
+    //=======State Добавление таски======================================================
+    const [addTitle, setAddTitle] = useState<string>('')
 
-    // const onClickHandlerAddTask = (addTitle: string) => {
-    //     props.addTask(addTitle)
-    //     props.setAddTitle('')
-    // }
-    //============================================================================
-    // const [addTitle, setAddTitle] = useState('')
-    //
-    // const onClickHandlerAddTask = (addTitle: string) => {
-    //     props.addTask(addTitle)
-    //     props.setAddTitle('')
-    // }
-    // const onChangeHandlerAddTask =(event: ChangeEvent<HTMLInputElement>)=>{
-    //     props.setAddTitle(event.currentTarget.value)
-    // }
-    // //Кнопка ввода ENter==================================================
+    const onClickHandlerAddTask = () => {
+        if (addTitle.trim() !== '') {//что-б и пробелы не считались за символы, убираем
+            props.addItem(addTitle.trim())//trim()- убираем пробелы вначале и конце
+            setAddTitle('')
+        } else {
+            setError('Заполни полe Чувак!')
+        }
+    }
+//=====================================================================================
+
+    //=====State Ошибка в случаи попытка отправки пустого поля========================
+    let [error, setError] = useState<string | null>(null)
+    const errorStop = error ? s.error : '';
+//===================================================================================================
+
+    //=======Добавление таски======================================================
+    // Кнопка ввода ENter==================================================
     // const onKeyDownHandler =(event: KeyboardEvent<HTMLInputElement>)=>{
     //     if(event.key === "Enter"){
-    //         onClickHandlerAddTask(props.addTitle)
+    //         onClickHandlerAddTask()
     //     }
     // }
 //=================================================================
     return (
-        <div>
-            <div>
+            <>
                 {/*<input*/}
                 {/*    value={addTitle}*/}
                 {/*    onChange={onChangeHandlerAddTask}*/}
                 {/*    onKeyDown={onKeyDownHandler}*/}
                 {/*/>*/}
-                {/*<UniversalInput setAddTitle={props.addTask}*/}
-                {/*                onClickHandlerAddTask={onClickHandlerAddTask}*/}
-                {/*                addTitle={props.addTitle}/>*/}
-                {/*<Button name='+' callBack={()=>onClickHandlerAddTask(props.addTitle)}/>*/}
+                <div className={s.input__block}>
+                    <UniversalInput
+                        setAddTitle={setAddTitle}
+                        addTitle={addTitle}
+                        callback={onClickHandlerAddTask}
+                        setError={setError}
+                        style={errorStop}
+                    />
+                    <Button name='+' callBack={() => onClickHandlerAddTask()}/>
+                </div>
+                {error && <div className={`${errorStop} ${s.block}`}>{error}</div>}
                 {/*<button onClick={onClickHandlerAddTask}>+</button>*/}
-            </div>
-        </div>
+            </>
     );
 };

@@ -4,7 +4,7 @@ h3 {
     margin: 0 10px 0 0;
 
     }
-    .todolistTitle{
+    .todolistTitle__btn{
         opacity: 0.9;
         border: none;
         border-radius: 0 5px 0 5px;
@@ -17,6 +17,7 @@ h3 {
 }
 
 .block {
+    display: block;
     height: 30px;
     border: none;
     color: red;
@@ -29,11 +30,6 @@ h3 {
     background: url("https://phonoteka.org/uploads/posts/2022-01/1642990537_71-phonoteka-org-p-krasnii-fon-abstraktsiya-71.jpg") center center/cover no-repeat;
     border-radius: 0 5px 0 5px;
     border: none;
-}
-
-/*//==============text tasks===============================*/
-.text {
-    color: aliceblue;
 }
 
 /*//======input active task=======================================*/
@@ -58,3 +54,7 @@ li {
     font-weight: 800;
 }
 
+/*========block input tasks================================================*/
+.input__block{
+    display: flex;
+}

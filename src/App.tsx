@@ -2,6 +2,10 @@ import React, {useState} from "react";
 import './App.css';
 import {TasksPropsType, Todolist} from "./Todolist";
 import {v1} from "uuid";
+import {UniversalInput} from "./components/input/UniversalInput";
+import {Button} from "./components/button/Button";
+import s from "./Todolist.module.css";
+import {FullInput} from "./components/fullInputButton/FullInput";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
@@ -11,7 +15,7 @@ export type TodolistType = {
     filter: filterValueType, //Список отсортированный для всех тудулистов
 }
 type taskStateType = {
-    [todolistID: string]: Array<TasksPropsType>
+    [todolistID: string]: TasksPropsType[];
 }
 
 function App() {
@@ -37,30 +41,7 @@ function App() {
             {id: v1(), title: "Drink", isDone: false},
         ],
     })
-
-//Удаление таски ===============================================================================================================
-    const deleteTask = (tId: string, todolistID: string) => {
-        // tasks = tasks.filter((el) => el.id !== elId)
-        // setTasks(tasks.filter((el) => el.id !== elId));//для обычного массива методы
-        //Ассоциативный массив =======================================
-        // const todoListsTasks = tasks[todolistID];
-        // const updatedTasks = todoListsTasks.filter(el=>el.id !== elId)
-        // const copyTasks = {...tasks}
-        // copyTasks[todolistID] = updatedTasks
-        // setTasks(copyTasks);
-        //Сокращенный вариант ================================================
-        setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
-    }
-//===============================================================================================================================
-
-    //=======Delete todolist========================================================================================================
-    const deleteTodolist = (todolistID: string) => {
-        setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
-        delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
-    }
-//====================================================================================================================================
-
-
+    console.log(todoLists);
 //=======Добавление таски=====================================================================================================
     const addTask = (addTitle: string, todolistID: string) => {
         // setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
@@ -76,7 +57,42 @@ function App() {
         // В объекте есть св-в[todolistID] в которое вносим изм.
         // [todolistID]: [кладем сюда новый массив и все старые таски]Закидываем старые 4 таксик ...tasks[todolistID + одну новую {id: v1(), title: addTitle, isDone: false}
     }
-    //========================================================================================================================
+//Удаление таски ===============================================================================================================
+    const deleteTask = (todolistID: string, tId: string,) => {
+        // tasks = tasks.filter((el) => el.id !== elId)
+        // setTasks(tasks.filter((el) => el.id !== elId));//для обычного массива методы
+        //Ассоциативный массив =======================================
+        // const todoListsTasks = tasks[todolistID];
+        // const updatedTasks = todoListsTasks.filter(el=>el.id !== elId)
+        // const copyTasks = {...tasks}
+        // copyTasks[todolistID] = updatedTasks
+        // setTasks(copyTasks);
+        //Сокращенный вариант ================================================
+        setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
+        //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
+    }
+// Передача наверх изм. title tasks=============================================================================
+    const changeTaskTitle = (taskId: string, newValue: string, todolistID: string) => {
+        setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)})
+    }
+// ============================================================================
+
+// ========Добавление Todolist=============================================================
+    const addTodolist =(title: string)=>{
+        let todolist: TodolistType = {id: v1(), title, filter: 'All',}
+        setTodoLists([todolist, ...todoLists])
+    setTasks({...tasks, [todolist.id] :[]})
+    }
+    //=======Delete todolist========================================================================================================
+    const deleteTodolist = (todolistID: string) => {
+        setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
+        delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
+    }
+    //Изм. title todolist==========================================================================
+    const onChangeHandlerTitleTodolist =(tlId: string, newValue: string,)=>{
+        setTodoLists(todoLists.map(tl => tl.id === tlId ? {...tl, title: newValue} : tl));
+    }
+//====================================================================================================================================
 
 //========Checked find====================================================================================================
 //     const changeStatus = (taskId: string, isDone: boolean) => {
@@ -96,15 +112,16 @@ function App() {
     // ==============================================================================================================================
 
 // =====================Фильтрация==================================================================================================
-    const [filter, setFilter] = useState<filterValueType>("All");
-    const changeTasksFilter = (filter: filterValueType, todoListsID: string) => {
+    const changeTasksFilter = (todoListsID: string, filter: filterValueType,) => {
         //     setFilterValue(filterValue);
         setTodoLists(todoLists.map(tl => tl.id === todoListsID ? {...tl, filter} : tl))
+        //map создает новый массив так что копию(...todolist) делать не надо
     }
-//====================================================================================================================================
+//===============================================================================================
+
     const todoListsComponents = todoLists.map(tl => {
         //=========================ФиЛЬТРАЦИЯ==============================
-        let filterTasks = tasks[tl.id];
+        let filterTasks = tasks[tl.id];//[tl.id] - обращение к конкретному тудулисту, то есть его id
         if (tl.filter === "Active") {
             // filterTasks = tasks.filter((el) => el.isDone);
             //Ассоциативный ===================================================
@@ -127,16 +144,21 @@ function App() {
                 changeStatus={changeStatus}
                 deleteTask={deleteTask}
                 deleteTodolist={deleteTodolist}
-                addTask={addTask}
+                addItem={addTask}
                 changeTasksFilter={changeTasksFilter}
+                changeTaskTitle={changeTaskTitle}//редактирование таски title
+                onChangeHandlerTitleTodolist={onChangeHandlerTitleTodolist}
             />
 
         )
     })
 
-//=============================================================================================================
+//============================================================================================
+
+
     return (
         <div className="App">
+            <FullInput  addItem={addTodolist}/>
             {todoListsComponents}
             {/*<Todolist*/}
             {/*    //id*/}

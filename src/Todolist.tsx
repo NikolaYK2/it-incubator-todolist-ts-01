@@ -1,8 +1,9 @@
-import React, {ChangeEvent, KeyboardEvent, MouseEvent, useState} from "react";
+import React from "react";
 import {Button} from "./components/button/Button";
-import {filterValueType, TodolistType} from "./App";
-import {UniversalInput} from "./components/input/UniversalInput";
+import {filterValueType} from "./App";
 import s from "./Todolist.module.css";
+import {FullInput} from "./components/fullInputButton/FullInput";
+import {EditableSpan} from "./components/editableSpan/EditableSpan";
 
 export type TasksPropsType = {
     id: string,
@@ -14,25 +15,39 @@ export type TodolistPropsType = {
     changeStatus: (taskId: string, isDone: boolean, id: string) => void,
     title: string,
     tasks: TasksPropsType[],
-    deleteTask: (idId: string, id: string) => void,
-    deleteTodolist:(id: string)=>void
-    addTask: (addTitle: string, id: string) => void
+    deleteTask: (id: string, idId: string,) => void,
+    deleteTodolist: (id: string) => void
+    addItem: (id: string, addTitle: string) => void
     // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
-    changeTasksFilter: (filter: filterValueType, id: string) => void
+    changeTasksFilter: (id: string, filter: filterValueType,) => void
+    changeTaskTitle:(id: string, newValue: string, taskId: string,)=>void,//редактирование title tasks
+    onChangeHandlerTitleTodolist:(taskId: string, newValue: string, )=>void,//изм. title todolist
     filter: filterValueType,
     //void - ничиег оне возвращает
 }
 
 export const Todolist = (props: TodolistPropsType) => {
-
+    //================addTask===================================================
+    const addTask = (title: string) => {
+        props.addItem(title, props.todoListID);
+    }
     // //Удаление таски==============================================================
     const onClickHandlerDelete = (Task: string) => {
-        props.deleteTask(Task, props.todoListID)
+        props.deleteTask(props.todoListID, Task,)
     }
+    //====Редактирование в task title===============================================
+    const onChangeHandlerTitle = (taskId: string, newValue: string,) => {
+        props.changeTaskTitle(taskId, newValue, props.todoListID)
+        //props.todoListID что б знали наверху в каком тудулисте поменять
+    }
+
+    //========================================================================
     // delete todolist=======================================
-    const onClickHandlerDeleteTodolist =()=>{
+    const onClickHandlerDeleteTodolist = () => {
         props.deleteTodolist(props.todoListID);
     }
+    //===============================================================
+    // =====================================================================
     //Если лист тасок остался пустой
     const taskListItems = props.tasks.length
         ? props.tasks.map(Task => {//elTasks - элемент каждого обьекта в массиве
@@ -40,16 +55,20 @@ export const Todolist = (props: TodolistPropsType) => {
             // const onClickHandlerDelete=()=>{
             //     props.deleteTask(elTask.id)
             // }
+            // изменение в title========================================
+            // const onChangeHandlerTitle = (newValue: string) => {
+            //     props.changeTaskTitle(Task.id, newValue, props.todoListID)
+            //     //props.todoListID что б знали наверху в каком тудулисте поменять
+            // }
             return (
                 <li key={Task.id} className={Task.isDone ? s.activeTask : ''}>
                     {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
                     {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
                     <Button name='x' callBack={() => onClickHandlerDelete(Task.id)}/>
-                    <label>
-                        <input type="checkbox" checked={Task.isDone}
-                               onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>
-                        <span className={s.text}>{Task.title}</span>
-                    </label>
+                    <input type="checkbox" checked={Task.isDone}
+                           onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>
+                    <EditableSpan title={Task.title} onChange={(newValue)=>onChangeHandlerTitle(Task.id, newValue)}/>
+                    {/*<span className={s.text}>{Task.title}</span>*/}
                 </li>
             );
         })
@@ -58,52 +77,56 @@ export const Todolist = (props: TodolistPropsType) => {
 //===============================================================================
 //Фильтр ==================================================
     const changeTasksFilterHandler = (filter: filterValueType,) => {
-        props.changeTasksFilter(filter, props.todoListID);
+        props.changeTasksFilter(props.todoListID, filter,);
     }
 
 //===========Добавление таски==================================================
     //=======State Добавление таски======================================================
-    const [addTitle, setAddTitle] = useState<string>('')
-
-    const onClickHandlerAddTask = () => {
-        if (addTitle.trim() !== '') {//что-б и пробелы не считались за символы, убираем
-            props.addTask(addTitle.trim(), props.todoListID)//trim()- убираем пробелы вначале и конце
-            setAddTitle('')
-        } else {
-            setError('Заполни полe Чувак!')
-        }
-    }
+    // const [addTitle, setAddTitle] = useState<string>('')
+    //
+    // const onClickHandlerAddTask = () => {
+    //     if (addTitle.trim() !== '') {//что-б и пробелы не считались за символы, убираем
+    //         props.addTask(addTitle.trim(), props.todoListID)//trim()- убираем пробелы вначале и конце
+    //         setAddTitle('')
+    //     } else {
+    //         setError('Заполни полe Чувак!')
+    //     }
+    // }
 //===========================================================
 //============CHecked===============================
     const changeStatusHandler = (taskId: string, filter: boolean,) => {
         props.changeStatus(taskId, filter, props.todoListID)
     }
 //=====State Ошибка в случаи попытка отправки пустого поля========================
-    let [error, setError] = useState<string | null>(null)
-    const errorStop = error ? s.error : '';
+//     let [error, setError] = useState<string | null>(null)
+//     const errorStop = error ? s.error : '';
 //=====================================================================
 //=================Focus button filter===================================
 //filterValue - добавили фильтр из локального стейка
     const buttonAll = props.filter === "All" ? s.active : '';
     const buttonActive = props.filter === "Active" ? s.active : '';
     const buttonCompleted = props.filter === "Completed" ? s.active : '';
-// =======================================================================
+// =============================================================================
+    //Изм. todolist======================================================================================
+    const onChangeHandlerTitleTodolist =(newValue: string)=>{
+        props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
+    }
+    // ========================================================================================================
     return (
         <div>
-            <h3>{props.title}</h3>
+            <h3><EditableSpan title={props.title} onChange={onChangeHandlerTitleTodolist}/></h3>
             <button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>
             {/*ниверсальный включает в себе и инпут и баттон*/}
-            {/*<FullInput setAddTitle={setAddTitle} addTitle={addTitle} addTask={props.addTask}/>*/}
-            {/*<FullInput  addTask={props.addTask} setAddTitle={setAddTitle} addTitle={addTitle}/>*/}
             <div className={s.block}>
-                <UniversalInput setAddTitle={setAddTitle}
-                                addTitle={addTitle}
-                                callback={onClickHandlerAddTask}
-                                setError={setError}
-                                style={errorStop}/>
+                <FullInput addItem={addTask}/>
+                {/*<UniversalInput setAddTitle={setAddTitle}*/}
+                {/*                addTitle={addTitle}*/}
+                {/*                callback={onClickHandlerAddTask}*/}
+                {/*                setError={setError}*/}
+                {/*                style={errorStop}/>*/}
 
-                <Button name='+' callBack={() => onClickHandlerAddTask()}/>
-                {error && <div className={`${errorStop} ${s.block}`}>{error}</div>}
+                {/*<Button name='+' callBack={() => onClickHandlerAddTask()}/>*/}
+                {/*{error && <div className={`${errorStop} ${s.block}`}>{error}</div>}*/}
             </div>
             {/*<div>*/}
             {/*    <input*/}
@@ -149,3 +172,4 @@ export const Todolist = (props: TodolistPropsType) => {
         </div>
     );
 }
+
