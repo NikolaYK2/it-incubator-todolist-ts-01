@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {useState} from 'react';
 import {Button} from "../button/Button";
 import {UniversalInput} from "../input/UniversalInput";
 import s from "../../Todolist.module.css";

@@ -21,7 +21,7 @@ export type TodolistPropsType = {
     // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
     changeTasksFilter: (id: string, filter: filterValueType,) => void
     changeTaskTitle:(id: string, newValue: string, taskId: string,)=>void,//редактирование title tasks
-    onChangeHandlerTitleTodolist:(taskId: string, newValue: string, )=>void,//изм. title todolist
+    onChangeHandlerTitleTodolist:(todoId: string, newValue: string,)=>void,//изм. title todolist
     filter: filterValueType,
     //void - ничиег оне возвращает
 }
@@ -109,14 +109,13 @@ export const Todolist = (props: TodolistPropsType) => {
 // =============================================================================
     //Изм. todolist======================================================================================
     const onChangeHandlerTitleTodolist =(newValue: string)=>{
-        props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
+        props.onChangeHandlerTitleTodolist(props.todoListID, newValue)
     }
     // ========================================================================================================
     return (
         <div>
             <h3><EditableSpan title={props.title} onChange={onChangeHandlerTitleTodolist}/></h3>
             <button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>
-            {/*ниверсальный включает в себе и инпут и баттон*/}
             <div className={s.block}>
                 <FullInput addItem={addTask}/>
                 {/*<UniversalInput setAddTitle={setAddTitle}*/}

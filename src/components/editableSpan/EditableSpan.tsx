@@ -12,12 +12,17 @@ export const EditableSpan = (props: EditableSpanType) => {
     //=====CONTROL EDITSPAN TASK=====================================================================
 
     let [editMode, setEditMode] = useState(false);
-    const activateEditMode = () => {
-        setEditMode(true);
-        setTitle(props.title);
-    }
-    const activateViewMode = () => {
-        setEditMode(false);
+    // const activateEditMode = () => {
+    //     setEditMode(true);
+    //     setTitle(props.title);
+    // }
+    // const activateViewMode = () => {
+    //     setEditMode(false);
+    //     props.onChange(title);
+    // }
+    //Сокращенный вариант=============
+    const switching =()=>{
+        setEditMode(!editMode);
         props.onChange(title);
     }
 //=============================================================================
@@ -25,11 +30,11 @@ export const EditableSpan = (props: EditableSpanType) => {
 
     let [title, setTitle] = useState(props.title);//props.title cо старта будет то значение котрое приходит в пропсах
     const onChangeHandlerValue = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.currentTarget.value)
+        setTitle(e.currentTarget.value);
     }
     const onKeyDownHandlerValue = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
-            setEditMode(false);
+            switching();
         }
     }
 
@@ -39,9 +44,9 @@ export const EditableSpan = (props: EditableSpanType) => {
             ? <input className={s.text__input}
                      value={title}
                      onChange={onChangeHandlerValue}
-                     onBlur={activateViewMode}
+                     onBlur={switching}
                      onKeyDown={onKeyDownHandlerValue}
                      autoFocus/>
-            : <span className={s.text} onDoubleClick={activateEditMode}>{title}</span>
+            : <span className={s.text} onDoubleClick={switching}>{title}</span>
     );
 }

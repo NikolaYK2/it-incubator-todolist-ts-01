@@ -2,9 +2,6 @@ import React, {useState} from "react";
 import './App.css';
 import {TasksPropsType, Todolist} from "./Todolist";
 import {v1} from "uuid";
-import {UniversalInput} from "./components/input/UniversalInput";
-import {Button} from "./components/button/Button";
-import s from "./Todolist.module.css";
 import {FullInput} from "./components/fullInputButton/FullInput";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
@@ -41,7 +38,9 @@ function App() {
             {id: v1(), title: "Drink", isDone: false},
         ],
     })
+
     console.log(todoLists);
+    console.log(tasks);
 //=======Добавление таски=====================================================================================================
     const addTask = (addTitle: string, todolistID: string) => {
         // setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
@@ -74,6 +73,7 @@ function App() {
 // Передача наверх изм. title tasks=============================================================================
     const changeTaskTitle = (taskId: string, newValue: string, todolistID: string) => {
         setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)})
+        console.log(newValue);
     }
 // ============================================================================
 
@@ -89,8 +89,9 @@ function App() {
         delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
     }
     //Изм. title todolist==========================================================================
-    const onChangeHandlerTitleTodolist =(tlId: string, newValue: string,)=>{
-        setTodoLists(todoLists.map(tl => tl.id === tlId ? {...tl, title: newValue} : tl));
+    const onChangeHandlerTitleTodolist =(todoId: string, newValue: string,)=>{
+        setTodoLists(todoLists.map(tl => tl.id === todoId ? {...tl, title: newValue} : tl));
+        console.log(newValue);
     }
 //====================================================================================================================================
 
