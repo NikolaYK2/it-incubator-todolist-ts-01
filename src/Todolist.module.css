@@ -5,11 +5,8 @@ h3 {
 
     }
     .todolistTitle__btn{
-        opacity: 0.9;
-        border: none;
-        border-radius: 0 5px 0 5px;
-
-}
+        color: white;
+    }
 
 .error {
     border: 2px solid red;
@@ -30,15 +27,25 @@ h3 {
     background: url("https://phonoteka.org/uploads/posts/2022-01/1642990537_71-phonoteka-org-p-krasnii-fon-abstraktsiya-71.jpg") center center/cover no-repeat;
     border-radius: 0 5px 0 5px;
     border: none;
+    transition: all .3s ease;
+    list-style-type: none;
+    }
+    .d:hover{
+        box-shadow: 2px 2px 5px brown;
+        transition: all .3s ease;
+        transform: scale(1.1);
 }
 
 /*//======input active task=======================================*/
 .activeTask {
-    opacity: 0.5;
+    opacity: 0.6;
 }
-
-li {
-    margin: 0 0 10px 0;
+ul{
+    padding: 0;
+    }
+    li {
+        margin: 0 0 10px 0;
+        list-style-type: none;
 }
 
 .tasksNull {
@@ -48,7 +55,6 @@ li {
     background: url("https://i09.fotocdn.net/s114/c2b44597d216de02/public_pin_l/2573276787.jpg") 0 0/cover no-repeat;
     width: 190px;
     height: 90px;
-    margin-left: -40px;
     box-shadow: 0 0 5px 5px black inset, 0 0 10px 10px black;
     color: brown;
     font-weight: 800;

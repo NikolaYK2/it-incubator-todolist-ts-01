@@ -3,6 +3,9 @@ import './App.css';
 import {TasksPropsType, Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {FullInput} from "./components/fullInputButton/FullInput";
+import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
+import {Menu} from "@mui/icons-material";
+import {blue, grey} from "@mui/material/colors";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
@@ -39,8 +42,6 @@ function App() {
         ],
     })
 
-    console.log(todoLists);
-    console.log(tasks);
 //=======Добавление таски=====================================================================================================
     const addTask = (addTitle: string, todolistID: string) => {
         // setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
@@ -73,15 +74,14 @@ function App() {
 // Передача наверх изм. title tasks=============================================================================
     const changeTaskTitle = (taskId: string, newValue: string, todolistID: string) => {
         setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)})
-        console.log(newValue);
     }
 // ============================================================================
 
 // ========Добавление Todolist=============================================================
-    const addTodolist =(title: string)=>{
+    const addTodolist = (title: string) => {
         let todolist: TodolistType = {id: v1(), title, filter: 'All',}
         setTodoLists([todolist, ...todoLists])
-    setTasks({...tasks, [todolist.id] :[]})
+        setTasks({...tasks, [todolist.id]: []})
     }
     //=======Delete todolist========================================================================================================
     const deleteTodolist = (todolistID: string) => {
@@ -89,9 +89,8 @@ function App() {
         delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
     }
     //Изм. title todolist==========================================================================
-    const onChangeHandlerTitleTodolist =(todoId: string, newValue: string,)=>{
+    const onChangeHandlerTitleTodolist = (todoId: string, newValue: string,) => {
         setTodoLists(todoLists.map(tl => tl.id === todoId ? {...tl, title: newValue} : tl));
-        console.log(newValue);
     }
 //====================================================================================================================================
 
@@ -120,6 +119,7 @@ function App() {
     }
 //===============================================================================================
 
+
     const todoListsComponents = todoLists.map(tl => {
         //=========================ФиЛЬТРАЦИЯ==============================
         let filterTasks = tasks[tl.id];//[tl.id] - обращение к конкретному тудулисту, то есть его id
@@ -135,22 +135,25 @@ function App() {
         }
         //==================================================================
         return (
-            <Todolist
-                key={tl.id}
-                todoListID={tl.id}
-                title={tl.title}//Название проекта
-                filter={tl.filter}
-                tasks={filterTasks}
+            <Grid item>
+                <Paper style={{backgroundColor: "rgba(0, 0, 0, 0.7)", boxShadow: "1px 2px 3px #fff", padding: '10px'}}>
+                    <Todolist
+                        key={tl.id}
+                        todoListID={tl.id}
+                        title={tl.title}//Название проекта
+                        filter={tl.filter}
+                        tasks={filterTasks}
 
-                changeStatus={changeStatus}
-                deleteTask={deleteTask}
-                deleteTodolist={deleteTodolist}
-                addItem={addTask}
-                changeTasksFilter={changeTasksFilter}
-                changeTaskTitle={changeTaskTitle}//редактирование таски title
-                onChangeHandlerTitleTodolist={onChangeHandlerTitleTodolist}
-            />
-
+                        changeStatus={changeStatus}
+                        deleteTask={deleteTask}
+                        deleteTodolist={deleteTodolist}
+                        addItem={addTask}
+                        changeTasksFilter={changeTasksFilter}
+                        changeTaskTitle={changeTaskTitle}//редактирование таски title
+                        onChangeHandlerTitleTodolist={onChangeHandlerTitleTodolist}
+                    />
+                </Paper>
+            </Grid>
         )
     })
 
@@ -159,21 +162,44 @@ function App() {
 
     return (
         <div className="App">
-            <FullInput  addItem={addTodolist}/>
-            {todoListsComponents}
-            {/*<Todolist*/}
-            {/*    //id*/}
-            {/*    changeStatus={changeStatus}*/}
-            {/*    title={todoLists}//Название проекта*/}
-            {/*    tasks={filterTasks}*/}
-            {/*    deleteTask={deleteTask}*/}
-            {/*    addTask={addTask}*/}
-            {/*    setFilterValue={setFilterValue}*/}
-            {/*    checkedTask={checkedTask}*/}
-            {/*    filterValue={filterValue}*/}
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{mr: 2}}
+                    >
+                        <Menu/>
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                        News
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
+            <Container fixed>
+                <Grid container style={{padding:'10px', height: '70px'}}>
+                    <FullInput addItem={addTodolist}/>
+                </Grid>
+                <Grid container spacing={5}>
+                    {todoListsComponents}
+                </Grid>
+                {/*<Todolist*/}
+                {/*    //id*/}
+                {/*    changeStatus={changeStatus}*/}
+                {/*    title={todoLists}//Название проекта*/}
+                {/*    tasks={filterTasks}*/}
+                {/*    deleteTask={deleteTask}*/}
+                {/*    addTask={addTask}*/}
+                {/*    setFilterValue={setFilterValue}*/}
+                {/*    checkedTask={checkedTask}*/}
+                {/*    filterValue={filterValue}*/}
 
-            {/*    // changeTasksFilter={changeTasksFilter}*/}
-            {/*/>*/}
+                {/*    // changeTasksFilter={changeTasksFilter}*/}
+                {/*/>*/}
+            </Container>
         </div>
     );
 

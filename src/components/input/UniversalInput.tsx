@@ -1,5 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent} from 'react';
 import s from "./UniversalInput.module.css";
+import {FormControl, Input, InputLabel, TextField} from "@mui/material";
+import {red} from "@mui/material/colors";
 
 
 type UniversalInputType={
@@ -33,6 +35,12 @@ export const UniversalInput = (props:UniversalInputType) => {
                 onKeyDown={onKeyDownHandler}
                 className={`${props.style} ${s.modified}`}
             />
+            {/*<TextField id="standard-basic" label="Standard" variant="standard"*/}
+            {/*           value={props.addTitle}*/}
+            {/*           onChange={onChangeHandlerAddTask}*/}
+            {/*           onKeyDown={onKeyDownHandler}*/}
+            {/*           className={`${props.style} ${s.modified}`}*/}
+            {/*/>*/}
         </div>
     );
 };

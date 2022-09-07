@@ -4,6 +4,9 @@ import {filterValueType} from "./App";
 import s from "./Todolist.module.css";
 import {FullInput} from "./components/fullInputButton/FullInput";
 import {EditableSpan} from "./components/editableSpan/EditableSpan";
+import {Checkbox, IconButton} from "@mui/material";
+import {Delete} from "@mui/icons-material";
+import {pink} from "@mui/material/colors";
 
 export type TasksPropsType = {
     id: string,
@@ -20,8 +23,8 @@ export type TodolistPropsType = {
     addItem: (id: string, addTitle: string) => void
     // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
     changeTasksFilter: (id: string, filter: filterValueType,) => void
-    changeTaskTitle:(id: string, newValue: string, taskId: string,)=>void,//редактирование title tasks
-    onChangeHandlerTitleTodolist:(todoId: string, newValue: string,)=>void,//изм. title todolist
+    changeTaskTitle: (id: string, newValue: string, taskId: string,) => void,//редактирование title tasks
+    onChangeHandlerTitleTodolist: (todoId: string, newValue: string,) => void,//изм. title todolist
     filter: filterValueType,
     //void - ничиег оне возвращает
 }
@@ -65,9 +68,20 @@ export const Todolist = (props: TodolistPropsType) => {
                     {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
                     {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
                     <Button name='x' callBack={() => onClickHandlerDelete(Task.id)}/>
-                    <input type="checkbox" checked={Task.isDone}
-                           onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>
-                    <EditableSpan title={Task.title} onChange={(newValue)=>onChangeHandlerTitle(Task.id, newValue)}/>
+                    <Checkbox checked={Task.isDone}
+                              onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}
+                              defaultChecked
+                              sx={{
+                                  color: pink[800],
+                                  '&.Mui-checked': {
+                                      color: pink[600],
+                                  },
+                              }}
+                    />
+
+                    {/*<input type="checkbox" checked={Task.isDone}*/}
+                    {/*       onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>*/}
+                    <EditableSpan title={Task.title} onChange={(newValue) => onChangeHandlerTitle(Task.id, newValue)}/>
                     {/*<span className={s.text}>{Task.title}</span>*/}
                 </li>
             );
@@ -103,19 +117,22 @@ export const Todolist = (props: TodolistPropsType) => {
 //=====================================================================
 //=================Focus button filter===================================
 //filterValue - добавили фильтр из локального стейка
-    const buttonAll = props.filter === "All" ? s.active : '';
-    const buttonActive = props.filter === "Active" ? s.active : '';
-    const buttonCompleted = props.filter === "Completed" ? s.active : '';
+    const buttonAll = props.filter === "All" ? s.active : s.d;
+    const buttonActive = props.filter === "Active" ? s.active : s.d;
+    const buttonCompleted = props.filter === "Completed" ? s.active : s.d;
 // =============================================================================
     //Изм. todolist======================================================================================
-    const onChangeHandlerTitleTodolist =(newValue: string)=>{
+    const onChangeHandlerTitleTodolist = (newValue: string) => {
         props.onChangeHandlerTitleTodolist(props.todoListID, newValue)
     }
     // ========================================================================================================
     return (
         <div>
             <h3><EditableSpan title={props.title} onChange={onChangeHandlerTitleTodolist}/></h3>
-            <button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>
+            {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
+            <IconButton onClick={onClickHandlerDeleteTodolist} color={'error'}>
+                <Delete/>
+            </IconButton>
             <div className={s.block}>
                 <FullInput addItem={addTask}/>
                 {/*<UniversalInput setAddTitle={setAddTitle}*/}

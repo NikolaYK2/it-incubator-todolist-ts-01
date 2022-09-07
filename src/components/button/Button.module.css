@@ -8,4 +8,5 @@
     font-weight: 700;
     cursor: pointer;
     border-radius: 0 5px 0 5px;
+    transition: all .3s ease;
 }

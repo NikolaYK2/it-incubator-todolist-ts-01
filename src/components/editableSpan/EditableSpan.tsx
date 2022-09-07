@@ -1,5 +1,7 @@
 import s from "./EditableSpan.module.css";
 import React, {useState, KeyboardEvent, ChangeEvent} from "react";
+import {FormControl, Input, InputLabel, TextField} from "@mui/material";
+import {blue, grey, red} from "@mui/material/colors";
 
 type EditableSpanType = {
     title: string,
@@ -41,12 +43,33 @@ export const EditableSpan = (props: EditableSpanType) => {
     // ============================================================================
     return (
         editMode
-            ? <input className={s.text__input}
+            ? /*<input className={s.text__input}
                      value={title}
                      onChange={onChangeHandlerValue}
                      onBlur={switching}
                      onKeyDown={onKeyDownHandlerValue}
-                     autoFocus/>
+                     autoFocus/>*/
+            <FormControl variant="standard">
+                <Input id="component-simple"
+                       value={title}
+                       onChange={onChangeHandlerValue}
+                       onBlur={switching}
+                       onKeyDown={onKeyDownHandlerValue}
+                       autoFocus
+                       sx={{
+                           '& > :not(style)': { color: '#f5f5f5',
+                                                width: 100},
+                       }}
+                />
+            </FormControl>
+            // <TextField id="standard-basic"  variant="standard"
+            //            className={s.text__input}
+            //            value={title}
+            //            onChange={onChangeHandlerValue}
+            //            onBlur={switching}
+            //            onKeyDown={onKeyDownHandlerValue}
+            //            autoFocus
+            // />
             : <span className={s.text} onDoubleClick={switching}>{title}</span>
     );
 }
