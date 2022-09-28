@@ -6,6 +6,7 @@ import {FullInput} from "./components/fullInputButton/FullInput";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import {Menu} from "@mui/icons-material";
 import {blue, grey} from "@mui/material/colors";
+import ButtonAppBar from "./components/buttonAppBar/ButtonAppBar";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
@@ -134,11 +135,11 @@ function App() {
             filterTasks = tasks[tl.id].filter(t => !t.isDone);
         }
         //==================================================================
+
         return (
-            <Grid item>
-                <Paper style={{backgroundColor: "rgba(0, 0, 0, 0.7)", boxShadow: "1px 2px 3px #fff", padding: '10px'}}>
+            <Grid item key={tl.id}>
+                <Paper style={{backgroundColor: "rgba(0, 0, 0, 0.7)", boxShadow: "1px 1px 10px grey", padding: '10px'}}>
                     <Todolist
-                        key={tl.id}
                         todoListID={tl.id}
                         title={tl.title}//Название проекта
                         filter={tl.filter}
@@ -158,32 +159,14 @@ function App() {
     })
 
 //============================================================================================
-
-
     return (
         <div className="App">
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{mr: 2}}
-                    >
-                        <Menu/>
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                        News
-                    </Typography>
-                    <Button color="inherit">Login</Button>
-                </Toolbar>
-            </AppBar>
+            <ButtonAppBar/>
             <Container fixed>
                 <Grid container style={{padding:'10px', height: '70px'}}>
                     <FullInput addItem={addTodolist}/>
                 </Grid>
-                <Grid container spacing={5}>
+                <Grid container spacing={4}>
                     {todoListsComponents}
                 </Grid>
                 {/*<Todolist*/}

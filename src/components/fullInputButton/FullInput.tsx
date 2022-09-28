@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Button} from "../button/Button";
 import {UniversalInput} from "../input/UniversalInput";
 import s from "../../Todolist.module.css";
+import {Button} from "../button/Button";
 
 type FullInputType = {
     addItem: (addTitle: string) => void,
@@ -50,10 +50,10 @@ export const FullInput = (props: FullInputType) => {
                         setError={setError}
                         style={errorStop}
                     />
-                    <Button name='+' callBack={() => onClickHandlerAddTask()}/>
+
+                    <Button callBack={() => onClickHandlerAddTask()} style={s.addTask}/>
                 </div>
                 {error && <div className={`${errorStop} ${s.block}`}>{error}</div>}
-                {/*<button onClick={onClickHandlerAddTask}>+</button>*/}
             </>
     );
 };
