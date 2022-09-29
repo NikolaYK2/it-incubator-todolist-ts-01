@@ -49,11 +49,11 @@ export const FullInput = (props: FullInputType) => {
                         callback={onClickHandlerAddTask}
                         setError={setError}
                         style={errorStop}
+                        error={error}
                     />
-
                     <Button callBack={() => onClickHandlerAddTask()} style={s.addTask}/>
                 </div>
-                {error && <div className={`${errorStop} ${s.block}`}>{error}</div>}
+                {/*{error && <div className={`${errorStop} ${s.block}`}>{error}</div>}*/}
             </>
     );
 };
