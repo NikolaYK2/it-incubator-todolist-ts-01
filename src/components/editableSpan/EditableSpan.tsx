@@ -1,11 +1,10 @@
 import s from "./EditableSpan.module.css";
 import React, {useState, KeyboardEvent, ChangeEvent} from "react";
-import {FormControl, Input, InputLabel, TextField} from "@mui/material";
-import {blue, grey, red} from "@mui/material/colors";
+import {TextField} from "@mui/material";
 
 type EditableSpanType = {
     title: string,
-    onChange:(newValue: string)=>void,
+    onChange: (newValue: string) => void,
 
 }
 //Делаем спан инпутом когданужно=========================================================
@@ -23,8 +22,10 @@ export const EditableSpan = (props: EditableSpanType) => {
     //     props.onChange(title);
     // }
     //Сокращенный вариант=============
-    const switching =()=>{
-        setEditMode(!editMode);
+    const switching = () => {
+        if (title !== '') {
+            setEditMode(!editMode);
+        }
         props.onChange(title);
     }
 //=============================================================================
@@ -49,27 +50,18 @@ export const EditableSpan = (props: EditableSpanType) => {
                      onBlur={switching}
                      onKeyDown={onKeyDownHandlerValue}
                      autoFocus/>*/
-            <FormControl variant="standard">
-                <Input id="component-simple"
-                       value={title}
-                       onChange={onChangeHandlerValue}
-                       onBlur={switching}
-                       onKeyDown={onKeyDownHandlerValue}
-                       autoFocus
-                       sx={{
-                           '& > :not(style)': { color: '#f5f5f5',
-                                                width: 100},
-                       }}
-                />
-            </FormControl>
-            // <TextField id="standard-basic"  variant="standard"
-            //            className={s.text__input}
-            //            value={title}
-            //            onChange={onChangeHandlerValue}
-            //            onBlur={switching}
-            //            onKeyDown={onKeyDownHandlerValue}
-            //            autoFocus
-            // />
+            <TextField
+                label={title === '' ? 'add & dell' : ''}
+                error={!title}
+                value={title}
+                size='small'
+                variant='filled'
+                onChange={onChangeHandlerValue}
+                onBlur={switching}
+                onKeyDown={onKeyDownHandlerValue}
+                autoFocus
+                sx={{input:{color: '#f5f5f5', width: '100px', padding:'10px 0 0 0'}}}
+            />
             : <span className={s.text} onDoubleClick={switching}>{title}</span>
     );
 }
