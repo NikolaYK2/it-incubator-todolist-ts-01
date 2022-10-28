@@ -1,5 +1,4 @@
 import {filterValueType, TodolistType} from "../App";
-import {v1} from "uuid";
 
 
 export const todoListsReducer = (state: TodolistType[], action: complexTypeActions) => {
@@ -26,7 +25,7 @@ export const todoListsReducer = (state: TodolistType[], action: complexTypeActio
 };
 
 
-type complexTypeActions =
+export type complexTypeActions =
     AddTodolistACType |
     DeleteTodolistACType |
     OnChangeHandlerTitleTodolistACType |
