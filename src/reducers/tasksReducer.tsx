@@ -1,7 +1,7 @@
 import {taskStateType} from "../App";
 import {v1} from "uuid";
 
-export const tasksReducer = (state: taskStateType, action: complexACType) => {
+export const tasksReducer = (state: taskStateType, action: complexACType): taskStateType => {
     switch (action.type) {
         case 'ADD-TASK': {
             //Сокращенный вариант=================================================================
@@ -23,6 +23,14 @@ export const tasksReducer = (state: taskStateType, action: complexACType) => {
             //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
             return {...state, [action.payload.todolistID]: state[action.payload.todolistID].filter(task=>task.id !== action.payload.tId)}
         }
+        case 'DELL-TASK-TODO': {
+            //Сокращенный вариант ================================================
+            // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
+            //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
+            delete state[action.payload.todolistID];
+            return state;
+        }
+
         case 'CHANGE-TASK-TITLE': {
             // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)});
             return {...state, [action.payload.todolistID]: state[action.payload.todolistID].map(task=>task.id === action.payload.taskId ?
@@ -32,13 +40,6 @@ export const tasksReducer = (state: taskStateType, action: complexACType) => {
             // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)});
             return {...state, [action.payload.todolistID]: state[action.payload.todolistID].map(task=>task.id === action.payload.taskId ?
                     {...task, isDone: action.payload.isDone} : task)}
-        }
-        case 'DELL-TASK-TODO': {
-            //Сокращенный вариант ================================================
-            // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
-            //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
-            delete state[action.payload.todolistID];
-            return state;
         }
 
         default:
