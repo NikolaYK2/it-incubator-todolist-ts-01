@@ -1,6 +1,7 @@
-import {addTaskAC, addTaskTodoAC, changeStatusAC, changeTaskTitleAC, deleteTaskAC, tasksReducer} from "./tasksReducer";
+import {addTaskAC, changeStatusAC, changeTaskTitleAC, deleteTaskAC, tasksReducer} from "./tasksReducer";
 import {v1} from "uuid";
 import {taskStateType} from "../App";
+import {addTodolistAC} from "./todoListsReducer";
 
 test('add task', () => {
     const todolistID_1 = v1();
@@ -53,7 +54,8 @@ test('add todolist and null tasks', () => {
             {id: '4', title: "Drink", isDone: false},
         ],
     }
-    const newTasks = tasksReducer(tasks, addTaskTodoAC(todolistID));
+    const title = 'Hi';
+    const newTasks = tasksReducer(tasks, addTodolistAC(title, todolistID));
     const keys = Object.keys(newTasks);//Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
     //Находим новый ключ
     const newKey = keys.find(k => k != todolistID_1 && k != todolistID_2);
@@ -92,6 +94,19 @@ test('remove task', () => {
     expect(newTasks[todolistID_2].length).toBe(4);
     expect(tasks[todolistID_1].length).toBe(4);
     expect(newTasks[todolistID_1].every(t => t.id != '1')).toBeTruthy();
+    expect(newTasks).toEqual({//tasks переменная в которой лежат данные, в данном случаи обьекты
+        [todolistID_1]: [
+            {id: '2', title: "JS", isDone: true},
+            {id: '3', title: "ReactJS", isDone: true},
+            {id: '4', title: "Next", isDone: false},
+        ],
+        [todolistID_2]: [
+            {id: '1', title: "Beer", isDone: true},
+            {id: '2', title: "Meat", isDone: true},
+            {id: '3', title: "Fish", isDone: true},
+            {id: '4', title: "Drink", isDone: false},
+        ],
+    })
 })
 
 test('change task title', () => {
@@ -147,4 +162,3 @@ test('change task status', () => {
     expect(newTasks[todolistID_1][1].isDone).toBe(false);
     expect(tasks[todolistID_1][1].isDone).toBe(true);
 })
-

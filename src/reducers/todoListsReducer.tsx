@@ -32,7 +32,7 @@ export type complexTypeActions =
     ChangeTasksFilterACType;
 
 
-type AddTodolistACType = ReturnType<typeof addTodolistAC>
+export type AddTodolistACType = ReturnType<typeof addTodolistAC>
 export const addTodolistAC = (title: string, todolistID:string) => {
     return {
         type: 'ADD-TODO',
@@ -44,7 +44,7 @@ export const addTodolistAC = (title: string, todolistID:string) => {
 
 }
 
-type DeleteTodolistACType = ReturnType<typeof deleteTodolistAC>
+export type DeleteTodolistACType = ReturnType<typeof deleteTodolistAC>
 export const deleteTodolistAC = (todolistID: string) => {
     return {
         type: 'DELETE-TODO',

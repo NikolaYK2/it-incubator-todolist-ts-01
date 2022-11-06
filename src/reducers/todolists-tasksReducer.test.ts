@@ -1,6 +1,6 @@
 import {taskStateType, TodolistType} from "../App";
-import {addTodolistAC, todoListsReducer} from "./todoListsReducer";
-import {addTaskTodoAC, deleteTaskTodoAC, tasksReducer} from "./tasksReducer";
+import {addTodolistAC, deleteTodolistAC, todoListsReducer} from "./todoListsReducer";
+import {tasksReducer} from "./tasksReducer";
 import {v1} from "uuid";
 
 test('ids should be equals', () => {
@@ -12,7 +12,7 @@ test('ids should be equals', () => {
     const todolistID = v1();
 
     const newTodoLists = todoListsReducer(todoLists,addTodolistAC(title, todolistID))
-    const newTasks = tasksReducer(tasks,addTaskTodoAC(todolistID));
+    const newTasks = tasksReducer(tasks,addTodolistAC(title, todolistID));
 
     const keys = Object.keys(newTasks);
     const idFromTodoLists = newTodoLists[0].id;
@@ -41,7 +41,7 @@ test('delete todolist and task', () => {
         ],
     }
 
-    const newTask = tasksReducer(tasks, deleteTaskTodoAC(todolistID_1));
+    const newTask = tasksReducer(tasks, deleteTodolistAC(todolistID_1));
     const keys = Object.keys(newTask)
 
     expect(keys.length).toBe(1);

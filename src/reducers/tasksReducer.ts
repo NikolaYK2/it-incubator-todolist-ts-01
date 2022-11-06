@@ -1,5 +1,6 @@
 import {taskStateType} from "../App";
 import {v1} from "uuid";
+import {AddTodolistACType, DeleteTodolistACType} from "./todoListsReducer";
 
 export const tasksReducer = (state: taskStateType, action: complexACType): taskStateType => {
     switch (action.type) {
@@ -11,11 +12,13 @@ export const tasksReducer = (state: taskStateType, action: complexACType): taskS
             // [todolistID]: [кладем сюда новый массив и все старые таски]Закидываем старые 4 таксик ...tasks[todolistID + одну новую {id: v1(), title: addTitle, isDone: false}
             return {...state, [action.payload.todolistID]:[{id: v1(), title: action.payload.addTitle, isDone: false}, ...state[action.payload.todolistID]]};
         }
-        case 'ADD-TASK-TODO': {
+        case 'ADD-TODO': {
             //Сокращенный вариант ================================================
             // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
             //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
-            return {...state, [action.payload.todolistID]: []}
+            // return {...state, [action.payload.todolistID]: []}
+            return {...state, [action.payload.todolistID]:[]};
+
         }
         case 'DELL-TASK': {
             //Сокращенный вариант ================================================
@@ -23,12 +26,12 @@ export const tasksReducer = (state: taskStateType, action: complexACType): taskS
             //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
             return {...state, [action.payload.todolistID]: state[action.payload.todolistID].filter(task=>task.id !== action.payload.tId)}
         }
-        case 'DELL-TASK-TODO': {
-            //Сокращенный вариант ================================================
-            // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
-            //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
-            delete state[action.payload.todolistID];
-            return state;
+        case 'DELETE-TODO': {
+            // const {[action.payload.todolistID]:[], ...rest} = {...state}
+            // return rest;
+            let copyState = {...state}
+            delete copyState[action.payload.todolistID];
+            return copyState;
         }
 
         case 'CHANGE-TASK-TITLE': {
@@ -48,7 +51,14 @@ export const tasksReducer = (state: taskStateType, action: complexACType): taskS
     }
 };
 
-type complexACType = AddTaskACType | AddTaskTodoACType | DeleteTaskACType | ChangeTaskTitleACType | ChangeStatusACACType | DeleteTaskTodoACType;
+type complexACType = AddTaskACType
+/*| AddTaskTodoACType*/
+    | DeleteTaskACType
+    | ChangeTaskTitleACType
+    | ChangeStatusACACType
+/*| DeleteTaskTodoACType*/
+    | AddTodolistACType
+    | DeleteTodolistACType;//Используем action todolista
 
 
 type AddTaskACType = ReturnType<typeof addTaskAC>
@@ -62,15 +72,15 @@ export const addTaskAC = (addTitle: string, todolistID: string) => {
     } as const;
 }
 
-type AddTaskTodoACType = ReturnType<typeof addTaskTodoAC>
-export const addTaskTodoAC = (todolistID: string) => {
-    return {
-        type: 'ADD-TASK-TODO',
-        payload: {
-            todolistID,
-        }
-    } as const;
-}
+// type AddTaskTodoACType = ReturnType<typeof addTaskTodoAC>
+// export const addTaskTodoAC = (todolistID: string) => {
+//     return {
+//         type: 'ADD-TASK-TODO',
+//         payload: {
+//             todolistID,
+//         }
+//     } as const;
+// }
 
 type DeleteTaskACType = ReturnType<typeof deleteTaskAC>
 export const deleteTaskAC = (todolistID: string, tId: string,) => {
@@ -83,15 +93,15 @@ export const deleteTaskAC = (todolistID: string, tId: string,) => {
     } as const;
 }
 
-type DeleteTaskTodoACType = ReturnType<typeof deleteTaskTodoAC>
-export const deleteTaskTodoAC = (todolistID: string) => {
-    return {
-        type: 'DELL-TASK-TODO',
-        payload: {
-            todolistID,
-        }
-    } as const;
-}
+// type DeleteTaskTodoACType = ReturnType<typeof deleteTaskTodoAC>
+// export const deleteTaskTodoAC = (todolistID: string) => {
+//     return {
+//         type: 'DELL-TASK-TODO',
+//         payload: {
+//             todolistID,
+//         }
+//     } as const;
+// }
 
 type ChangeTaskTitleACType = ReturnType<typeof changeTaskTitleAC>
 export const changeTaskTitleAC = (taskId: string, newValue: string, todolistID: string) => {

@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from "react";
+import React, {useReducer} from "react";
 import './App.css';
 import {TasksPropsType, Todolist} from "./Todolist";
 import {v1} from "uuid";
@@ -12,11 +12,10 @@ import {
     todoListsReducer
 } from "./reducers/todoListsReducer";
 import {
-    addTaskAC, addTaskTodoAC,
+    addTaskAC,
     changeStatusAC,
     changeTaskTitleAC,
     deleteTaskAC,
-    deleteTaskTodoAC,
     tasksReducer
 } from "./reducers/tasksReducer";
 
@@ -101,14 +100,14 @@ function App() {
         // setTasks({...tasks, [todolist.id]: []})
         const todolistID = v1();
         dispatchTodoLists(addTodolistAC(title, todolistID));
-        dispatchTasks(addTaskTodoAC(todolistID));
+        dispatchTasks(addTodolistAC(title, todolistID));
     }
     //=======Delete todolist========================================================================================================
     const deleteTodolist = (todolistID: string) => {
         // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
         // delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
         dispatchTodoLists(deleteTodolistAC(todolistID))
-        dispatchTasks(deleteTaskTodoAC(todolistID))
+        dispatchTasks(deleteTodolistAC(todolistID))
     }
     //Изм. title todolist==========================================================================
     const onChangeHandlerTitleTodolist = (todoId: string, newValue: string,) => {
