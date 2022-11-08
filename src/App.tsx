@@ -1,6 +1,6 @@
 import React, {useReducer} from "react";
 import './App.css';
-import {TasksPropsType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 import {FullInput} from "./components/fullInputButton/FullInput";
 import {Container, Grid, Paper} from "@mui/material";
@@ -15,7 +15,7 @@ import {
     addTaskAC,
     changeStatusAC,
     changeTaskTitleAC,
-    deleteTaskAC,
+    deleteTaskAC, TasksPropsType,
     tasksReducer
 } from "./reducers/tasksReducer";
 
@@ -34,7 +34,7 @@ function App() {
     //todoLists - cписок тудулистов
     const todolistID_1 = v1();
     const todolistID_2 = v1();
-    const [todoLists, dispatchTodoLists] = useReducer(todoListsReducer, [
+    const [todoLists, dispatchTodoLists] = useReducer(todoListsReducer, [//первым параметром принимаем редьюсер
         {id: todolistID_1, title: 'What to learn', filter: 'All'},
         {id: todolistID_2, title: 'What to buy', filter: 'All'},
     ]);
@@ -57,18 +57,18 @@ function App() {
     console.log(tasks)
 //=======Добавление таски=====================================================================================================
     const addTask = (addTitle: string, todolistID: string) => {
-        // setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
-//Acc. масс. =====================================================================
-//const todoListsTasks = tasks[todolistID];
-        // const updatedTasks = [{id: v1(), title: addTitle, isDone: false}, ...todoListsTasks];
-        // const copyTasks = {...tasks};
-        // copyTasks[todolistID] = updatedTasks;
-        // setTasks(copyTasks);
-        //Сокращенный вариант=================================================================
-        // setTasks({...tasks, [todolistID]: [{id: v1(), title: addTitle, isDone: false}, ...tasks[todolistID]]})
-        //...tasks- раскрываем все такси и делаем копию,
-        // В объекте есть св-в[todolistID] в которое вносим изм.
-        // [todolistID]: [кладем сюда новый массив и все старые таски]Закидываем старые 4 таксик ...tasks[todolistID + одну новую {id: v1(), title: addTitle, isDone: false}
+//         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
+// Acc. масс. =====================================================================
+// const todoListsTasks = tasks[todolistID];
+//         const updatedTasks = [{id: v1(), title: addTitle, isDone: false}, ...todoListsTasks];
+//         const copyTasks = {...tasks};
+//         copyTasks[todolistID] = updatedTasks;
+//         setTasks(copyTasks);
+//         Сокращенный вариант=================================================================
+//         setTasks({...tasks, [todolistID]: [{id: v1(), title: addTitle, isDone: false}, ...tasks[todolistID]]})
+//         ...tasks- раскрываем все такси и делаем копию,
+//         В объекте есть св-в[todolistID] в которое вносим изм.
+//         [todolistID]: [кладем сюда новый массив и все старые таски]Закидываем старые 4 таксик ...tasks[todolistID + одну новую {id: v1(), title: addTitle, isDone: false}
         dispatchTasks(addTaskAC(addTitle, todolistID))
     }
 //Удаление таски ===============================================================================================================
@@ -166,14 +166,14 @@ function App() {
                         todoListID={tl.id}
                         title={tl.title}//Название проекта
                         filter={tl.filter}
-                        tasks={filterTasks}
+                        // tasks={filterTasks}
 
-                        changeStatus={changeStatus}
-                        deleteTask={deleteTask}
+                        // changeStatus={changeStatus}
+                        // deleteTask={deleteTask}
                         deleteTodolist={deleteTodolist}
-                        addItem={addTask}
+                        // addItem={addTask}
                         changeTasksFilter={changeTasksFilter}
-                        changeTaskTitle={changeTaskTitle}//редактирование таски title
+                        // changeTaskTitle={changeTaskTitle}//редактирование таски title
                         onChangeHandlerTitleTodolist={onChangeHandlerTitleTodolist}
                     />
                 </Paper>

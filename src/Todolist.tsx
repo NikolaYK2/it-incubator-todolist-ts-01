@@ -1,59 +1,133 @@
 import React from "react";
 import {Button} from "./components/button/Button";
-import {filterValueType} from "./App";
 import s from "./Todolist.module.css";
 import {FullInput} from "./components/fullInputButton/FullInput";
 import {EditableSpan} from "./components/editableSpan/EditableSpan";
 import {Checkbox, IconButton} from "@mui/material";
 import {Bookmark, BookmarkBorder, Delete} from "@mui/icons-material";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootState} from "./reducers/store";
+import {addTaskAC, changeStatusAC, changeTaskTitleAC, deleteTaskAC, TasksPropsType} from "./reducers/tasksReducer";
+import {filterValueType} from "./reducers/todoListsReducer";
 
-export type TasksPropsType = {
-    id: string,
-    title: string,
-    isDone: boolean,
-}
+// export type TasksPropsType = {
+//     id: string,
+//     title: string,
+//     isDone: boolean,
+// }
 export type TodolistPropsType = {
-    todoListID: string,
-    changeStatus: (taskId: string, isDone: boolean, id: string) => void,
+    todoListID: string;
     title: string,
-    tasks: TasksPropsType[],
-    deleteTask: (id: string, idId: string,) => void,
-    deleteTodolist: (id: string) => void
-    addItem: (id: string, addTitle: string) => void
+    // tasks: TasksPropsType[],
+    // changeStatus: (taskId: string, isDone: boolean, id: string) => void,
+    // deleteTask: (id: string, idId: string,) => void,
+    // addItem: (id: string, addTitle: string) => void
     // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
+    // changeTaskTitle: (id: string, newValue: string, taskId: string,) => void,//редактирование title tasks
+    deleteTodolist: (id: string) => void
     changeTasksFilter: (id: string, filter: filterValueType,) => void
-    changeTaskTitle: (id: string, newValue: string, taskId: string,) => void,//редактирование title tasks
     onChangeHandlerTitleTodolist: (todoId: string, newValue: string,) => void,//изм. title todolist
     filter: filterValueType,
     //void - ничиег оне возвращает
 }
 
 export const Todolist = (props: TodolistPropsType) => {
+    const dispatch = useDispatch();
+    const tasks = useSelector<AppRootState, TasksPropsType[]>((state)=>state.tasks[props.todoListID]);
+//=======Добавление таски=====================================================================================================
+//     const addTask = (addTitle: string, todolistID: string) => {
+// //         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
+// // Acc. масс. =====================================================================
+// // const todoListsTasks = tasks[todolistID];
+// //         const updatedTasks = [{id: v1(), title: addTitle, isDone: false}, ...todoListsTasks];
+// //         const copyTasks = {...tasks};
+// //         copyTasks[todolistID] = updatedTasks;
+// //         setTasks(copyTasks);
+// //         Сокращенный вариант=================================================================
+// //         setTasks({...tasks, [todolistID]: [{id: v1(), title: addTitle, isDone: false}, ...tasks[todolistID]]})
+// //         ...tasks- раскрываем все такси и делаем копию,
+// //         В объекте есть св-в[todolistID] в которое вносим изм.
+// //         [todolistID]: [кладем сюда новый массив и все старые таски]Закидываем старые 4 таксик ...tasks[todolistID + одну новую {id: v1(), title: addTitle, isDone: false}
+//         dispatch(addTaskAC(addTitle, todolistID))
+//     }
+//Удаление таски ===============================================================================================================
+//     const deleteTask = (todolistID: string, tId: string,) => {
+//         // tasks = tasks.filter((el) => el.id !== elId)
+//         // setTasks(tasks.filter((el) => el.id !== elId));//для обычного массива методы
+//         //Ассоциативный массив =======================================
+//         // const todoListsTasks = tasks[todolistID];
+//         // const updatedTasks = todoListsTasks.filter(el=>el.id !== elId)
+//         // const copyTasks = {...tasks}
+//         // copyTasks[todolistID] = updatedTasks
+//         // setTasks(copyTasks);
+//         //Сокращенный вариант ================================================
+//         // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
+//         //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
+//         dispatch(deleteTaskAC(todolistID, tId))
+//     }
+// Передача наверх изм. title tasks=============================================================================
+//     const changeTaskTitle = (taskId: string, newValue: string, todolistID: string) => {
+//         // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)});
+//         dispatch(changeTaskTitleAC(taskId, newValue, todolistID))
+//     }
+
+
     //================addTask===================================================
-    const addTask = (title: string) => {
-        props.addItem(title, props.todoListID);
+    const addTask = (addTitle: string) => {
+        dispatch(addTaskAC(addTitle, props.todoListID))
+
+        // props.addItem(title, props.todoListID);
     }
     // //Удаление таски==============================================================
     const onClickHandlerDelete = (Task: string) => {
-        props.deleteTask(props.todoListID, Task,)
+        // props.deleteTask(props.todoListID, Task,)
+        dispatch(deleteTaskAC(props.todoListID, Task))
+
     }
     //====Редактирование в task title===============================================
     const onChangeHandlerTitle = (taskId: string, newValue: string,) => {
-        props.changeTaskTitle(taskId, newValue, props.todoListID)
+        // props.changeTaskTitle(taskId, newValue, props.todoListID)
         //props.todoListID что б знали наверху в каком тудулисте поменять
+        dispatch(changeTaskTitleAC(taskId, newValue, props.todoListID))
+
     }
 
-    //========================================================================
+    //status task========================================================================
+    // const changeStatus = (taskId: string, isDone: boolean, todolistID: string) => {//отображения статуса таски true или false
+    //     //     let task = tasks.map((t) => t.id === taskId ? {...t, /*isDone: isDone - это*/ isDone} : t);
+    //     // }
+    //     //======Ассациативный ================
+    //     // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, isDone} : t)})
+    //     dispatch(changeStatusAC(taskId, isDone, todolistID))
+    // }
+
+
+
+
+
     // delete todolist=======================================
     const onClickHandlerDeleteTodolist = () => {
         props.deleteTodolist(props.todoListID);
     }
     //===============================================================
+    //=========================ФиЛЬТРАЦИЯ==============================
+    let filterTasks = tasks;//[tl.id] - обращение к конкретному тудулисту, то есть его id
+    if (props.filter === "Active") {
+        // filterTasks = tasks.filter((el) => el.isDone);
+        //Ассоциативный ===================================================
+        filterTasks = tasks.filter(t => t.isDone);
+    }
+    if (props.filter === "Completed") {
+        // filterTasks = tasks.filter(el => !el.isDone);
+        //Ассоциативный ===================================================
+        filterTasks = tasks.filter(t => !t.isDone);
+    }
+    //==================================================================
 
     // =====================================================================
     //Если лист тасок остался пустой
-    const taskListItems = props.tasks.length
-        ? props.tasks.map(Task => {//elTasks - элемент каждого обьекта в массиве
+    const taskListItems = tasks.length
+        ? filterTasks.map(Task => {//elTasks - элемент каждого обьекта в массиве
             // //Удаление ==============================================================
             // const onClickHandlerDelete=()=>{
             //     props.deleteTask(elTask.id)
@@ -63,6 +137,8 @@ export const Todolist = (props: TodolistPropsType) => {
             //     props.changeTaskTitle(Task.id, newValue, props.todoListID)
             //     //props.todoListID что б знали наверху в каком тудулисте поменять
             // }
+
+
             return (
                 <li key={Task.id} className={Task.isDone ? s.activeTask : ''}>
                     {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
@@ -104,8 +180,10 @@ export const Todolist = (props: TodolistPropsType) => {
     // }
 //===========================================================
 //============CHecked===============================
-    const changeStatusHandler = (taskId: string, filter: boolean,) => {
-        props.changeStatus(taskId, filter, props.todoListID)
+    const changeStatusHandler = (taskId: string, isDone: boolean,) => {
+        dispatch(changeStatusAC(taskId, isDone, props.todoListID))
+
+        // props.changeStatus(taskId, filter, props.todoListID)
     }
 //=====State Ошибка в случаи попытка отправки пустого поля========================
 //     let [error, setError] = useState<string | null>(null)
@@ -119,9 +197,11 @@ export const Todolist = (props: TodolistPropsType) => {
 // =============================================================================
     //Изм. todolist======================================================================================
     const onChangeHandlerTitleTodolist = (newValue: string) => {
-        props.onChangeHandlerTitleTodolist(props.todoListID, newValue)
+        props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
     }
     // ========================================================================================================
+
+
     return (
         <div>
             <h3><EditableSpan title={props.title} onChange={onChangeHandlerTitleTodolist}/></h3>

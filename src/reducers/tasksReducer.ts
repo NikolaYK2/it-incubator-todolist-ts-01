@@ -1,8 +1,32 @@
-import {taskStateType} from "../App";
 import {v1} from "uuid";
-import {AddTodolistACType, DeleteTodolistACType} from "./todoListsReducer";
+import {AddTodolistACType, DeleteTodolistACType, todolistID_1, todolistID_2} from "./todoListsReducer";
 
-export const tasksReducer = (state: taskStateType, action: complexACType): taskStateType => {
+export type TasksPropsType = {
+    id: string,
+    title: string,
+    isDone: boolean,
+}
+export type taskStateType = {
+    [todolistID: string]: TasksPropsType[];
+}
+
+
+const initialState: taskStateType={
+    // [todolistID_1]: [
+    //     {id: v1(), title: "HTML&CSS", isDone: true},
+    //     {id: v1(), title: "JS", isDone: true},
+    //     {id: v1(), title: "ReactJS", isDone: true},
+    //     {id: v1(), title: "Next", isDone: false},
+    // ],
+    // [todolistID_2]: [
+    //     {id: v1(), title: "Beer", isDone: true},
+    //     {id: v1(), title: "Meat", isDone: true},
+    //     {id: v1(), title: "Fish", isDone: true},
+    //     {id: v1(), title: "Drink", isDone: false},
+    // ],
+}
+
+export const tasksReducer = (state: taskStateType = initialState, action: complexACType): taskStateType => {
     switch (action.type) {
         case 'ADD-TASK': {
             //Сокращенный вариант=================================================================
@@ -18,7 +42,6 @@ export const tasksReducer = (state: taskStateType, action: complexACType): taskS
             //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
             // return {...state, [action.payload.todolistID]: []}
             return {...state, [action.payload.todolistID]:[]};
-
         }
         case 'DELL-TASK': {
             //Сокращенный вариант ================================================
@@ -33,7 +56,6 @@ export const tasksReducer = (state: taskStateType, action: complexACType): taskS
             delete copyState[action.payload.todolistID];
             return copyState;
         }
-
         case 'CHANGE-TASK-TITLE': {
             // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)});
             return {...state, [action.payload.todolistID]: state[action.payload.todolistID].map(task=>task.id === action.payload.taskId ?
