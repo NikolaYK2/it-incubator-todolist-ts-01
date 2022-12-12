@@ -8,7 +8,12 @@ import {Bookmark, BookmarkBorder, Delete} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./reducers/store";
 import {addTaskAC, changeStatusAC, changeTaskTitleAC, deleteTaskAC, TasksPropsType} from "./reducers/tasksReducer";
-import {filterValueType} from "./reducers/todoListsReducer";
+import {
+    changeTasksFilterAC,
+    deleteTodolistAC,
+    filterValueType,
+    onChangeTitleTodolistAC, TodolistType
+} from "./reducers/todoListsReducer";
 
 // export type TasksPropsType = {
 //     id: string,
@@ -16,24 +21,26 @@ import {filterValueType} from "./reducers/todoListsReducer";
 //     isDone: boolean,
 // }
 export type TodolistPropsType = {
-    todoListID: string;
-    title: string,
-    // tasks: TasksPropsType[],
-    // changeStatus: (taskId: string, isDone: boolean, id: string) => void,
-    // deleteTask: (id: string, idId: string,) => void,
-    // addItem: (id: string, addTitle: string) => void
-    // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
-    // changeTaskTitle: (id: string, newValue: string, taskId: string,) => void,//редактирование title tasks
-    deleteTodolist: (id: string) => void
-    changeTasksFilter: (id: string, filter: filterValueType,) => void
-    onChangeHandlerTitleTodolist: (todoId: string, newValue: string,) => void,//изм. title todolist
-    filter: filterValueType,
-    //void - ничиег оне возвращает
+    todolist : TodolistType
+    // todoListID: string;
+    // title: string,
+    // // tasks: TasksPropsType[],
+    // // changeStatus: (taskId: string, isDone: boolean, id: string) => void,
+    // // deleteTask: (id: string, idId: string,) => void,
+    // // addItem: (id: string, addTitle: string) => void
+    // // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
+    // // changeTaskTitle: (id: string, newValue: string, taskId: string,) => void,//редактирование title tasks
+    // // deleteTodolist: (id: string) => void
+    // // changeTasksFilter: (id: string, filter: filterValueType,) => void
+    // // onChangeHandlerTitleTodolist: (todoId: string, newValue: string,) => void,//изм. title todolist
+    // filter: filterValueType,
+    // //void - ничиег оне возвращает
 }
 
 export const Todolist = (props: TodolistPropsType) => {
+    const {id, title, filter} = props.todolist
     const dispatch = useDispatch();
-    const tasks = useSelector<AppRootState, TasksPropsType[]>((state)=>state.tasks[props.todoListID]);
+    const tasks = useSelector<AppRootState, TasksPropsType[]>((state)=>state.tasks[id]);
 //=======Добавление таски=====================================================================================================
 //     const addTask = (addTitle: string, todolistID: string) => {
 // //         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
@@ -74,21 +81,21 @@ export const Todolist = (props: TodolistPropsType) => {
 
     //================addTask===================================================
     const addTask = (addTitle: string) => {
-        dispatch(addTaskAC(addTitle, props.todoListID))
+        dispatch(addTaskAC(addTitle, id))
 
         // props.addItem(title, props.todoListID);
     }
     // //Удаление таски==============================================================
     const onClickHandlerDelete = (Task: string) => {
         // props.deleteTask(props.todoListID, Task,)
-        dispatch(deleteTaskAC(props.todoListID, Task))
+        dispatch(deleteTaskAC(id, Task))
 
     }
     //====Редактирование в task title===============================================
     const onChangeHandlerTitle = (taskId: string, newValue: string,) => {
         // props.changeTaskTitle(taskId, newValue, props.todoListID)
         //props.todoListID что б знали наверху в каком тудулисте поменять
-        dispatch(changeTaskTitleAC(taskId, newValue, props.todoListID))
+        dispatch(changeTaskTitleAC(taskId, newValue, id))
 
     }
 
@@ -101,23 +108,19 @@ export const Todolist = (props: TodolistPropsType) => {
     //     dispatch(changeStatusAC(taskId, isDone, todolistID))
     // }
 
-
-
-
-
     // delete todolist=======================================
     const onClickHandlerDeleteTodolist = () => {
-        props.deleteTodolist(props.todoListID);
+        dispatch(deleteTodolistAC('todolistID'))
     }
     //===============================================================
     //=========================ФиЛЬТРАЦИЯ==============================
     let filterTasks = tasks;//[tl.id] - обращение к конкретному тудулисту, то есть его id
-    if (props.filter === "Active") {
+    if (filter === "Active") {
         // filterTasks = tasks.filter((el) => el.isDone);
         //Ассоциативный ===================================================
         filterTasks = tasks.filter(t => t.isDone);
     }
-    if (props.filter === "Completed") {
+    if (filter === "Completed") {
         // filterTasks = tasks.filter(el => !el.isDone);
         //Ассоциативный ===================================================
         filterTasks = tasks.filter(t => !t.isDone);
@@ -137,7 +140,6 @@ export const Todolist = (props: TodolistPropsType) => {
             //     props.changeTaskTitle(Task.id, newValue, props.todoListID)
             //     //props.todoListID что б знали наверху в каком тудулисте поменять
             // }
-
 
             return (
                 <li key={Task.id} className={Task.isDone ? s.activeTask : ''}>
@@ -163,7 +165,8 @@ export const Todolist = (props: TodolistPropsType) => {
 //===============================================================================
 //Фильтр ==================================================
     const changeTasksFilterHandler = (filter: filterValueType,) => {
-        props.changeTasksFilter(props.todoListID, filter,);
+        dispatch(changeTasksFilterAC(id, filter,))
+        // props.changeTasksFilter(props.todoListID, filter,);
     }
 
 //===========Добавление таски==================================================
@@ -181,7 +184,7 @@ export const Todolist = (props: TodolistPropsType) => {
 //===========================================================
 //============CHecked===============================
     const changeStatusHandler = (taskId: string, isDone: boolean,) => {
-        dispatch(changeStatusAC(taskId, isDone, props.todoListID))
+        dispatch(changeStatusAC(taskId, isDone, id))
 
         // props.changeStatus(taskId, filter, props.todoListID)
     }
@@ -191,20 +194,21 @@ export const Todolist = (props: TodolistPropsType) => {
 //=====================================================================
 //=================Focus button filter===================================
 //filterValue - добавили фильтр из локального стейка
-    const buttonAll = props.filter === "All" ? s.active : s.default;
-    const buttonActive = props.filter === "Active" ? s.active : s.default;
-    const buttonCompleted = props.filter === "Completed" ? s.active : s.default;
+    const buttonAll = filter === "All" ? s.active : s.default;
+    const buttonActive = filter === "Active" ? s.active : s.default;
+    const buttonCompleted = filter === "Completed" ? s.active : s.default;
 // =============================================================================
     //Изм. todolist======================================================================================
     const onChangeHandlerTitleTodolist = (newValue: string) => {
-        props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
+            dispatch(onChangeTitleTodolistAC(newValue, id))
+        // props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
     }
     // ========================================================================================================
 
 
     return (
         <div>
-            <h3><EditableSpan title={props.title} onChange={onChangeHandlerTitleTodolist}/></h3>
+            <h3><EditableSpan title={title} onChange={onChangeHandlerTitleTodolist}/></h3>
             {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
             <IconButton onClick={onClickHandlerDeleteTodolist} color={'error'}>
                 <Delete/>

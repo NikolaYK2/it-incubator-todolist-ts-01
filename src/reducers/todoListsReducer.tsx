@@ -1,4 +1,3 @@
-import {v1} from "uuid";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
@@ -8,8 +7,8 @@ export type TodolistType = {
     filter: filterValueType, //Список отсортированный для всех тудулистов
 }
 
-export let todolistID_1 = v1();
-export let todolistID_2 = v1();
+// export let todolistID_1 = v1();
+// export let todolistID_2 = v1();
 
 const initialState: TodolistType[] = [//первым параметром принимаем редьюсер
         // {id: todolistID_1, title: 'What to learn', filter: 'All'},
@@ -43,7 +42,7 @@ export const todoListsReducer = (state: TodolistType[] = initialState, action: c
 export type complexTypeActions =
     AddTodolistACType |
     DeleteTodolistACType |
-    OnChangeHandlerTitleTodolistACType |
+    OnChangeTitleTodolistACType |
     ChangeTasksFilterACType;
 
 
@@ -69,8 +68,8 @@ export const deleteTodolistAC = (todolistID: string) => {
     } as const;
 }
 
-type OnChangeHandlerTitleTodolistACType = ReturnType<typeof onChangeHandlerTitleTodolistAC>
-export const onChangeHandlerTitleTodolistAC = (todoId: string, newValue: string,) => {
+type OnChangeTitleTodolistACType = ReturnType<typeof onChangeTitleTodolistAC>
+export const onChangeTitleTodolistAC = (todoId: string, newValue: string,) => {
     return {
         type: 'CHANGE-TITLE-TODO',
         payload: {

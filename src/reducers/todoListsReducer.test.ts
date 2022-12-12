@@ -1,67 +1,45 @@
-import {v1} from "uuid";
 import {
     addTodolistAC,
     changeTasksFilterAC,
-    deleteTodolistAC,
-    onChangeHandlerTitleTodolistAC,
-    todoListsReducer
+    deleteTodolistAC, onChangeTitleTodolistAC,
+    todoListsReducer,
+    TodolistType
 } from "./todoListsReducer";
-import {filterValueType, TodolistType} from "../App";
 
 
-test('add new todolist',()=>{
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
-
-    const todolistID = v1();
-    const title = 'new title'
-
-    const todoLists: TodolistType[] = [
-        {id: todolistID_1, title: 'What to learn', filter: 'All'},
-        {id: todolistID_2, title: 'What to buy', filter: 'All'},
+let todoLists: TodolistType[];
+beforeEach(()=>{
+    todoLists = [
+        {id: 'todolistID_1', title: 'What to learn', filter: 'All'},
+        {id: 'todolistID_2', title: 'What to buy', filter: 'All'},
     ];
-    const newTodolist = todoListsReducer(todoLists, addTodolistAC(title, todolistID));
+
+})
+test('add new todolist',()=>{
+
+    // const todoLists: TodolistType[] = [
+    //     {id: todolistID_1, title: 'What to learn', filter: 'All'},
+    //     {id: todolistID_2, title: 'What to buy', filter: 'All'},
+    // ];
+    const newTodolist = todoListsReducer(todoLists, addTodolistAC('title', 'todolistID'));
     expect(newTodolist.length).toBe(3)
     expect(todoLists.length).toBe(2)
 })
 
 test('delete todolist',()=>{
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
 
-    const todoLists: TodolistType[] = [
-        {id: todolistID_1, title: 'What to learn', filter: 'All'},
-        {id: todolistID_2, title: 'What to buy', filter: 'All'},
-    ];
-    const newTodolist = todoListsReducer(todoLists, deleteTodolistAC(todolistID_1));
+    const newTodolist = todoListsReducer(todoLists, deleteTodolistAC('todolistID_1'));
     expect(newTodolist.length).toBe(1)
 })
 
 test('CHANGE TITLE TODO',()=>{
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
 
-    const newValue = 'Hi';
-
-    const todoLists: TodolistType[] = [
-        {id: todolistID_1, title: 'What to learn', filter: 'All'},
-        {id: todolistID_2, title: 'What to buy', filter: 'All'},
-    ];
-    const newTodolist = todoListsReducer(todoLists, onChangeHandlerTitleTodolistAC(todolistID_1, newValue));
+    const newTodolist = todoListsReducer(todoLists, onChangeTitleTodolistAC('todolistID_1', 'hi'));
     expect(newTodolist[0].title).toBe('Hi')
 })
 
 test('TASK FILTER TODO',()=>{
-    const todolistID_1 = v1();
-    const todolistID_2 = v1();
-
-    const filter: filterValueType = 'Active';
-
-    const todoLists: TodolistType[] = [
-        {id: todolistID_1, title: 'What to learn', filter: 'All'},
-        {id: todolistID_2, title: 'What to buy', filter: 'All'},
-    ];
-    const newTodolist = todoListsReducer(todoLists, changeTasksFilterAC(todolistID_1, filter));
+    const newTodolist = todoListsReducer(todoLists, changeTasksFilterAC('todolistID_1', 'Active'));
     expect(newTodolist[0].filter).toBe('Active')
 })
 

@@ -1,16 +1,11 @@
 import React from "react";
 import './App.css';
 import {Todolist} from "./Todolist";
-import {v1} from "uuid";
 import {FullInput} from "./components/fullInputButton/FullInput";
 import {Container, Grid, Paper} from "@mui/material";
 import ButtonAppBar from "./components/buttonAppBar/ButtonAppBar";
 import {
     addTodolistAC,
-    changeTasksFilterAC,
-    deleteTodolistAC,
-    filterValueType,
-    onChangeHandlerTitleTodolistAC,
     TodolistType,
 } from "./reducers/todoListsReducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -18,30 +13,6 @@ import {AppRootState} from "./reducers/store";
 
 
 function AppRedux() {
-    //todoLists - cписок тудулистов
-    // const todolistID_1 = v1();
-    // const todolistID_2 = v1();
-    // const [todoLists, dispatchTodoLists] = useReducer(todoListsReducer, [//первым параметром принимаем редьюсер
-    //     {id: todolistID_1, title: 'What to learn', filter: 'All'},
-    //     {id: todolistID_2, title: 'What to buy', filter: 'All'},
-    // ]);
-    //
-    // const [tasks, dispatchTasks] = useReducer(tasksReducer, {//tasks переменная в которой лежат данные, в данном случаи обьекты
-    //     [todolistID_1]: [
-    //         {id: v1(), title: "HTML&CSS", isDone: true},
-    //         {id: v1(), title: "JS", isDone: true},
-    //         {id: v1(), title: "ReactJS", isDone: true},
-    //         {id: v1(), title: "Next", isDone: false},
-    //     ],
-    //     [todolistID_2]: [
-    //         {id: v1(), title: "Beer", isDone: true},
-    //         {id: v1(), title: "Meat", isDone: true},
-    //         {id: v1(), title: "Fish", isDone: true},
-    //         {id: v1(), title: "Drink", isDone: false},
-    //     ],
-    // })
-    // console.log(todoLists)
-    // console.log(tasks)
 
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootState, TodolistType[]>((state)=>state.todoLists);
@@ -90,21 +61,22 @@ function AppRedux() {
         // setTodoLists([todolist, ...todoLists])
         // setTasks({...tasks, [todolist.id]: []})
         // dispatch(addTodolistAC(title, todolistID));
-        const todolistID = v1();
-        dispatch(addTodolistAC(title, todolistID));
+        // const todolistID = v1();
+        dispatch(addTodolistAC(title, 'todolistID'));
     }
     //=======Delete todolist========================================================================================================
-    const deleteTodolist = (todolistID: string) => {
-        // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
-        // delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
-        // dispatch(deleteTodolistAC(todolistID))
-        dispatch(deleteTodolistAC(todolistID))
-    }
+    // const deleteTodolist = (todolistID: string) => {
+    //     // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
+    //     // delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
+    //     // dispatch(deleteTodolistAC(todolistID))
+    //     dispatch(deleteTodolistAC(todolistID))
+    // }
     //Изм. title todolist==========================================================================
-    const onChangeHandlerTitleTodolist = (todoId: string, newValue: string,) => {
-        // setTodoLists(todoLists.map(tl => tl.id === todoId ? {...tl, title: newValue} : tl));
-        dispatch(onChangeHandlerTitleTodolistAC(todoId, newValue))
-    }
+
+    // const onChangeHandlerTitleTodolist = (todoId: string, newValue: string,) => {
+    //     // setTodoLists(todoLists.map(tl => tl.id === todoId ? {...tl, title: newValue} : tl));
+    //     dispatch(onChangeHandlerTitleTodolistAC(todoId, newValue))
+    // }
 //====================================================================================================================================
 
 //========Checked find====================================================================================================
@@ -126,12 +98,12 @@ function AppRedux() {
     // ==============================================================================================================================
 
 // =====================Фильтрация==================================================================================================
-    const changeTasksFilter = (todoListsID: string, filter: filterValueType,) => {
-        //     setFilterValue(filterValue);
-        // setTodoLists(todoLists.map(tl => tl.id === todoListsID ? {...tl, filter} : tl))
-        //map создает новый массив так что копию(...todolist) делать не надо
-        dispatch(changeTasksFilterAC(todoListsID, filter))
-    }
+//     const changeTasksFilter = (todoListsID: string, filter: filterValueType,) => {
+//         //     setFilterValue(filterValue);
+//         // setTodoLists(todoLists.map(tl => tl.id === todoListsID ? {...tl, filter} : tl))
+//         //map создает новый массив так что копию(...todolist) делать не надо
+//         dispatch(changeTasksFilterAC(todoListsID, filter))
+//     }
 //===============================================================================================
 
 
@@ -154,18 +126,19 @@ function AppRedux() {
             <Grid item key={tl.id}>
                 <Paper style={{backgroundColor: "rgba(0, 0, 0, 0.7)", boxShadow: "1px 1px 10px grey", padding: '10px'}}>
                     <Todolist
-                        todoListID={tl.id}
-                        title={tl.title}//Название проекта
-                        filter={tl.filter}
+                        todolist={tl}
+                        // todoListID={tl.id}
+                        // title={tl.title}//Название проекта
+                        // filter={tl.filter}
                         // tasks={filterTasks}
 
-                        deleteTodolist={deleteTodolist}
-                        changeTasksFilter={changeTasksFilter}
+                        // deleteTodolist={deleteTodolist}
+                        // changeTasksFilter={changeTasksFilter}
                         // changeStatus={changeStatus}
                         // deleteTask={deleteTask}
                         // addItem={addTask}
                         // changeTaskTitle={changeTaskTitle}//редактирование таски title
-                        onChangeHandlerTitleTodolist={onChangeHandlerTitleTodolist}
+                        // onChangeTitleTodolist={onChangeHandlerTitleTodolist}
                     />
                 </Paper>
             </Grid>

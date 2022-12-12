@@ -1,5 +1,5 @@
 import {v1} from "uuid";
-import {AddTodolistACType, DeleteTodolistACType, todolistID_1, todolistID_2} from "./todoListsReducer";
+import {AddTodolistACType, DeleteTodolistACType} from "./todoListsReducer";
 
 export type TasksPropsType = {
     id: string,

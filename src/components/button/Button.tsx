@@ -1,7 +1,5 @@
 import React from 'react';
 import s from './Button.module.css';
-import {IconButton} from "@mui/material";
-import {Delete} from "@mui/icons-material";
 
  type ButtonType = {
     name?: string,
