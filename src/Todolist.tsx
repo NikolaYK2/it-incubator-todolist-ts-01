@@ -15,11 +15,6 @@ import {
     onChangeTitleTodolistAC, TodolistType
 } from "./reducers/todoListsReducer";
 
-// export type TasksPropsType = {
-//     id: string,
-//     title: string,
-//     isDone: boolean,
-// }
 export type TodolistPropsType = {
     todolist : TodolistType
     // todoListID: string;
@@ -30,7 +25,7 @@ export type TodolistPropsType = {
     // // addItem: (id: string, addTitle: string) => void
     // // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
     // // changeTaskTitle: (id: string, newValue: string, taskId: string,) => void,//редактирование title tasks
-    // // deleteTodolist: (id: string) => void
+    // deleteTodolist: (id: string) => void
     // // changeTasksFilter: (id: string, filter: filterValueType,) => void
     // // onChangeHandlerTitleTodolist: (todoId: string, newValue: string,) => void,//изм. title todolist
     // filter: filterValueType,
@@ -78,7 +73,6 @@ export const Todolist = (props: TodolistPropsType) => {
 //         dispatch(changeTaskTitleAC(taskId, newValue, todolistID))
 //     }
 
-
     //================addTask===================================================
     const addTask = (addTitle: string) => {
         dispatch(addTaskAC(addTitle, id))
@@ -109,8 +103,8 @@ export const Todolist = (props: TodolistPropsType) => {
     // }
 
     // delete todolist=======================================
-    const onClickHandlerDeleteTodolist = () => {
-        dispatch(deleteTodolistAC('todolistID'))
+    const onClickHandlerDeleteTodolist = (todolistID: string) => {
+        dispatch(deleteTodolistAC(todolistID))
     }
     //===============================================================
     //=========================ФиЛЬТРАЦИЯ==============================
@@ -210,7 +204,7 @@ export const Todolist = (props: TodolistPropsType) => {
         <div>
             <h3><EditableSpan title={title} onChange={onChangeHandlerTitleTodolist}/></h3>
             {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
-            <IconButton onClick={onClickHandlerDeleteTodolist} color={'error'}>
+            <IconButton onClick={()=>onClickHandlerDeleteTodolist(id)} color={'error'}>
                 <Delete/>
             </IconButton>
             <div className={s.block}>

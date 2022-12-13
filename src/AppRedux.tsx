@@ -10,6 +10,7 @@ import {
 } from "./reducers/todoListsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./reducers/store";
+import {v1} from "uuid";
 
 
 function AppRedux() {
@@ -61,8 +62,8 @@ function AppRedux() {
         // setTodoLists([todolist, ...todoLists])
         // setTasks({...tasks, [todolist.id]: []})
         // dispatch(addTodolistAC(title, todolistID));
-        // const todolistID = v1();
-        dispatch(addTodolistAC(title, 'todolistID'));
+        const todolistID = v1();
+        dispatch(addTodolistAC(title, todolistID));
     }
     //=======Delete todolist========================================================================================================
     // const deleteTodolist = (todolistID: string) => {
