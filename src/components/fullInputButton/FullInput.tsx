@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {UniversalInput} from "../input/UniversalInput";
 import s from "../../Todolist.module.css";
 import {Button} from "../button/Button";
@@ -8,18 +8,18 @@ type FullInputType = {
 }
 
 
-export const FullInput = (props: FullInputType) => {
+export const FullInput = React.memo ((props: FullInputType) => {
     //=======State Добавление таски======================================================
     const [addTitle, setAddTitle] = useState<string>('')
-
-    const onClickHandlerAddTask = () => {
+    console.log('add input')
+    const onClickHandlerAddTask = useCallback(() => {
         if (addTitle.trim() !== '') {//что-б и пробелы не считались за символы, убираем
             props.addItem(addTitle.trim())//trim()- убираем пробелы вначале и конце
             setAddTitle('')
         } else {
             setError('Заполни полe Чувак!')
         }
-    }
+    },[addTitle,props]);
 //=====================================================================================
 
     //=====State Ошибка в случаи попытка отправки пустого поля========================
@@ -56,4 +56,4 @@ export const FullInput = (props: FullInputType) => {
                 {/*{error && <div className={`${errorStop} ${s.block}`}>{error}</div>}*/}
             </>
     );
-};
+});

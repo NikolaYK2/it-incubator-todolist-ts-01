@@ -34,7 +34,7 @@ test('delete todolist',()=>{
 
 test('CHANGE TITLE TODO',()=>{
 
-    const newTodolist = todoListsReducer(todoLists, onChangeTitleTodolistAC('todolistID_1', 'hi'));
+    const newTodolist = todoListsReducer(todoLists, onChangeTitleTodolistAC('todolistID_1', 'Hi'));
     expect(newTodolist[0].title).toBe('Hi')
 })
 

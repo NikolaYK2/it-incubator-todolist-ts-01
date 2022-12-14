@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useCallback} from 'react';
 import s from "./UniversalInput.module.css";
 import {TextField} from "@mui/material";
 
@@ -13,19 +13,21 @@ type UniversalInputType = {
 
 }
 
-export const UniversalInput = (props: UniversalInputType) => {
+export const UniversalInput = React.memo ((props: UniversalInputType) => {
 //добавления значений в инпут============================
-    const onChangeHandlerAddTask = (event: ChangeEvent<HTMLInputElement>) => {
-        props.setError(null)//Когда начинаем писать, ошибка пропадает / можно это прописать и в onKey
+    const onChangeHandlerAddTask = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+        if (props.error !== null){
+            props.setError(null)//Когда начинаем писать, ошибка пропадает / можно это прописать и в onKey
+        }
         props.setAddTitle(event.currentTarget.value);
+    },[props]);
 
-    }
     //Кнопка ввода ENter==================================================
-    const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+    const onKeyDownHandler = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             props.callback()// функция добавления таски
         }
-    }
+    },[props]);
 
 
     return (
@@ -45,5 +47,5 @@ export const UniversalInput = (props: UniversalInputType) => {
             />
         </div>
     );
-};
+});
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import './App.css';
 import {Todolist} from "./Todolist";
 import {FullInput} from "./components/fullInputButton/FullInput";
@@ -14,7 +14,7 @@ import {v1} from "uuid";
 
 
 function AppRedux() {
-
+    console.log('App')
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootState, TodolistType[]>((state)=>state.todoLists);
 //     const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
@@ -57,14 +57,14 @@ function AppRedux() {
 // ============================================================================
 
 // ========Добавление Todolist=============================================================
-    const addTodolist = (title: string) => {
+    const addTodolist = useCallback ((title: string) => {
         // let todolist: TodolistType = {id: v1(), title, filter: 'All',}
         // setTodoLists([todolist, ...todoLists])
         // setTasks({...tasks, [todolist.id]: []})
         // dispatch(addTodolistAC(title, todolistID));
         const todolistID = v1();
         dispatch(addTodolistAC(title, todolistID));
-    }
+    },[dispatch]);
     //=======Delete todolist========================================================================================================
     // const deleteTodolist = (todolistID: string) => {
     //     // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))

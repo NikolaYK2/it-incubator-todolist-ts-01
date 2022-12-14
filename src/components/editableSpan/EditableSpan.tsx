@@ -1,5 +1,5 @@
 import s from "./EditableSpan.module.css";
-import React, {useState, KeyboardEvent, ChangeEvent} from "react";
+import React, {useState, KeyboardEvent, ChangeEvent, useCallback} from "react";
 import {TextField} from "@mui/material";
 
 type EditableSpanType = {
@@ -8,11 +8,14 @@ type EditableSpanType = {
 
 }
 //Делаем спан инпутом когданужно=========================================================
-export const EditableSpan = (props: EditableSpanType) => {
+export const EditableSpan = React.memo((props: EditableSpanType) => {
+    console.log('editblSpan');
     //==Делаем управление не из вне, а state управление самой компонентой
     //=====CONTROL EDITSPAN TASK=====================================================================
-
     let [editMode, setEditMode] = useState(false);
+    //=====CONTROL VALUE=====================================================================
+    let [title, setTitle] = useState(props.title);//props.title cо старта будет то значение котрое приходит в пропсах
+
     // const activateEditMode = () => {
     //     setEditMode(true);
     //     setTitle(props.title);
@@ -22,24 +25,22 @@ export const EditableSpan = (props: EditableSpanType) => {
     //     props.onChange(title);
     // }
     //Сокращенный вариант=============
-    const switching = () => {
+    const switching = useCallback(() => {
         if (title !== '') {
             setEditMode(!editMode);
         }
         props.onChange(title);
-    }
+    },[props, title, editMode]);
 //=============================================================================
     //=====CONTROL VALUE=====================================================================
-
-    let [title, setTitle] = useState(props.title);//props.title cо старта будет то значение котрое приходит в пропсах
-    const onChangeHandlerValue = (e: ChangeEvent<HTMLInputElement>) => {
+    const onChangeHandlerValue = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value);
-    }
-    const onKeyDownHandlerValue = (e: KeyboardEvent<HTMLInputElement>) => {
+    },[]);
+    const onKeyDownHandlerValue = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             switching();
         }
-    }
+    },[switching]);
 
     // ============================================================================
     return (
@@ -64,4 +65,4 @@ export const EditableSpan = (props: EditableSpanType) => {
             />
             : <span className={s.text} onDoubleClick={switching}>{title}</span>
     );
-}
+});
