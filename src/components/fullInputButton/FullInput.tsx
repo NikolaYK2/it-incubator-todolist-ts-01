@@ -10,7 +10,8 @@ type FullInputType = {
 
 export const FullInput = React.memo ((props: FullInputType) => {
     //=======State Добавление таски======================================================
-    const [addTitle, setAddTitle] = useState<string>('')
+    const [addTitle, setAddTitle] = useState<string>('');
+
     console.log('add input')
     const onClickHandlerAddTask = useCallback(() => {
         if (addTitle.trim() !== '') {//что-б и пробелы не считались за символы, убираем
@@ -51,7 +52,7 @@ export const FullInput = React.memo ((props: FullInputType) => {
                         style={errorStop}
                         error={error}
                     />
-                    <Button callBack={() => onClickHandlerAddTask()} style={s.addTask}/>
+                    <Button callBack={onClickHandlerAddTask} style={s.addTask}/>
                 </div>
                 {/*{error && <div className={`${errorStop} ${s.block}`}>{error}</div>}*/}
             </>

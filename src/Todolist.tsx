@@ -210,7 +210,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         <div>
             <h3><EditableSpan title={title} onChange={onChangeHandlerTitleTodolist}/></h3>
             {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
-            <IconButton onClick={() => onClickHandlerDeleteTodolist(id)} color={'error'}>
+            <IconButton onClick={() =>onClickHandlerDeleteTodolist(id)} color={'error'}>
                 <Delete/>
             </IconButton>
             <div className={s.block}>
@@ -258,9 +258,9 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
                 {/*})}*/}
             </ul>
             <div>
-                <Button name='All' callBack={() => changeTasksFilterHandler("All")} style={buttonAll}/>
-                <Button name='Active' callBack={() => changeTasksFilterHandler("Active")} style={buttonActive}/>
-                <Button name='Completed' callBack={() => changeTasksFilterHandler("Completed")} style={buttonCompleted}/>
+                <Button name='All' callBack={useCallback(() => changeTasksFilterHandler("All"),[changeTasksFilterHandler])} style={buttonAll}/>
+                <Button name='Active' callBack={useCallback(() => changeTasksFilterHandler("Active"),[changeTasksFilterHandler])} style={buttonActive}/>
+                <Button name='Completed' callBack={useCallback(() => changeTasksFilterHandler("Completed"),[changeTasksFilterHandler])} style={buttonCompleted}/>
                 {/*<button onClick={() => changeTasksFilter("All")}>All</button>*/}
                 {/*<button onClick={() => changeTasksFilter("Active")}>Active</button>*/}
                 {/*<button onClick={() => changeTasksFilter("Completed")}>Completed</button>*/}
@@ -268,4 +268,5 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         </div>
     );
 });
+
 

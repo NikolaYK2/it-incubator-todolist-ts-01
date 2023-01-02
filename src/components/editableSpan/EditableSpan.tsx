@@ -1,5 +1,5 @@
 import s from "./EditableSpan.module.css";
-import React, {useState, KeyboardEvent, ChangeEvent, useCallback} from "react";
+import React, {useState, KeyboardEvent, ChangeEvent, useCallback, memo} from "react";
 import {TextField} from "@mui/material";
 
 type EditableSpanType = {
@@ -8,7 +8,7 @@ type EditableSpanType = {
 
 }
 //Делаем спан инпутом когданужно=========================================================
-export const EditableSpan = React.memo((props: EditableSpanType) => {
+export const EditableSpan = /*React.*/memo((props: EditableSpanType) => {//можно писать теперь просто memo
     console.log('editblSpan');
     //==Делаем управление не из вне, а state управление самой компонентой
     //=====CONTROL EDITSPAN TASK=====================================================================
