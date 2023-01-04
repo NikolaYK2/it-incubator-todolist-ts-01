@@ -123,6 +123,22 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         //Ассоциативный ===================================================
         filterTasks = tasks.filter(t => !t.isDone);
     }
+
+    // filterTasks = useMemo(()=>{
+    //     if (filter === "Active") {
+    //         // filterTasks = tasks.filter((el) => el.isDone);
+    //         //Ассоциативный ===================================================
+    //         filterTasks = tasks.filter(t => t.isDone);
+    //     }
+    //     if (filter === "Completed") {
+    //         // filterTasks = tasks.filter(el => !el.isDone);
+    //         //Ассоциативный ===================================================
+    //         filterTasks = tasks.filter(t => !t.isDone);
+    //     }
+    //
+    //     return filterTasks;
+    // },[filter, filterTasks]);
+    //
     //==================================================================
 
     // =====================================================================
