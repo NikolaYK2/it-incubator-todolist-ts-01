@@ -7,7 +7,7 @@ import s from "../../Todolist.module.css";
 import {Button} from "../button/Button";
 import {EditableSpan} from "../editableSpan/EditableSpan";
 
-type  TaskType ={
+export type  TaskType ={
     task: TasksPropsType,
     idTodolist: string
 }

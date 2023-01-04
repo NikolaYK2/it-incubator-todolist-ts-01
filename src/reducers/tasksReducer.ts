@@ -11,7 +11,7 @@ export type taskStateType = {
 }
 
 
-const initialState: taskStateType={
+export const initialState: taskStateType={
     // [todolistID_1]: [
     //     {id: v1(), title: "HTML&CSS", isDone: true},
     //     {id: v1(), title: "JS", isDone: true},
