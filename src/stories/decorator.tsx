@@ -41,3 +41,7 @@ export const decorators = [
         </div>
     ),
 ];
+
+// export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {//Функция которая возвращает react компоненту
+//     return <Provider store={store}>{storyFn()}</Provider>
+// }

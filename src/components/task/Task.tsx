@@ -17,6 +17,7 @@ export const Task = React.memo((props:TaskType) => {
 
     //============CHecked===============================
     const changeStatusHandler = useCallback((taskId: string, isDone: boolean,) => {
+        debugger
         dispatch(changeStatusAC(taskId, isDone, props.idTodolist))
         // props.changeStatus(taskId, filter, props.todoListID)
     },[dispatch, props.idTodolist]);

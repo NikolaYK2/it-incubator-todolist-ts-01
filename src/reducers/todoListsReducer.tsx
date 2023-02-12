@@ -16,7 +16,6 @@ const initialState: TodolistType[] = [//первым параметром при
     ];
 
 export const todoListsReducer = (state: TodolistType[] = initialState, action: complexTypeActions):TodolistType[] => {
-
     if (action.type === 'ADD-TODO') {
         // let todolist: TodolistType = {id: v1(), title: action.payload.title, filter: 'All'};
         // setTodoLists([todolist, ...todoLists])

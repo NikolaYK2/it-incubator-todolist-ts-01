@@ -39,7 +39,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     console.log('Todolist')
     const dispatch = useDispatch();
     const tasks = useSelector<AppRootState, TasksPropsType[]>((state) => state.tasks[id]);
-//=======Добавление таски=====================================================================================================
+    //=======Добавление таски=====================================================================================================
 //     const addTask = (addTitle: string, todolistID: string) => {
 // //         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
 // // Acc. масс. =====================================================================
@@ -182,7 +182,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     const changeTasksFilterHandler = useCallback((filter: filterValueType,) => {
         dispatch(changeTasksFilterAC(id, filter,))
         // props.changeTasksFilter(props.todoListID, filter,);
-    },[dispatch, id]);
+    }, [dispatch, id]);
 
 //===========Добавление таски==================================================
     //=======State Добавление таски======================================================
@@ -218,7 +218,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     const onChangeHandlerTitleTodolist = useCallback((newValue: string) => {
         dispatch(onChangeTitleTodolistAC(newValue, id))
         // props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
-    },[dispatch, id]);
+    }, [dispatch, id]);
     // ========================================================================================================
 
 
@@ -226,7 +226,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         <div>
             <h3><EditableSpan title={title} onChange={onChangeHandlerTitleTodolist}/></h3>
             {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
-            <IconButton onClick={() =>onClickHandlerDeleteTodolist(id)} color={'error'}>
+            <IconButton onClick={() => onClickHandlerDeleteTodolist(id)} color={'error'}>
                 <Delete/>
             </IconButton>
             <div className={s.block}>
@@ -274,9 +274,15 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
                 {/*})}*/}
             </ul>
             <div>
-                <Button name='All' callBack={useCallback(() => changeTasksFilterHandler("All"),[changeTasksFilterHandler])} style={buttonAll}/>
-                <Button name='Active' callBack={useCallback(() => changeTasksFilterHandler("Active"),[changeTasksFilterHandler])} style={buttonActive}/>
-                <Button name='Completed' callBack={useCallback(() => changeTasksFilterHandler("Completed"),[changeTasksFilterHandler])} style={buttonCompleted}/>
+                <Button name='All'
+                        callBack={useCallback(() => changeTasksFilterHandler("All"), [changeTasksFilterHandler])}
+                        style={buttonAll}/>
+                <Button name='Active'
+                        callBack={useCallback(() => changeTasksFilterHandler("Active"), [changeTasksFilterHandler])}
+                        style={buttonActive}/>
+                <Button name='Completed'
+                        callBack={useCallback(() => changeTasksFilterHandler("Completed"), [changeTasksFilterHandler])}
+                        style={buttonCompleted}/>
                 {/*<button onClick={() => changeTasksFilter("All")}>All</button>*/}
                 {/*<button onClick={() => changeTasksFilter("Active")}>Active</button>*/}
                 {/*<button onClick={() => changeTasksFilter("Completed")}>Completed</button>*/}
