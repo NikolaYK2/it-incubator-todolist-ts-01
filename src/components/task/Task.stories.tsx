@@ -1,7 +1,7 @@
 import {ComponentMeta, ComponentStory} from "@storybook/react";
 import React from "react";
 import {Task} from "./Task";
-import {decorators} from "../../stories/decorator";
+import {decorators} from "../../stories/decorators/decorator";
 import {useSelector} from "react-redux";
 import {TasksPropsType} from "../../reducers/tasksReducer";
 import {AppRootState} from "../../reducers/store";
