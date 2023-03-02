@@ -8,6 +8,7 @@ export default {
 //TODOl =====================================================
 export const GetTodolist = () => {
     const [state, setState] = useState<any>(null)
+
     useEffect(() => {
         // здесь мы будем делать запрос и ответ закидывать в стейт.
         // который в виде строки будем отображать в div-ке
@@ -16,7 +17,18 @@ export const GetTodolist = () => {
             .then((res) => {
                 setState(res.data);
             })
+
+        // todolistsApi.getTodolists().then(data=>{ - как пример с зарезолвленной сразу датой в DALL
+        //     setState(data);
+        // });
+
+        // const fun = async ()=>{
+        //     return setState(await todolistsApi.getTodolists());
+        // }
+        // fun();
+
     }, [])
+
     return <div>{JSON.stringify(state)}</div>
 }
 
@@ -29,17 +41,19 @@ export const CreateTodolist = () => {
     //             setState(res.data);
     //         })
     // }, [])
-    const addTaskHandle = (title:string) => {
-            todolistsApi.createTodolists(title)
-                // axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'Dim'}, settings)
-                .then((res) => {
-                    setState(res.data);
-                })
+    const addTaskHandle = (title: string) => {
+        todolistsApi.createTodolists(title)
+            // axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'Dim'}, settings)
+            .then((res) => {
+                setState(res.data);
+            })
     }
 
     return <div>{JSON.stringify(state)}
-        <input placeholder={'task'} value={state} onChange={(e)=>{setState(e.currentTarget.value)}}/>
-        <button onClick={()=>addTaskHandle(state)}>add</button>
+        <input placeholder={'task'} value={state} onChange={(e) => {
+            setState(e.currentTarget.value)
+        }}/>
+        <button onClick={() => addTaskHandle(state)}>add</button>
     </div>
 }
 
@@ -85,46 +99,100 @@ export const UpdateTodolistTitle = () => {
     //         })
     // }, [])
 
-    const updTodoHandle=()=>{
-            todolistsApi.updateTodolists(todoId, name)
-                // axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`, {title: 'Nik'}, settings)
-                .then((res) => {
-                    setState(res.data);
-                })
+    const updTodoHandle = () => {
+        todolistsApi.updateTodolists(todoId, name)
+            // axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`, {title: 'Nik'}, settings)
+            .then((res) => {
+                setState(res.data);
+            })
     }
     return <div>{JSON.stringify(state)}
-        <input placeholder={'todoId'} value={todoId} onChange={(e)=>{setTodoId(e.currentTarget.value)}}/>
-        <input placeholder={'name'} value={name} onChange={(e)=>{setName(e.currentTarget.value)}}/>
+        <input placeholder={'todoId'} value={todoId} onChange={(e) => {
+            setTodoId(e.currentTarget.value)
+        }}/>
+        <input placeholder={'name'} value={name} onChange={(e) => {
+            setName(e.currentTarget.value)
+        }}/>
         <button onClick={updTodoHandle}>upd</button>
     </div>
 }
 
 //TASK==============================================================
 export const GetTasks = () => {
-    const [state, setState] = useState<any>(null)
+    const [state, setState] = useState<any>(null);
+    const [id, setId] = useState<any>(null);
+    const [todoId, setTodoId] = useState<string[]>([]);
 
+    console.log(state);
     useEffect(() => {
-        const todolistId = '9608112e-78c9-445b-8485-da26f5101088';
-        todolistsApi.getTasks(todolistId)
+        todolistsApi.getTodolists()
             .then((res) => {
-                setState(res.data);
+                setTodoId(res.data.map(e => e.id));
             })
-    }, [])
-    return <div>{JSON.stringify(state)}</div>
+    }, []);
+
+    // useEffect(() => {
+    //     todolistsApi.getTasks(todoIdStr)
+    //         .then((res) => {
+    //             setState(res.data);
+    //         })
+    // }, [todoIdStr])
+    //
+    // const taskClickHandle = () => {
+    //     todolistsApi.getTasks(todoId)
+    //         .then((res) => {
+    //             setState(res.data);
+    //         })
+    //
+    // }
+
+    const clickHandle = (todoIdStr: string) => {
+        todolistsApi.getTasks(todoIdStr)
+            .then((res) => {
+                setState(res.data.items.map(e=>e.title));
+                setId(res.data.items.map(e=>e.id));
+
+            })
+    }
+    return <div>{JSON.stringify(state)}{JSON.stringify(id)}
+        <div></div>
+        {todoId.map(id => {
+            return (
+                <div onClick={() => clickHandle(id)}>{id}</div>
+            );
+        })}
+        {/*<input placeholder="todolistId" value={todoId} onChange={(e) => setTodoId(e.currentTarget.value)}/>*/}
+        {/*<button onClick={taskClickHandle}>add</button>*/}
+    </div>
 }
 
 export const CreateTask = () => {
-    const [state, setState] = useState<any>(null)
-    useEffect(() => {
-        const todoId = '';
-        todolistsApi.createTask(todoId, 'Nik')
+    const [state, setState] = useState<any>(null);
+    const [todoId, setTodoId] = useState<any>('');
+    const [title, setTitle] = useState<any>('');
+
+    // useEffect(() => {
+    //     const todoId = '';
+    //     todolistsApi.createTask(todoId, 'Nik')
+    //         // axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'Dim'}, settings)
+    //         .then((res) => {
+    //             setState(res.data);
+    //         })
+    // }, [])
+    const taskChangeHandle = () => {
+        todolistsApi.createTask(todoId, title)
             // axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'Dim'}, settings)
             .then((res) => {
                 setState(res.data);
             })
-    }, [])
+    }
 
-    return <div>{JSON.stringify(state)}</div>
+
+    return <div>{JSON.stringify(state)}
+        <input placeholder="todoId" value={todoId} onChange={(e) => setTodoId(e.currentTarget.value)}/>
+        <input placeholder="nameTask" value={title} onChange={(e) => setTitle(e.currentTarget.value)}/>
+        <button onClick={taskChangeHandle}>add</button>
+    </div>
 }
 
 
@@ -166,17 +234,33 @@ export const DeleteTask = () => {
 
 export const UpdateTaskTitle = () => {
     const [state, setState] = useState<any>(null)
-    useEffect(() => {
-        const todolistId = '5f5283bc-64a0-46d9-af00-308cb33e4cb7';
-        const taskId = '5f5283bc-64a0-46d9-af00-308cb33e4cb7';
-        let title:any=null;
-        todolistsApi.updateTask(todolistId, taskId, title)
+    const [taskId, setTaskId] = useState<any>('')
+    const [todoId, setTodoId] = useState<any>('')
+    const [title, setTitle] = useState<any>('')
+    // useEffect(() => {
+    //     const todolistId = '5f5283bc-64a0-46d9-af00-308cb33e4cb7';
+    //     const taskId = '5f5283bc-64a0-46d9-af00-308cb33e4cb7';
+    //     let title: any = null;
+    //     todolistsApi.updateTask(todolistId, taskId, title)
+    //         // axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`, {title: 'Nik'}, settings)
+    //         .then((res) => {
+    //             setState(res.data);
+    //         })
+    //
+    // }, [])
+
+    const clickHandle = () => {
+        todolistsApi.updateTask(todoId, taskId, title)
             // axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${todolistId}`, {title: 'Nik'}, settings)
             .then((res) => {
                 setState(res.data);
             })
+    }
 
-    }, [])
-
-    return <div>{JSON.stringify(state)}</div>
+    return <div>{JSON.stringify(state)}
+        <input placeholder="taskId" value={taskId} onChange={(e) => setTaskId(e.currentTarget.value)}/><br/>
+        <input placeholder="todoId" value={todoId} onChange={(e) => setTodoId(e.currentTarget.value)}/><br/>
+        <input placeholder="title" value={title} onChange={(e) => setTitle(e.currentTarget.value)}/>
+        <button onClick={clickHandle}>add</button>
+    </div>
 }

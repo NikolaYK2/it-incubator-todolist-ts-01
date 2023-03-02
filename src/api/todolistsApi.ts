@@ -9,16 +9,16 @@ import axios from "axios";
 const instance = axios.create({
     withCredentials: true,
     // headers:{
-    //     'API-KEY': сюда свой ключ
-    // }
+    //     'API-KEY': '0317dbf2-f26f-44a4-a811-d77a69628a1e'
+    // },
     baseURL: `https://social-network.samuraijs.com/api/1.1/`,
 })
 // ========= todolistss typeee =================================
 export type TodolistType = {
-    "id": string,
-    'title': string,
-    "addedDate": string,
-    'order': number,
+    id: string,
+    title: string,
+    addedDate: string,
+    order: number,
 }
 
 // type CreateTodolistType= {// Тоже похожий тип, отличие только с обьектом, тут полный в ниже пустой, для этого нужно создать дженерик
@@ -57,8 +57,8 @@ export type UpdTaskType={
     deadline: string,
 }
 export type TaskType = {
-    description: string,
     title: string,
+    description: string,
     completed: boolean,
     status: number,
     priority: number,
@@ -70,8 +70,8 @@ export type TaskType = {
     addedDate: string,
 
 }
-type GetTaskType = {
-    Items: TaskType,
+export type GetTaskType = {
+    items: TaskType[],
     totalCount: number,
     error: string | null,
 }
@@ -82,7 +82,9 @@ export const todolistsApi = {
     getTodolists() {
         //Уточняем что к нам придет массив тудулистов axios.get<Array<TodolistType>>
         // return axios.get<Array<TodolistType>>('https://social-network.samuraijs.com/api/1.1/todo-lists/', settings);
-        return instance.get<Array<TodolistType>>(`todo-lists/`);
+        //Типизируя запросы, нужно ссылаться на тот обьект что прихзодит в response
+        return instance.get<Array<TodolistType>>(`todo-lists/`)/*.then((res) => res.data)*/; //Лишняя строчка кода считаю
+
     },
     createTodolists(title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
         return instance.post<ResponsTodolistsType<{ item: TodolistType }>>('todo-lists/', {title: title});
@@ -91,7 +93,7 @@ export const todolistsApi = {
         return instance.delete<ResponsTodolistsType<{}>>(`todo-lists/${todoId}`);
     },
     updateTodolists(todoId: string, title: string) {
-        return instance.put<ResponsTodolistsType>(`todo-lists/${todoId}`, {title: title});
+        return instance.put<ResponsTodolistsType>(`todo-lists/${todoId}`, {title});
     },
 
     //TASK================================================
@@ -99,12 +101,12 @@ export const todolistsApi = {
         return instance.get<GetTaskType>(`todo-lists/${todoId}/tasks`);
     },
     createTask(todoId:string, title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
-        return instance.post<ResponsTodolistsType>(`todo-lists/${todoId}/tasks`, {title: title});
+        return instance.post<ResponsTodolistsType>(`todo-lists/${todoId}/tasks`, {title});
     },
     deleteTask(todoId: string, taskId:string) {
         return instance.delete<ResponsTodolistsType>(`todo-lists/${todoId}/tasks/${taskId}`);
     },
     updateTask(todoId: string, taskId:string, title: UpdTaskType) {
-        return instance.put<UpdTaskType>(`todo-lists/${todoId}/tasks/${taskId}`, {title: title});
+        return instance.put<UpdTaskType>(`todo-lists/${todoId}/tasks/${taskId}`, {title});
     },
 }

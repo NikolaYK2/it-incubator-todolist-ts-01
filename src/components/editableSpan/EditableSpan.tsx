@@ -45,7 +45,8 @@ export const EditableSpan = /*React.*/memo((props: EditableSpanType) => {//мо�
     // ============================================================================
     return (
         editMode
-            ? /*<input className={s.text__input}
+            ?
+            /*<input className={s.text__input}
                      value={title}
                      onChange={onChangeHandlerValue}
                      onBlur={switching}
