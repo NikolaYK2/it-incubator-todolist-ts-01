@@ -1,26 +1,36 @@
+import {TodolistType} from "../api/todolistsApi";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
-export type TodolistType = {
-    id: string,
-    title: string,
-    filter: filterValueType, //Список отсортированный для всех тудулистов
-}
+// export type TodolistType = {
+//     id: string,
+//     title: string,
+//     filter: filterValueType, //Список отсортированный для всех тудулистов
+// }
 
 // export let todolistID_1 = v1();
 // export let todolistID_2 = v1();
+export type TodoAppApiType = TodolistType & {
+    filter: filterValueType,
 
-const initialState: TodolistType[] = [//первым параметром принимаем редьюсер
+}
+const initialState: TodoAppApiType[] = [//первым параметром принимаем редьюсер
         // {id: todolistID_1, title: 'What to learn', filter: 'All'},
         // {id: todolistID_2, title: 'What to buy', filter: 'All'},
     ];
 
-export const todoListsReducer = (state: TodolistType[] = initialState, action: complexTypeActions):TodolistType[] => {
+export const todoListsReducer = (state = initialState, action: complexTypeActions):TodoAppApiType[] => {
     if (action.type === 'ADD-TODO') {
         // let todolist: TodolistType = {id: v1(), title: action.payload.title, filter: 'All'};
         // setTodoLists([todolist, ...todoLists])
         // setTasks({...tasks, [todolist.id]: []})
-        return [...state, {id: action.payload.todolistID, title: action.payload.title, filter: 'All'}];
+        return [...state, {
+            id: action.payload.todolistID,
+            title: action.payload.title,
+            filter: 'All',
+            addedDate: '',
+            order: 0,
+        }];
     } else if (action.type === 'DELETE-TODO') {
         // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
         // delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было

@@ -1,24 +1,24 @@
 import React, {useCallback} from 'react';
 import {Checkbox} from "@mui/material";
 import {Bookmark, BookmarkBorder} from "@mui/icons-material";
-import {changeStatusAC, changeTaskTitleAC, deleteTaskAC, TasksPropsType} from "../../reducers/tasksReducer";
+import {changeStatusAC, changeTaskTitleAC, deleteTaskAC} from "../../reducers/tasksReducer";
 import {useDispatch} from "react-redux";
 import s from "../../Todolist.module.css";
 import {Button} from "../button/Button";
 import {EditableSpan} from "../editableSpan/EditableSpan";
+import {TaskStatuses, TaskType} from "../../api/todolistsApi";
 
-export type  TaskType ={
-    task: TasksPropsType,
+export type  TaskTypeP ={
+    task: TaskType,
     idTodolist: string
 }
-export const Task = React.memo((props:TaskType) => {
-    const {id, isDone, title} = props.task
+export const Task = React.memo((props:TaskTypeP) => {
+    const {id, status, title} = props.task
     const dispatch = useDispatch();
 
     //============CHecked===============================
-    const changeStatusHandler = useCallback((taskId: string, isDone: boolean,) => {
-        debugger
-        dispatch(changeStatusAC(taskId, isDone, props.idTodolist))
+    const changeStatusHandler = useCallback((taskId: string, status: TaskStatuses,) => {
+        dispatch(changeStatusAC(taskId, status ? TaskStatuses.New : TaskStatuses.Completed, props.idTodolist))
         // props.changeStatus(taskId, filter, props.todoListID)
     },[dispatch, props.idTodolist]);
 
@@ -42,8 +42,8 @@ export const Task = React.memo((props:TaskType) => {
                 {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
                 <Button callBack={() => onClickHandlerDeleteTask(id)} style={s.dellTask}/>
                 <Checkbox
-                    checked={isDone}
-                    onChange={(event) => changeStatusHandler(id, event.currentTarget.checked)}
+                    checked={status === TaskStatuses.Completed}
+                    onChange={() => changeStatusHandler(id, status)}
                     icon={<BookmarkBorder/>}
                     checkedIcon={<Bookmark/>}
                     style={{color: 'darkred'}}

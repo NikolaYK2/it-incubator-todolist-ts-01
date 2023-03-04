@@ -7,18 +7,19 @@ import {IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./reducers/store";
-import {addTaskAC, TasksPropsType} from "./reducers/tasksReducer";
+import {addTaskAC} from "./reducers/tasksReducer";
 import {
     changeTasksFilterAC,
     deleteTodolistAC,
     filterValueType,
     onChangeTitleTodolistAC,
-    TodolistType
+    TodoAppApiType,
 } from "./reducers/todoListsReducer";
 import {Task} from "./components/task/Task";
+import {TaskStatuses, TaskType} from "./api/todolistsApi";
 
 export type TodolistPropsType = {
-    todolist: TodolistType
+    todolist: TodoAppApiType
     // todoListID: string;
     // title: string,
     // // tasks: TasksPropsType[],
@@ -38,7 +39,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     const {id, title, filter} = props.todolist
     console.log('Todolist')
     const dispatch = useDispatch();
-    const tasks = useSelector<AppRootState, TasksPropsType[]>((state) => state.tasks[id]);
+    const tasks = useSelector<AppRootState, TaskType[]>((state) => state.tasks[id]);
     //=======Добавление таски=====================================================================================================
 //     const addTask = (addTitle: string, todolistID: string) => {
 // //         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
@@ -116,12 +117,12 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     if (filter === "Active") {
         // filterTasks = tasks.filter((el) => el.isDone);
         //Ассоциативный ===================================================
-        filterTasks = tasks.filter(t => t.isDone);
+        filterTasks = tasks.filter(t => t.status === TaskStatuses.New);
     }
     if (filter === "Completed") {
         // filterTasks = tasks.filter(el => !el.isDone);
         //Ассоциативный ===================================================
-        filterTasks = tasks.filter(t => !t.isDone);
+        filterTasks = tasks.filter(t => t.status === TaskStatuses.Completed);
     }
 
     // filterTasks = useMemo(()=>{
@@ -156,7 +157,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
             // }
 
             return (
-                <li key={task.id} className={task.isDone ? s.activeTask : ''}>
+                <li key={task.id} className={task.status ? s.activeTask : ''}>
                     {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
                     {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
                     <Task task={task} idTodolist={id}/>

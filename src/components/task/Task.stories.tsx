@@ -1,17 +1,28 @@
 import {ComponentMeta, ComponentStory} from "@storybook/react";
 import React from "react";
 import {Task} from "./Task";
-import {decorators} from "../../stories/decorators/decorator";
 import {useSelector} from "react-redux";
-import {TasksPropsType} from "../../reducers/tasksReducer";
 import {AppRootState} from "../../reducers/store";
+import {TaskStatuses, TaskType, TodoTaskPriorities} from "../../api/todolistsApi";
+import {decorators} from "../../stories/decorators/decorator";
 
 export default {
     title: 'Components/Task',
     component: Task,
     decorators: decorators,
     args: {
-        task: {id: '2', isDone: true, title: 'JS'},
+        task: {
+            id: '2',
+            title: 'JS',
+            status: TaskStatuses.Completed,
+            addedDate: '',
+            startDate: '',
+            deadline: '',
+            order: 0,
+            priority: TodoTaskPriorities.Low,
+            todoListId: 'todolistID_2',
+            description: ''
+        },
         idTodolist: '1',
     }
 } as ComponentMeta<typeof Task>;
@@ -43,7 +54,18 @@ TaskExamplete1.parameters = {
 
 export const TaskExamplete2 = Template.bind({});
 TaskExamplete2.args = {
-    task: {id: '2', isDone: false, title: 'JS'},
+    task: {
+        id: '2',
+        status: TaskStatuses.New,
+        title: 'JS',
+        addedDate: '',
+        startDate: '',
+        deadline: '',
+        order: 0,
+        priority: TodoTaskPriorities.Low,
+        todoListId: 'todolistID_2',
+        description: ''
+    },
 };
 TaskExamplete2.parameters = {
     backgrounds: {
@@ -77,9 +99,9 @@ TaskExamplete2.parameters = {
 //     },
 // }
 
-//REDUX======================================================================================
-const TaskWithRedux = ()=>{
-    const tasks = useSelector<AppRootState, TasksPropsType>((state) => state.tasks['todolistID_1'][0]);
+//REDUX нужно обернуть в оболочку редакторскую компоненту======================================================================================
+const TaskWithRedux = () => {
+    const tasks = useSelector<AppRootState, TaskType>((state) => state.tasks['todolistID_1'][0]);
 
     return <Task task={tasks} idTodolist={'todolistID_1'}/>
 }

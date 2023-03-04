@@ -1,11 +1,5 @@
 import axios from "axios";
 
-// const settings = {
-//     withCredentials: true,
-//     // headers:{
-//     //     'API-KEY': сюда свой ключ
-//     // }
-// }
 const instance = axios.create({
     withCredentials: true,
     // headers:{
@@ -47,24 +41,38 @@ type ResponsTodolistsType<D = {}> = {//D - уточняем наш дженер�
 // }
 
 //tasks type==============================================
+export enum TaskStatuses {//Тип данных. Перечисление всех возможных вариантов
+    New = 0,//Где isDOne false = New
+    InProgress = 1,
+    Completed = 2,//выполнено,типо isDone ture
+    Draft = 3
+}
+
+export enum TodoTaskPriorities {//Тип данных. Перечисление всех возможных вариантов
+    Low = 0,
+    Middle = 1,
+    Hi = 2,
+    Urgently = 3,
+    Later = 4
+}
+
 export type UpdTaskType={
     title: string,
     description: string,
-    completed: boolean,
-    status: number,
-    priority: number,
+    status: TaskStatuses,
+    priority: TodoTaskPriorities,
     startDate: string,
     deadline: string,
 }
 export type TaskType = {
+    id: string,
     title: string,
     description: string,
-    completed: boolean,
-    status: number,
-    priority: number,
+    // completed: boolean,
+    status: TaskStatuses,
+    priority: TodoTaskPriorities,
     startDate: string,
     deadline: string,
-    id: string,
     todoListId: string,
     order: number,
     addedDate: string,
@@ -101,12 +109,12 @@ export const todolistsApi = {
         return instance.get<GetTaskType>(`todo-lists/${todoId}/tasks`);
     },
     createTask(todoId:string, title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
-        return instance.post<ResponsTodolistsType>(`todo-lists/${todoId}/tasks`, {title});
+        return instance.post<ResponsTodolistsType<TaskType>>(`todo-lists/${todoId}/tasks`, {title});
     },
     deleteTask(todoId: string, taskId:string) {
         return instance.delete<ResponsTodolistsType>(`todo-lists/${todoId}/tasks/${taskId}`);
     },
-    updateTask(todoId: string, taskId:string, title: UpdTaskType) {
-        return instance.put<UpdTaskType>(`todo-lists/${todoId}/tasks/${taskId}`, {title});
+    updateTask(todoId: string, taskId:string, data: UpdTaskType) {
+        return instance.put<ResponsTodolistsType>(`todo-lists/${todoId}/tasks/${taskId}`, data);
     },
 }

@@ -5,8 +5,7 @@ import {FullInput} from "./components/fullInputButton/FullInput";
 import {Container, Grid, Paper} from "@mui/material";
 import ButtonAppBar from "./components/buttonAppBar/ButtonAppBar";
 import {
-    addTodolistAC,
-    TodolistType,
+    addTodolistAC, TodoAppApiType,
 } from "./reducers/todoListsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./reducers/store";
@@ -16,7 +15,7 @@ import {v1} from "uuid";
 function AppRedux() {
     console.log('App')
     const dispatch = useDispatch();
-    const todoLists = useSelector<AppRootState, TodolistType[]>((state)=>state.todoLists);
+    const todoLists = useSelector<AppRootState, TodoAppApiType[]>((state)=>state.todoLists);
 //     const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
 // //=======Добавление таски=====================================================================================================
 //     const addTask = (addTitle: string, todolistID: string) => {
