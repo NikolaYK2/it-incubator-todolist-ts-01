@@ -1,4 +1,5 @@
-import {TodolistType} from "../api/todolistsApi";
+import {todolistsApi, TodolistType} from "../api/todolistsApi";
+import {Dispatch} from "redux";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
@@ -15,11 +16,11 @@ export type TodoAppApiType = TodolistType & {
 
 }
 const initialState: TodoAppApiType[] = [//первым параметром принимаем редьюсер
-        // {id: todolistID_1, title: 'What to learn', filter: 'All'},
-        // {id: todolistID_2, title: 'What to buy', filter: 'All'},
-    ];
+    // {id: todolistID_1, title: 'What to learn', filter: 'All'},
+    // {id: todolistID_2, title: 'What to buy', filter: 'All'},
+];
 
-export const todoListsReducer = (state = initialState, action: complexTypeActions):TodoAppApiType[] => {
+export const todoListsReducer = (state = initialState, action: complexTypeActions): TodoAppApiType[] => {
     if (action.type === 'ADD-TODO') {
         // let todolist: TodolistType = {id: v1(), title: action.payload.title, filter: 'All'};
         // setTodoLists([todolist, ...todoLists])
@@ -42,7 +43,14 @@ export const todoListsReducer = (state = initialState, action: complexTypeAction
         //     setFilterValue(filterValue);
         // setTodoLists(todoLists.map(tl => tl.id === todoListsID ? {...tl, filter} : tl))
         //map создает новый массив так что копию(...todolist) делать не надо
-        return state.map(todoFil => todoFil.id === action.payload.todoListsID ? {...todoFil, filter: action.payload.filter} : todoFil);
+        return state.map(todoFil => todoFil.id === action.payload.todoListsID ? {
+            ...todoFil,
+            filter: action.payload.filter
+        } : todoFil);
+    } else if (action.type === "SET-TODOLISTS") {
+        return action.payload.todoLists.map(tl => {
+            return {...tl, filter: 'All'}
+        })
     }
     return state;
 };
@@ -52,11 +60,12 @@ export type complexTypeActions =
     AddTodolistACType |
     DeleteTodolistACType |
     OnChangeTitleTodolistACType |
-    ChangeTasksFilterACType;
+    ChangeTasksFilterACType |
+    SetTodolistsACType;
 
 
 export type AddTodolistACType = ReturnType<typeof addTodolistAC>
-export const addTodolistAC = (title: string, todolistID:string) => {
+export const addTodolistAC = (title: string, todolistID: string) => {
     return {
         type: 'ADD-TODO',
         payload: {
@@ -97,4 +106,31 @@ export const changeTasksFilterAC = (todoListsID: string, filter: filterValueType
             filter,
         }
     } as const;
+}
+
+export type SetTodolistsACType = ReturnType<typeof setTodolistsAC>
+export const setTodolistsAC = (todoLists: TodolistType[]) => {
+    return {
+        type: 'SET-TODOLISTS',
+        payload: {
+            todoLists,
+        }
+    } as const;
+}
+
+
+//THUNK ===========================================================================
+// export const setTodolistsThunk =/*()=>{
+//     return */(dispatch: Dispatch<complexTypeActions>) => {
+//     todolistsApi.getTodolists()
+//         .then(res => {
+//             dispatch(setTodolistsAC(res.data))
+//         })
+// }
+export const setTodolistsThunkCreator = () => {
+    return (dispatch: Dispatch<complexTypeActions>) => {
+        todolistsApi.getTodolists().then(res => {
+            dispatch(setTodolistsAC(res.data))
+        })
+    }
 }

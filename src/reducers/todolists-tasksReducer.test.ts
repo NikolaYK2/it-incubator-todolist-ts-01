@@ -3,7 +3,6 @@ import {tasksReducer, taskStateType} from "./tasksReducer";
 import {TaskStatuses, TodoTaskPriorities} from "../api/todolistsApi";
 
 
-
 test('ids should be equals', () => {
     const todoLists: TodoAppApiType[] = [];
     const tasks: taskStateType = {};
@@ -118,5 +117,20 @@ test('delete todolist and task', () => {
 
     expect(keys.length).toBe(1);
     expect(newTask['todolistID_1']).not.toBeDefined();
+})
+
+test('set todo and task', () => {
+    // const todoLists: TodoAppApiType[] = [];
+    // const tasks: taskStateType = {};
+    //
+    // const newTodoLists = setTodolistsAC([], addTodolistAC(todoLists))
+    // const newTasks = tasksReducer({}, addTodolistAC('title', 'todolistID'));
+    //
+    // const keys = Object.keys(newTasks);
+    // const idFromTodoLists = newTodoLists[0].id;
+    // const idFromTasks = keys[0];
+    //
+    // expect(idFromTodoLists).toBe('todolistID');
+    // expect(idFromTasks).toBe('todolistID');
 })
 

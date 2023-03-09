@@ -1,7 +1,7 @@
 import {
     addTodolistAC,
     changeTasksFilterAC,
-    deleteTodolistAC, onChangeTitleTodolistAC, TodoAppApiType,
+    deleteTodolistAC, onChangeTitleTodolistAC, setTodolistsAC, TodoAppApiType,
     todoListsReducer,
 } from "./todoListsReducer";
 
@@ -40,6 +40,11 @@ test('CHANGE TITLE TODO',()=>{
 test('TASK FILTER TODO',()=>{
     const newTodolist = todoListsReducer(todoLists, changeTasksFilterAC('todolistID_1', 'Active'));
     expect(newTodolist[0].filter).toBe('Active')
+})
+
+test('SET TODO',()=>{
+    const newTodolist = todoListsReducer([], setTodolistsAC(todoLists));
+    expect(newTodolist.length).toBe(2)
 })
 
 

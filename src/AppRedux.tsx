@@ -1,22 +1,33 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect} from "react";
 import './App.css';
 import {Todolist} from "./Todolist";
 import {FullInput} from "./components/fullInputButton/FullInput";
 import {Container, Grid, Paper} from "@mui/material";
 import ButtonAppBar from "./components/buttonAppBar/ButtonAppBar";
-import {
-    addTodolistAC, TodoAppApiType,
-} from "./reducers/todoListsReducer";
+import {addTodolistAC, setTodolistsThunkCreator, TodoAppApiType,} from "./reducers/todoListsReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState} from "./reducers/store";
+import {AppRootState, AppThunkDispatch} from "./reducers/store";
 import {v1} from "uuid";
 
 
 function AppRedux() {
     console.log('App')
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppThunkDispatch>();
     const todoLists = useSelector<AppRootState, TodoAppApiType[]>((state)=>state.todoLists);
-//     const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
+
+    //Достаем тудулисты ========================================
+    useEffect(()=>{
+        dispatch(setTodolistsThunkCreator());//С функцией TC
+        // dispatch(setTodolistsThunkCreator); //Без функции TC
+        // setTodolistsThunkCreator(dispatch);
+
+        // todolistsApi.getTodolists()
+        //     .then(res=>{
+        //         dispatch(setTodolistsAC(res.data));
+        //     })
+    },[])
+
+    //     const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
 // //=======Добавление таски=====================================================================================================
 //     const addTask = (addTitle: string, todolistID: string) => {
 // //         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])

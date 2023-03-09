@@ -1,5 +1,13 @@
-import {addTaskAC, changeStatusAC, changeTaskTitleAC, deleteTaskAC, tasksReducer, taskStateType} from "./tasksReducer";
-import {addTodolistAC} from "./todoListsReducer";
+import {
+    addTaskAC,
+    changeStatusAC,
+    changeTaskTitleAC,
+    deleteTaskAC,
+    setTasksAC,
+    tasksReducer,
+    taskStateType
+} from "./tasksReducer";
+import {addTodolistAC, setTodolistsAC} from "./todoListsReducer";
 import {TaskStatuses, TodoTaskPriorities} from "../api/todolistsApi";
 
 let tasks: taskStateType;
@@ -166,9 +174,33 @@ test('change task title', () => {
 
 test('change task status', () => {
 
-
     const newTasks = tasksReducer(tasks, changeStatusAC('2', TaskStatuses.New, 'todolistID_1'));
 
     expect(newTasks['todolistID_1'][1].status).toBe(TaskStatuses.New);
     expect(tasks['todolistID_1'][1].status).toBe(TaskStatuses.Completed);
+})
+
+test('пустые массивы должны быть добавлены, когда мы set todolists', () => {
+
+    const newTasks = tasksReducer({}, setTodolistsAC([
+        {id: '1', title: 'title1', order: 0, addedDate: ''},
+        {id: '2', title: 'title2', order: 0, addedDate: ''},]));
+
+    const keys = Object.keys(newTasks);
+
+    expect(keys.length).toBe(2);
+    expect(newTasks['1']).toStrictEqual([]);
+    expect(newTasks['2']).toStrictEqual([]);
+})
+
+test('tasks для todo должны быть добавлены', () => {
+
+    const newTasks = tasksReducer({
+        'todolistID_2':[],
+        'todolistID_1':[]
+    }, setTasksAC('todolistID_1', tasks['todolistID_1']));
+
+
+    expect(newTasks['todolistID_1'].length).toBe(4);
+    expect(newTasks['todolistID_2'].length).toBe(0);
 })
