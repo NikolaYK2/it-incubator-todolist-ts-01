@@ -7,12 +7,12 @@ import {IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState, AppThunkDispatch} from "./reducers/store";
-import {addTaskAC, setTasksTC} from "./reducers/tasksReducer";
+import {addTasksTC, setTasksTC} from "./reducers/tasksReducer";
 import {
     changeTasksFilterAC,
-    deleteTodolistAC,
+    changeTitleTodoThunkCreator,
+    deleteTodoThunkCreator,
     filterValueType,
-    onChangeTitleTodolistAC,
     TodoAppApiType,
 } from "./reducers/todoListsReducer";
 import {Task} from "./components/task/Task";
@@ -82,8 +82,10 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 //     }
 
     //================addTask===================================================
-    const addTask = useCallback((addTitle: string) => {
-        dispatch(addTaskAC(addTitle, id))
+    const addTask = useCallback((title:string) => {
+        // dispatch(addTaskAC(addTitle, id));
+        dispatch(addTasksTC(id, title))
+
         // props.addItem(title, props.todoListID);
     }, [dispatch, id]);
     // // //Удаление таски==============================================================
@@ -111,7 +113,8 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 
     // delete todolist=======================================
     const onClickHandlerDeleteTodolist = useCallback((todolistID: string) => {
-        dispatch(deleteTodolistAC(todolistID))
+        // dispatch(deleteTodolistAC(todolistID));
+        dispatch(deleteTodoThunkCreator(todolistID));
     }, [dispatch]);
     //===============================================================
     //=========================ФиЛЬТРАЦИЯ==============================
@@ -187,6 +190,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
     const changeTasksFilterHandler = useCallback((filter: filterValueType,) => {
         dispatch(changeTasksFilterAC(id, filter,))
         // props.changeTasksFilter(props.todoListID, filter,);
+
     }, [dispatch, id]);
 
 //===========Добавление таски==================================================
@@ -221,8 +225,10 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 // =============================================================================
     //Изм. todolist======================================================================================
     const onChangeHandlerTitleTodolist = useCallback((newValue: string) => {
-        dispatch(onChangeTitleTodolistAC(newValue, id))
+        // dispatch(onChangeTitleTodolistAC(newValue, id))
         // props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
+
+        dispatch(changeTitleTodoThunkCreator(id, newValue));
     }, [dispatch, id]);
     // ========================================================================================================
 

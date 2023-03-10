@@ -1,6 +1,6 @@
 import {addTodolistAC, deleteTodolistAC, TodoAppApiType, todoListsReducer} from "./todoListsReducer";
 import {tasksReducer, taskStateType} from "./tasksReducer";
-import {TaskStatuses, TodoTaskPriorities} from "../api/todolistsApi";
+import {TaskStatuses, TodolistType, TodoTaskPriorities} from "../api/todolistsApi";
 
 
 test('ids should be equals', () => {
@@ -9,8 +9,12 @@ test('ids should be equals', () => {
 
     // const action = addTaskTodoAC('new todolist');
 
-    const newTodoLists = todoListsReducer(todoLists, addTodolistAC('title', 'todolistID'))
-    const newTasks = tasksReducer(tasks, addTodolistAC('title', 'todolistID'));
+    const newTodoLists = todoListsReducer(todoLists, addTodolistAC({
+        id: 'todolistID', title: 'What to learn', order: 0, addedDate: ''
+    }))
+    const newTasks = tasksReducer(tasks, addTodolistAC({
+        id: 'todolistID', title: 'What to learn', order: 0, addedDate: ''
+    }));
 
     const keys = Object.keys(newTasks);
     const idFromTodoLists = newTodoLists[0].id;
@@ -120,17 +124,26 @@ test('delete todolist and task', () => {
 })
 
 test('set todo and task', () => {
-    // const todoLists: TodoAppApiType[] = [];
-    // const tasks: taskStateType = {};
-    //
-    // const newTodoLists = setTodolistsAC([], addTodolistAC(todoLists))
-    // const newTasks = tasksReducer({}, addTodolistAC('title', 'todolistID'));
-    //
-    // const keys = Object.keys(newTasks);
-    // const idFromTodoLists = newTodoLists[0].id;
-    // const idFromTasks = keys[0];
-    //
-    // expect(idFromTodoLists).toBe('todolistID');
-    // expect(idFromTasks).toBe('todolistID');
+    const todoLists: TodoAppApiType[] = [];
+    const tasks: taskStateType = {};
+
+    let todolist: TodolistType = {
+        id: 'todolistID_1',
+        title: 'What to learn',
+        order: 0,
+        addedDate: ''
+
+    }
+
+
+    const newTodoLists = todoListsReducer(todoLists, addTodolistAC(todolist))
+    const newTasks = tasksReducer(tasks, addTodolistAC(todolist));
+
+    const keys = Object.keys(newTasks);
+    const idFromTodoLists = newTodoLists[0].id;
+    const idFromTasks = keys[0];
+
+    expect(idFromTodoLists).toBe(todolist.id);
+    expect(idFromTasks).toBe(todolist.id);
 })
 

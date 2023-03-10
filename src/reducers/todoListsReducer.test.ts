@@ -7,42 +7,45 @@ import {
 
 
 let todoLists: TodoAppApiType[];
-beforeEach(()=>{
+beforeEach(() => {
     todoLists = [
-        {id: 'todolistID_1', title: 'What to learn', filter: 'All', order: 0, addedDate:''},
-        {id: 'todolistID_2', title: 'What to buy', filter: 'All', order: 0, addedDate:''},
+        {id: 'todolistID_1', title: 'What to learn', filter: 'All', order: 0, addedDate: ''},
+        {id: 'todolistID_2', title: 'What to buy', filter: 'All', order: 0, addedDate: ''},
     ];
 
 })
-test('add new todolist',()=>{
+test('add new todolist', () => {
 
     // const todoLists: TodolistType[] = [
     //     {id: todolistID_1, title: 'What to learn', filter: 'All'},
     //     {id: todolistID_2, title: 'What to buy', filter: 'All'},
     // ];
-    const newTodolist = todoListsReducer(todoLists, addTodolistAC('title', 'todolistID'));
+    const newTodolist = todoListsReducer(todoLists, addTodolistAC({
+            id: 'todolistID_1', title: 'What to learn', order: 0, addedDate: ''
+        },
+    ));
     expect(newTodolist.length).toBe(3)
     expect(todoLists.length).toBe(2)
 })
 
-test('delete todolist',()=>{
+test('delete todolist', () => {
 
     const newTodolist = todoListsReducer(todoLists, deleteTodolistAC('todolistID_1'));
     expect(newTodolist.length).toBe(1)
 })
 
-test('CHANGE TITLE TODO',()=>{
+test('CHANGE TITLE TODO', () => {
 
     const newTodolist = todoListsReducer(todoLists, onChangeTitleTodolistAC('todolistID_1', 'Hi'));
     expect(newTodolist[0].title).toBe('Hi')
 })
 
-test('TASK FILTER TODO',()=>{
+test('TASK FILTER TODO', () => {
     const newTodolist = todoListsReducer(todoLists, changeTasksFilterAC('todolistID_1', 'Active'));
     expect(newTodolist[0].filter).toBe('Active')
 })
 
-test('SET TODO',()=>{
+test('SET TODO', () => {
     const newTodolist = todoListsReducer([], setTodolistsAC(todoLists));
     expect(newTodolist.length).toBe(2)
 })

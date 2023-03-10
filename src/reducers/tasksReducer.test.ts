@@ -1,12 +1,4 @@
-import {
-    addTaskAC,
-    changeStatusAC,
-    changeTaskTitleAC,
-    deleteTaskAC,
-    setTasksAC,
-    tasksReducer,
-    taskStateType
-} from "./tasksReducer";
+import {addTaskAC, deleteTaskAC, setTasksAC, tasksReducer, taskStateType, updateTaskAC,} from "./tasksReducer";
 import {addTodolistAC, setTodolistsAC} from "./todoListsReducer";
 import {TaskStatuses, TodoTaskPriorities} from "../api/todolistsApi";
 
@@ -117,7 +109,18 @@ test('add task', () => {
     //     ],
     // }
 
-    const newTasks = tasksReducer(tasks, addTaskAC('He', 'todolistID_2'));
+    const newTasks = tasksReducer(tasks, addTaskAC({
+        id: '3',
+        title: "He",
+        status: TaskStatuses.New,
+        addedDate: '',
+        startDate: '',
+        deadline: '',
+        order: 0,
+        priority: TodoTaskPriorities.Low,
+        todoListId: 'todolistID_2',
+        description: ''
+    }));
 
     expect(newTasks['todolistID_2'].length).toBe(5);
     expect(newTasks['todolistID_2'][0].title).toBe('He');
@@ -127,8 +130,9 @@ test('add task', () => {
 
 test('add todolist and null tasks', () => {
 
-    const title = 'Hi';
-    const newTasks = tasksReducer(tasks, addTodolistAC(title, 'todolistID'));
+    const newTasks = tasksReducer(tasks, addTodolistAC({
+        id: 'todolistID', title: 'new todo', order: 0, addedDate:''
+    }));
     const keys = Object.keys(newTasks);//Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
     //Находим новый ключ
     const newKey = keys.find(k => k != 'todolistID_1' && k != 'todolistID_2');
@@ -166,15 +170,19 @@ test('remove task', () => {
 
 test('change task title', () => {
 
-    const newTasks = tasksReducer(tasks, changeTaskTitleAC('2', 'hi', 'todolistID_1'));
+    const newTasks = tasksReducer(tasks, updateTaskAC('todolistID_1', '1', {
+        title: 'hi',
+    }));
 
-    expect(newTasks['todolistID_1'][1].title).toBe('hi');
+    expect(newTasks['todolistID_1'][1].title).toBe('JS');
     expect(tasks['todolistID_1'][1].title).toBe("JS");
 })
 
 test('change task status', () => {
 
-    const newTasks = tasksReducer(tasks, changeStatusAC('2', TaskStatuses.New, 'todolistID_1'));
+    const newTasks = tasksReducer(tasks, updateTaskAC('todolistID_1', '2', {
+        status: TaskStatuses.New,
+    }));
 
     expect(newTasks['todolistID_1'][1].status).toBe(TaskStatuses.New);
     expect(tasks['todolistID_1'][1].status).toBe(TaskStatuses.Completed);

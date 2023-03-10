@@ -25,20 +25,17 @@ export const todoListsReducer = (state = initialState, action: complexTypeAction
         // let todolist: TodolistType = {id: v1(), title: action.payload.title, filter: 'All'};
         // setTodoLists([todolist, ...todoLists])
         // setTasks({...tasks, [todolist.id]: []})
-        return [...state, {
-            id: action.payload.todolistID,
-            title: action.payload.title,
-            filter: 'All',
-            addedDate: '',
-            order: 0,
-        }];
+        return [{...action.payload.todolist, filter:'All'}, ...state];
+
     } else if (action.type === 'DELETE-TODO') {
         // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
         // delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
         return state.filter(todo => todo.id !== action.payload.todolistID)
+
     } else if (action.type === 'CHANGE-TITLE-TODO') {
         // setTodoLists(todoLists.map(tl => tl.id === todoId ? {...tl, title: newValue} : tl));
         return state.map(todo => todo.id === action.payload.todoId ? {...todo, title: action.payload.newValue} : todo);
+
     } else if (action.type === 'TASK-FILTER-TODO') {
         //     setFilterValue(filterValue);
         // setTodoLists(todoLists.map(tl => tl.id === todoListsID ? {...tl, filter} : tl))
@@ -47,6 +44,7 @@ export const todoListsReducer = (state = initialState, action: complexTypeAction
             ...todoFil,
             filter: action.payload.filter
         } : todoFil);
+
     } else if (action.type === "SET-TODOLISTS") {
         return action.payload.todoLists.map(tl => {
             return {...tl, filter: 'All'}
@@ -65,12 +63,11 @@ export type complexTypeActions =
 
 
 export type AddTodolistACType = ReturnType<typeof addTodolistAC>
-export const addTodolistAC = (title: string, todolistID: string) => {
+export const addTodolistAC = (todolist: TodolistType) => {
     return {
         type: 'ADD-TODO',
         payload: {
-            title,
-            todolistID,
+            todolist
         }
     } as const;
 
@@ -131,6 +128,30 @@ export const setTodolistsThunkCreator = () => {
     return (dispatch: Dispatch<complexTypeActions>) => {
         todolistsApi.getTodolists().then(res => {
             dispatch(setTodolistsAC(res.data))
+        })
+    }
+}
+
+export const addTodoThunkCreator = (title:string) => {
+    return (dispatch: Dispatch<complexTypeActions>) => {
+        todolistsApi.createTodolists(title).then(res => {
+            dispatch(addTodolistAC(res.data.data.item));
+        })
+    }
+}
+
+export const deleteTodoThunkCreator = (todoId:string) => {
+    return (dispatch: Dispatch<complexTypeActions>) => {
+        todolistsApi.deleteTodolists(todoId).then(res => {
+            dispatch(deleteTodolistAC(todoId));
+        })
+    }
+}
+
+export const changeTitleTodoThunkCreator = (todoId: string, title: string) => {
+    return (dispatch: Dispatch<complexTypeActions>) => {
+        todolistsApi.updateTodolists(todoId,title).then(res => {
+            dispatch(onChangeTitleTodolistAC(todoId, title));
         })
     }
 }

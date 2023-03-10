@@ -56,7 +56,7 @@ export enum TodoTaskPriorities {//Тип данных. Перечисление 
     Later = 4
 }
 
-export type UpdTaskType={
+export type UpdTaskType = {
     title: string,
     description: string,
     status: TaskStatuses,
@@ -108,13 +108,13 @@ export const todolistsApi = {
     getTasks(todoId: string) {
         return instance.get<GetTaskType>(`todo-lists/${todoId}/tasks`);
     },
-    createTask(todoId:string, title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
-        return instance.post<ResponsTodolistsType<TaskType>>(`todo-lists/${todoId}/tasks`, {title});
+    createTask(todoId: string, title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
+        return instance.post<ResponsTodolistsType<{ item: TaskType }>>(`todo-lists/${todoId}/tasks`, {title});
     },
-    deleteTask(todoId: string, taskId:string) {
+    deleteTask(todoId: string, taskId: string) {
         return instance.delete<ResponsTodolistsType>(`todo-lists/${todoId}/tasks/${taskId}`);
     },
-    updateTask(todoId: string, taskId:string, data: UpdTaskType) {
-        return instance.put<ResponsTodolistsType>(`todo-lists/${todoId}/tasks/${taskId}`, data);
+    updateTask(todoId: string, taskId: string, data: UpdTaskType) {
+        return instance.put<ResponsTodolistsType<{ item: TaskType }>>(`todo-lists/${todoId}/tasks/${taskId}`, data);
     },
 }

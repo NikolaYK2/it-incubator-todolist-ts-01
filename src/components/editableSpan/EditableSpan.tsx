@@ -62,7 +62,7 @@ export const EditableSpan = /*React.*/memo((props: EditableSpanType) => {//мо�
                 onBlur={switching}
                 onKeyDown={onKeyDownHandlerValue}
                 autoFocus
-                sx={{input:{color: '#f5f5f5', width: '100px', padding:'10px 0 0 0'}}}
+                sx={{input:{color: '#f5f5f5', maxWidth: '150px', padding:'10px 0 0 0'}}}
             />
             : <span className={s.text} onDoubleClick={switching}>{title}</span>
     );

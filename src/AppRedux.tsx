@@ -4,19 +4,18 @@ import {Todolist} from "./Todolist";
 import {FullInput} from "./components/fullInputButton/FullInput";
 import {Container, Grid, Paper} from "@mui/material";
 import ButtonAppBar from "./components/buttonAppBar/ButtonAppBar";
-import {addTodolistAC, setTodolistsThunkCreator, TodoAppApiType,} from "./reducers/todoListsReducer";
+import {addTodoThunkCreator, setTodolistsThunkCreator, TodoAppApiType,} from "./reducers/todoListsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState, AppThunkDispatch} from "./reducers/store";
-import {v1} from "uuid";
 
 
 function AppRedux() {
     console.log('App')
     const dispatch = useDispatch<AppThunkDispatch>();
-    const todoLists = useSelector<AppRootState, TodoAppApiType[]>((state)=>state.todoLists);
+    const todoLists = useSelector<AppRootState, TodoAppApiType[]>((state) => state.todoLists);
 
     //Достаем тудулисты ========================================
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(setTodolistsThunkCreator());//С функцией TC
         // dispatch(setTodolistsThunkCreator); //Без функции TC
         // setTodolistsThunkCreator(dispatch);
@@ -25,7 +24,7 @@ function AppRedux() {
         //     .then(res=>{
         //         dispatch(setTodolistsAC(res.data));
         //     })
-    },[])
+    }, [])
 
     //     const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
 // //=======Добавление таски=====================================================================================================
@@ -67,14 +66,16 @@ function AppRedux() {
 // ============================================================================
 
 // ========Добавление Todolist=============================================================
-    const addTodolist = useCallback ((title: string) => {
+    const addTodolist = useCallback((title: string) => {
         // let todolist: TodolistType = {id: v1(), title, filter: 'All',}
         // setTodoLists([todolist, ...todoLists])
         // setTasks({...tasks, [todolist.id]: []})
         // dispatch(addTodolistAC(title, todolistID));
-        const todolistID = v1();
-        dispatch(addTodolistAC(title, todolistID));
-    },[dispatch]);
+        // const todolistID = v1();
+        // dispatch(addTodolistAC(title, todolistID));
+
+        dispatch(addTodoThunkCreator(title));
+    }, [dispatch]);
     //=======Delete todolist========================================================================================================
     // const deleteTodolist = (todolistID: string) => {
     //     // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
