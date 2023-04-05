@@ -1,13 +1,13 @@
 import React, {useCallback} from 'react';
 import {Checkbox} from "@mui/material";
 import {Bookmark, BookmarkBorder} from "@mui/icons-material";
-import {deleteTasksTC, updateTaskTC} from "../../reducers/tasksReducer";
+import {deleteTasksTC, updateTaskTC} from "../../tasksReducer";
 import {useDispatch} from "react-redux";
-import s from "../../Todolist.module.css";
-import {Button} from "../button/Button";
-import {EditableSpan} from "../editableSpan/EditableSpan";
-import {TaskStatuses, TaskType} from "../../api/todolistsApi";
-import {AppThunkDispatch} from "../../reducers/store";
+import s from "../Todolist.module.css";
+import {Button} from "../../../../components/button/Button";
+import {EditableSpan} from "../../../../components/editableSpan/EditableSpan";
+import {TaskStatuses, TaskType} from "../../../../api/todolistsApi";
+import {AppThunkDispatch} from "../../../../app/store";
 
 export type  TaskTypeP = {
     task: TaskType,

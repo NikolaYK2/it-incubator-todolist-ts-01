@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {UniversalInput} from "../input/UniversalInput";
-import s from "../../Todolist.module.css";
+import s from "../../features/todolistsList/todolist/Todolist.module.css";
 import {Button} from "../button/Button";
 
 type FullInputType = {

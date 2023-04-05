@@ -1,6 +1,6 @@
 import {addTodolistAC, deleteTodolistAC, TodoAppApiType, todoListsReducer} from "./todoListsReducer";
 import {tasksReducer, taskStateType} from "./tasksReducer";
-import {TaskStatuses, TodolistType, TodoTaskPriorities} from "../api/todolistsApi";
+import {TaskStatuses, TodolistType, TodoTaskPriorities} from "../../api/todolistsApi";
 
 
 test('ids should be equals', () => {
@@ -123,7 +123,7 @@ test('delete todolist and task', () => {
     expect(newTask['todolistID_1']).not.toBeDefined();
 })
 
-test('set todo and task', () => {
+test('set todolistsList and task', () => {
     const todoLists: TodoAppApiType[] = [];
     const tasks: taskStateType = {};
 

@@ -2,7 +2,7 @@ import {ComponentMeta, ComponentStory} from "@storybook/react";
 import {FullInput} from "./FullInput";
 import React, {useCallback, useState} from "react";
 import {action} from "@storybook/addon-actions";
-import s from "../../Todolist.module.css";
+import s from "../../features/todolistsList/todolist/Todolist.module.css";
 import {UniversalInput} from "../input/UniversalInput";
 import {Button} from "../button/Button";
 

@@ -1,7 +1,7 @@
 import {ComponentMeta, ComponentStory} from "@storybook/react";
 import React from "react";
 import AppRedux from "./AppRedux";
-import {decorators} from "./stories/decorators/decorator";
+import {decorators} from "../stories/decorators/decorator";
 
 export default {
     title: 'Components/AppRedux',

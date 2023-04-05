@@ -1,16 +1,13 @@
-import React, {useCallback, useEffect} from "react";
-import './App.css';
-import {Todolist} from "./Todolist";
-import {FullInput} from "./components/fullInputButton/FullInput";
-import {Container, Grid, Paper} from "@mui/material";
-import ButtonAppBar from "./components/buttonAppBar/ButtonAppBar";
-import {addTodoThunkCreator, setTodolistsThunkCreator, TodoAppApiType,} from "./reducers/todoListsReducer";
+import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState, AppThunkDispatch} from "./reducers/store";
+import {AppRootState, AppThunkDispatch} from "../../app/store";
+import {addTodoThunkCreator, setTodolistsThunkCreator, TodoAppApiType} from "./todoListsReducer";
+import {Container, Grid, Paper} from "@mui/material";
+import {Todolist} from "./todolist/Todolist";
+import {FullInput} from "../../components/fullInputButton/FullInput";
 
+export const TodolistsList: React.FC = () => {
 
-function AppRedux() {
-    console.log('App')
     const dispatch = useDispatch<AppThunkDispatch>();
     const todoLists = useSelector<AppRootState, TodoAppApiType[]>((state) => state.todoLists);
 
@@ -73,7 +70,6 @@ function AppRedux() {
         // dispatch(addTodolistAC(title, todolistID));
         // const todolistID = v1();
         // dispatch(addTodolistAC(title, todolistID));
-
         dispatch(addTodoThunkCreator(title));
     }, [dispatch]);
     //=======Delete todolist========================================================================================================
@@ -143,7 +139,7 @@ function AppRedux() {
                         // title={tl.title}//Название проекта
                         // filter={tl.filter}
                         // tasks={filterTasks}
-
+                        //
                         // deleteTodolist={deleteTodolist}
                         // changeTasksFilter={changeTasksFilter}
                         // changeStatus={changeStatus}
@@ -158,33 +154,29 @@ function AppRedux() {
     })
 
 //============================================================================================
-    return (
-        <div className="App">
-            <ButtonAppBar/>
-            <Container fixed>
-                <Grid container style={{padding: '10px', height: '70px'}}>
-                    <FullInput addItem={addTodolist}/>
-                </Grid>
-                <Grid container spacing={4}>
-                    {todoListsComponents}
-                </Grid>
-                {/*<Todolist*/}
-                {/*    //id*/}
-                {/*    changeStatus={changeStatus}*/}
-                {/*    title={todoLists}//Название проекта*/}
-                {/*    tasks={filterTasks}*/}
-                {/*    deleteTask={deleteTask}*/}
-                {/*    addTask={addTask}*/}
-                {/*    setFilterValue={setFilterValue}*/}
-                {/*    checkedTask={checkedTask}*/}
-                {/*    filterValue={filterValue}*/}
 
-                {/*    // changeTasksFilter={changeTasksFilter}*/}
-                {/*/>*/}
-            </Container>
-        </div>
+    return (
+        <Container fixed>
+            <Grid container style={{padding: '10px', height: '70px'}}>
+                <FullInput addItem={addTodolist}/>
+            </Grid>
+            <Grid container spacing={4}>
+                {todoListsComponents}
+            </Grid>
+            {/*<Todolist*/}
+            {/*    //id*/}
+            {/*    changeStatus={changeStatus}*/}
+            {/*    title={todoLists}//Название проекта*/}
+            {/*    tasks={filterTasks}*/}
+            {/*    deleteTask={deleteTask}*/}
+            {/*    addTask={addTask}*/}
+            {/*    setFilterValue={setFilterValue}*/}
+            {/*    checkedTask={checkedTask}*/}
+            {/*    filterValue={filterValue}*/}
+
+            {/*    // changeTasksFilter={changeTasksFilter}*/}
+            {/*/>*/}
+        </Container>
     );
 
 }
-
-export default AppRedux;

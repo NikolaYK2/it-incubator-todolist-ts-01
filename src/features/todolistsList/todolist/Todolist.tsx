@@ -1,22 +1,22 @@
 import React, {useCallback, useEffect} from "react";
-import {Button} from "./components/button/Button";
+import {Button} from "../../../components/button/Button";
 import s from "./Todolist.module.css";
-import {FullInput} from "./components/fullInputButton/FullInput";
-import {EditableSpan} from "./components/editableSpan/EditableSpan";
+import {FullInput} from "../../../components/fullInputButton/FullInput";
+import {EditableSpan} from "../../../components/editableSpan/EditableSpan";
 import {IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState, AppThunkDispatch} from "./reducers/store";
-import {addTasksTC, setTasksTC} from "./reducers/tasksReducer";
+import {AppRootState, AppThunkDispatch} from "../../../app/store";
+import {addTasksTC, setTasksTC} from "../tasksReducer";
 import {
     changeTasksFilterAC,
     changeTitleTodoThunkCreator,
     deleteTodoThunkCreator,
     filterValueType,
     TodoAppApiType,
-} from "./reducers/todoListsReducer";
-import {Task} from "./components/task/Task";
-import {TaskStatuses, TaskType} from "./api/todolistsApi";
+} from "../todoListsReducer";
+import {Task} from "./task/Task";
+import {TaskStatuses, TaskType} from "../../../api/todolistsApi";
 
 export type TodolistPropsType = {
     todolist: TodoAppApiType

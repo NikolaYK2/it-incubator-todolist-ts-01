@@ -2,9 +2,9 @@ import {ComponentMeta, ComponentStory} from "@storybook/react";
 import React from "react";
 import {Task} from "./Task";
 import {useSelector} from "react-redux";
-import {AppRootState} from "../../reducers/store";
-import {TaskStatuses, TaskType, TodoTaskPriorities} from "../../api/todolistsApi";
-import {decorators} from "../../stories/decorators/decorator";
+import {AppRootState} from "../../../../app/store";
+import {TaskStatuses, TaskType, TodoTaskPriorities} from "../../../../api/todolistsApi";
+import {decorators} from "../../../../stories/decorators/decorator";
 
 export default {
     title: 'Components/Task',

@@ -1,6 +1,6 @@
 import {AnyAction, applyMiddleware, combineReducers, compose, legacy_createStore as createStore} from "redux";
-import {tasksReducer} from "./tasksReducer";
-import {todoListsReducer} from "./todoListsReducer";
+import {tasksReducer} from "../features/todolistsList/tasksReducer";
+import {todoListsReducer} from "../features/todolistsList/todoListsReducer";
 import {TypedUseSelectorHook, useSelector} from "react-redux";
 import thunkMiddleware, {ThunkDispatch} from "redux-thunk";
 

@@ -47,7 +47,6 @@ export enum TaskStatuses {//Тип данных. Перечисление все
     Completed = 2,//выполнено,типо isDone ture
     Draft = 3
 }
-
 export enum TodoTaskPriorities {//Тип данных. Перечисление всех возможных вариантов
     Low = 0,
     Middle = 1,
@@ -92,7 +91,6 @@ export const todolistsApi = {
         // return axios.get<Array<TodolistType>>('https://social-network.samuraijs.com/api/1.1/todo-lists/', settings);
         //Типизируя запросы, нужно ссылаться на тот обьект что прихзодит в response
         return instance.get<Array<TodolistType>>(`todo-lists/`)/*.then((res) => res.data)*/; //Лишняя строчка кода считаю
-
     },
     createTodolists(title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
         return instance.post<ResponsTodolistsType<{ item: TodolistType }>>('todo-lists/', {title: title});
