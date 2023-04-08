@@ -6,10 +6,17 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import {LinearProgress} from "@mui/material";
+import {ErrorSnackbar} from "../errorSnackbar/ErrorSnackbar";
+import {useAppSelector} from "../../app/store";
+import {StatusType} from "../../app/appReducer";
 
 export default function ButtonAppBar() {
+    const status = useAppSelector<StatusType>(state => state.app.status);
+
     return (
         <Box sx={{ flexGrow: 1 }}>
+            <ErrorSnackbar/>
             <AppBar position="static" style={{backgroundColor: 'brown'}}>
                 <Toolbar>
                     <IconButton
@@ -25,6 +32,7 @@ export default function ButtonAppBar() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
+                {status === 'loading' && <LinearProgress/>}
             </AppBar>
         </Box>
     );

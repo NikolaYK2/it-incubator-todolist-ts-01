@@ -90,7 +90,7 @@ export const todolistsApi = {
         //Уточняем что к нам придет массив тудулистов axios.get<Array<TodolistType>>
         // return axios.get<Array<TodolistType>>('https://social-network.samuraijs.com/api/1.1/todo-lists/', settings);
         //Типизируя запросы, нужно ссылаться на тот обьект что прихзодит в response
-        return instance.get<Array<TodolistType>>(`todo-lists/`)/*.then((res) => res.data)*/; //Лишняя строчка кода считаю
+        return instance.get<Array<TodolistType>>(`todo-lists/`).then((res) => res.data);
     },
     createTodolists(title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
         return instance.post<ResponsTodolistsType<{ item: TodolistType }>>('todo-lists/', {title: title});

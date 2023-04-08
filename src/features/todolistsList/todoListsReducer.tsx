@@ -1,5 +1,6 @@
 import {todolistsApi, TodolistType} from "../../api/todolistsApi";
 import {Dispatch} from "redux";
+import {setStatusAC, SetStatusACType, StatusType} from "../../app/appReducer";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
@@ -11,21 +12,22 @@ export type filterValueType = "All" | 'Active' | 'Completed';
 
 // export let todolistID_1 = v1();
 // export let todolistID_2 = v1();
-export type TodoAppApiType = TodolistType & {
+export type TodoAppType = TodolistType & {
     filter: filterValueType,
+    entityStatus: StatusType,
 
 }
-const initialState: TodoAppApiType[] = [//первым параметром принимаем редьюсер
+const initialState: TodoAppType[] = [//первым параметром принимаем редьюсер
     // {id: todolistID_1, title: 'What to learn', filter: 'All'},
     // {id: todolistID_2, title: 'What to buy', filter: 'All'},
 ];
 
-export const todoListsReducer = (state = initialState, action: complexTypeActions): TodoAppApiType[] => {
+export const todoListsReducer = (state = initialState, action: complexTypeActions): TodoAppType[] => {
     if (action.type === 'ADD-TODO') {
         // let todolist: TodolistType = {id: v1(), title: action.payload.title, filter: 'All'};
         // setTodoLists([todolist, ...todoLists])
         // setTasks({...tasks, [todolist.id]: []})
-        return [{...action.payload.todolist, filter: 'All'}, ...state];
+        return [{...action.payload.todolist, filter: 'All', entityStatus: 'idle'}, ...state];
 
     } else if (action.type === 'DELETE-TODO') {
         // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
@@ -46,7 +48,7 @@ export const todoListsReducer = (state = initialState, action: complexTypeAction
         } : todoFil);
 
     } else if (action.type === "SET-TODOLISTS") {
-        return action.payload.todoLists.map(tl => ({...tl, filter: 'All'}));
+        return action.payload.todoLists.map(tl => ({...tl, filter: 'All', entityStatus: 'idle'}));
     }
     return state;
 };
@@ -60,6 +62,7 @@ export type complexTypeActions =
     | AddTodoACType
     | DeleteTodoACType
     | SetTodoACType
+    | SetStatusACType
     | ReturnType<typeof onChangeTitleTodolistAC>
     | ReturnType<typeof changeTasksFilterAC>;
 
@@ -121,15 +124,20 @@ export const setTodolistsAC = (todoLists: TodolistType[]) => {
 //         })
 // }
 export const setTodolistsThunkCreator = () => /*{*//*return */(dispatch: Dispatch<complexTypeActions>) => {
-    todolistsApi.getTodolists().then(res => {
-        dispatch(setTodolistsAC(res.data))
+    dispatch(setStatusAC('loading'));
+    todolistsApi.getTodolists().then(data => {
+        dispatch(setTodolistsAC(data))
+        dispatch(setStatusAC('succeeded'));
     })
 }
 // }
 
 export const addTodoThunkCreator = (title: string) => (dispatch: Dispatch<complexTypeActions>) => {
+    dispatch(setStatusAC('loading'));
     todolistsApi.createTodolists(title).then(res => {
         dispatch(addTodolistAC(res.data.data.item));
+        dispatch(setStatusAC('succeeded'));
+
     })
 }
 

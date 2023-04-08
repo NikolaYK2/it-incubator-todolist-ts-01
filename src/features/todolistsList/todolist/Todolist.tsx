@@ -13,13 +13,13 @@ import {
     changeTitleTodoThunkCreator,
     deleteTodoThunkCreator,
     filterValueType,
-    TodoAppApiType,
+    TodoAppType,
 } from "../todoListsReducer";
 import {Task} from "./task/Task";
 import {TaskStatuses, TaskType} from "../../../api/todolistsApi";
 
 export type TodolistPropsType = {
-    todolist: TodoAppApiType
+    todolist: TodoAppType
     // todoListID: string;
     // title: string,
     // // tasks: TasksPropsType[],

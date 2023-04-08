@@ -14,8 +14,8 @@ export const GetTodolist = () => {
         // который в виде строки будем отображать в div-ке
         // axios.get('https://social-network.samuraijs.com/api/1.1/todo-lists', settings)
         todolistsApi.getTodolists()
-            .then((res) => {
-                setState(res.data);
+            .then((data) => {
+                setState(data);
             })
 
         // todolistsApi.getTodolists().then(data=>{ - как пример с зарезолвленной сразу датой в DALL
@@ -125,8 +125,8 @@ export const GetTasks = () => {
 
     useEffect(() => {
         todolistsApi.getTodolists()
-            .then((res) => {
-                setTodoId(res.data.map(e => e.id));
+            .then((data) => {
+                setTodoId(data.map(e => e.id));
             })
     }, []);
 

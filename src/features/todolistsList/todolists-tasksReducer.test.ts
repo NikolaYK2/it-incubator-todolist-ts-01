@@ -1,10 +1,10 @@
-import {addTodolistAC, deleteTodolistAC, TodoAppApiType, todoListsReducer} from "./todoListsReducer";
+import {addTodolistAC, deleteTodolistAC, TodoAppType, todoListsReducer} from "./todoListsReducer";
 import {tasksReducer, taskStateType} from "./tasksReducer";
 import {TaskStatuses, TodolistType, TodoTaskPriorities} from "../../api/todolistsApi";
 
 
 test('ids should be equals', () => {
-    const todoLists: TodoAppApiType[] = [];
+    const todoLists: TodoAppType[] = [];
     const tasks: taskStateType = {};
 
     // const action = addTaskTodoAC('new todolist');
@@ -124,7 +124,7 @@ test('delete todolist and task', () => {
 })
 
 test('set todolistsList and task', () => {
-    const todoLists: TodoAppApiType[] = [];
+    const todoLists: TodoAppType[] = [];
     const tasks: taskStateType = {};
 
     let todolist: TodolistType = {

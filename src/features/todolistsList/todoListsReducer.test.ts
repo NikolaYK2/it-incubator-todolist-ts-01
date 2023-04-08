@@ -1,16 +1,16 @@
 import {
     addTodolistAC,
     changeTasksFilterAC,
-    deleteTodolistAC, onChangeTitleTodolistAC, setTodolistsAC, TodoAppApiType,
+    deleteTodolistAC, onChangeTitleTodolistAC, setTodolistsAC, TodoAppType,
     todoListsReducer,
 } from "./todoListsReducer";
 
 
-let todoLists: TodoAppApiType[];
+let todoLists: TodoAppType[];
 beforeEach(() => {
     todoLists = [
-        {id: 'todolistID_1', title: 'What to learn', filter: 'All', order: 0, addedDate: ''},
-        {id: 'todolistID_2', title: 'What to buy', filter: 'All', order: 0, addedDate: ''},
+        {id: 'todolistID_1', title: 'What to learn', filter: 'All', order: 0, addedDate: '', entityStatus: 'idle'},
+        {id: 'todolistID_2', title: 'What to buy', filter: 'All', order: 0, addedDate: '', entityStatus: 'idle'},
     ];
 
 })
