@@ -23,7 +23,7 @@ const rootReducer = combineReducers({
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export type AppRootState = ReturnType<typeof rootReducer>;
-export const store = createStore(rootReducer, compose(applyMiddleware(thunkMiddleware ), composeEnhancers()));
+export const store = createStore(rootReducer, compose(applyMiddleware(thunkMiddleware), composeEnhancers()));
 export const useAppSelector: TypedUseSelectorHook<AppRootState> = useSelector;//здесь мы его не вызываем
 
 // 2. Create a type for thunk dispatch ===========================

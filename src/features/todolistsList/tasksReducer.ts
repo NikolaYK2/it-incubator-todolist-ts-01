@@ -2,7 +2,8 @@ import {TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType} f
 import {Dispatch} from "redux";
 import {AppRootState} from "../../app/store";
 import {AddTodoACType, DeleteTodoACType, SetTodoACType} from "./todoListsReducer";
-import {setErrorAC, SetErrorACType, setStatusAC, SetStatusACType} from "../../app/appReducer";
+import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../../app/appReducer";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 
 // export type TasksPropsType = {
 //     id: string,
@@ -113,8 +114,8 @@ type complexACType =
     | DeleteTodoACType
     | SetTodoACType
     | AddTodoACType
-    | SetErrorACType
-    | SetStatusACType
+    | SetAppErrorACType
+    | SetAppStatusACType
     | ReturnType<typeof addTaskAC>
     | ReturnType<typeof deleteTaskAC>
     | ReturnType<typeof updateTaskAC>
@@ -183,36 +184,45 @@ export const setTasksAC = (todolistID: string, tasks: TaskType[]) => ({
 
 // THUNK =========================================================================================================
 export const setTasksTC = (todolistID: string) => (dispatch: Dispatch<complexACType>) => {
-    dispatch(setStatusAC('loading'));
+    dispatch(setAppStatusAC('loading'));
     todolistsApi.getTasks(todolistID)
         .then(res => {
             dispatch(setTasksAC(todolistID, res.data.items));
-            dispatch(setStatusAC('succeeded'))
+            dispatch(setAppStatusAC('succeeded'))
+        })
+        .catch(error => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 
 export const deleteTasksTC = (todoId: string, taskId: string,) => (dispatch: Dispatch<complexACType>) => {
+    dispatch(setAppStatusAC('loading'));
+
     todolistsApi.deleteTask(todoId, taskId)
         .then(res => {
-            dispatch(deleteTaskAC(todoId, taskId))
+            dispatch(deleteTaskAC(todoId, taskId));
+            dispatch(setAppStatusAC('succeeded'));
+        })
+        .catch(error => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 
 export const addTasksTC = (todoId: string, title: string) => (dispatch: Dispatch<complexACType>) => {
-    dispatch(setStatusAC('loading'));
+    dispatch(setAppStatusAC('loading'));
 
     todolistsApi.createTask(todoId, title)
         .then(res => {
             if (res.data.resultCode === 0) {
                 dispatch(addTaskAC(res.data.data.item));
-                dispatch(setStatusAC('succeeded'));
+                dispatch(setAppStatusAC('succeeded'));
             } else {
-                if (res.data.messages.length){
-                    dispatch(setErrorAC(res.data.messages[0]));
-                }
-                dispatch(setStatusAC('failed'));
+                handleServerAppError(res.data, dispatch);
             }
 
+        })
+        .catch((error) => {
+            handleServerNetworkError(error.message, dispatch);
         })
 }
 
@@ -237,6 +247,7 @@ export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCTyp
         // }
 
         const task = getState().tasks[todoId].find(t => t.id === taskId);//Будет бежать по массиву только до первого совпадения
+        dispatch(setAppStatusAC('loading'));
 
         if (task) {
 
@@ -250,9 +261,24 @@ export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCTyp
                 // ...task - нельзя, отправим много чего лишнего
                 ...model
             }
+
             todolistsApi.updateTask(todoId, taskId, apiModel)
                 .then(res => {
-                    dispatch(updateTaskAC(todoId, taskId, apiModel));
+                    if (res.data.resultCode === 0) {
+                        dispatch(updateTaskAC(todoId, taskId, apiModel));
+                        dispatch(setAppStatusAC('succeeded'));
+                    } else {
+                        handleServerAppError(res.data, dispatch);
+                        // if (res.data.messages.length) {
+                        //     dispatch(setAppErrorAC(res.data.messages[0]));
+                        // }
+                        // dispatch(setAppStatusAC('failed'));
+                    }
+                })
+                .catch((error) => {
+                    handleServerNetworkError(error.message, dispatch);
+                    // dispatch(setAppErrorAC(error));
+                    // dispatch(setAppStatusAC('failed'));
                 })
         }
     }

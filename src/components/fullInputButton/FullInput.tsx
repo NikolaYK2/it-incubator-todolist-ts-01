@@ -5,10 +5,11 @@ import {Button} from "../button/Button";
 
 type FullInputType = {
     addItem: (addTitle: string) => void,
+    disabled?: boolean
 }
 
 
-export const FullInput = React.memo ((props: FullInputType) => {
+export const FullInput = React.memo (({disabled = false, ...props}: FullInputType) => {
     //=======State Добавление таски======================================================
     const [addTitle, setAddTitle] = useState<string>('');
 
@@ -51,8 +52,9 @@ export const FullInput = React.memo ((props: FullInputType) => {
                         setError={setError}
                         style={errorStop}
                         error={error}
+                        disabled={disabled}
                     />
-                    <Button callBack={onClickHandlerAddTask} style={s.addTask}/>
+                    <Button callBack={onClickHandlerAddTask} style={s.addTask} disabled={disabled}/>
                 </div>
                 {/*{error && <div className={`${errorStop} ${s.block}`}>{error}</div>}*/}
             </>

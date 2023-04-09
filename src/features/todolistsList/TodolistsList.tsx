@@ -6,13 +6,19 @@ import {Container, Grid, Paper} from "@mui/material";
 import {Todolist} from "./todolist/Todolist";
 import {FullInput} from "../../components/fullInputButton/FullInput";
 
-export const TodolistsList: React.FC = () => {
+type TodolistsListType = {
+    demo?: boolean
+}
+export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
 
     const dispatch = useDispatch<AppThunkDispatch>();
     const todoLists = useSelector<AppRootState, TodoAppType[]>((state) => state.todoLists);
 
     //Достаем тудулисты ========================================
     useEffect(() => {
+        if (demo){
+            return;
+        }
         dispatch(setTodolistsThunkCreator());//С функцией TC
         // dispatch(setTodolistsThunkCreator); //Без функции TC
         // setTodolistsThunkCreator(dispatch);
@@ -135,6 +141,7 @@ export const TodolistsList: React.FC = () => {
                 <Paper style={{backgroundColor: "rgba(0, 0, 0, 0.7)", boxShadow: "1px 1px 10px grey", padding: '10px'}}>
                     <Todolist
                         todolist={tl}
+                        demo={demo}
                         // todoListID={tl.id}
                         // title={tl.title}//Название проекта
                         // filter={tl.filter}

@@ -1,4 +1,4 @@
-import {appReducer, InitialStateAppType, setErrorAC, setStatusAC} from "./appReducer";
+import {appReducer, InitialStateAppType, setAppErrorAC, setAppStatusAC} from "./appReducer";
 
 let app: InitialStateAppType;
 beforeEach(() => {
@@ -10,7 +10,7 @@ beforeEach(() => {
 
 test('status', () => {
 
-    const newApp = appReducer(app, setStatusAC('succeeded'));
+    const newApp = appReducer(app, setAppStatusAC('succeeded'));
 
     expect(newApp.status).toBe('succeeded');
     expect(app.status).toBe('idle');
@@ -18,7 +18,7 @@ test('status', () => {
 
 test('status error', () => {
 
-    const newApp = appReducer(app, setErrorAC('hera se!'));
+    const newApp = appReducer(app, setAppErrorAC('hera se!'));
 
     expect(newApp.error).toBe('hera se!');
     expect(app.error).toBe(null);

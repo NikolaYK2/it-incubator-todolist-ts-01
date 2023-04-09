@@ -24,9 +24,15 @@ FullInputExample.args = {
     // addItem:callback,
     addItem:action('button clicked inside from')
 };
+const Template1: ComponentStory<typeof FullInput> = (args) => <FullInput {...args} disabled={true}/>;
+export const FullInputDisabled = Template1.bind({});
+// FullInputDisabled.args = {
+//     // addItem:callback,
+//     addItem:action('button clicked inside from')
+// };
 //================================================================================
 
-const Template1: ComponentStory<typeof FullInput> = (args) => {
+const Template2: ComponentStory<typeof FullInput> = (args) => {
     const [addTitle, setAddTitle] = useState<string>('');
 
     const onClickHandlerAddTask = useCallback(() => {
@@ -63,7 +69,8 @@ const Template1: ComponentStory<typeof FullInput> = (args) => {
     );
 
 }
-export const FullInputError = Template1.bind({});
+
+export const FullInputError = Template2.bind({});
 FullInputError.args = {
     addItem:action('button clicked inside from')
 };

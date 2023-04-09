@@ -10,6 +10,7 @@ type UniversalInputType = {
     setError: (value: null) => void,
     style: string,
     error?: string | null,
+    disabled?:boolean,
 
 }
 
@@ -33,6 +34,7 @@ export const UniversalInput = React.memo ((props: UniversalInputType) => {
     return (
         <div className={s.universalInput}>
             <TextField
+                disabled={props.disabled}
                 size='small'
                 variant="filled"
                 color='success'

@@ -19,7 +19,8 @@ import {Task} from "./task/Task";
 import {TaskStatuses, TaskType} from "../../../api/todolistsApi";
 
 export type TodolistPropsType = {
-    todolist: TodoAppType
+    todolist: TodoAppType,
+    demo?: boolean
     // todoListID: string;
     // title: string,
     // // tasks: TasksPropsType[],
@@ -35,14 +36,20 @@ export type TodolistPropsType = {
     // //void - ничиег оне возвращает
 }
 
-export const Todolist = React.memo((props: TodolistPropsType) => {
-    const {id, title, filter} = props.todolist
+export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType) => {//demo если не передали по умолчанию будет false
     console.log('Todolist')
+
+    // if (typeof props.demo === 'undefined') props.demo = false;//что бы не делать тут проверки,  делаем ее в пропсах
+
+    const {id, title, filter} = props.todolist
     const dispatch = useDispatch<AppThunkDispatch>();
     const tasks = useSelector<AppRootState, TaskType[]>((state) => state.tasks[id]);
 
     useEffect(() => {
-        dispatch(setTasksTC(id))
+        if (demo) {
+            return;
+        }
+        dispatch(setTasksTC(id));
     }, [])
     //=======Добавление таски=====================================================================================================
 //     const addTask = (addTitle: string, todolistID: string) => {
@@ -82,7 +89,7 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
 //     }
 
     //================addTask===================================================
-    const addTask = useCallback((title:string) => {
+    const addTask = useCallback((title: string) => {
         // dispatch(addTaskAC(addTitle, id));
         dispatch(addTasksTC(id, title))
 
@@ -237,11 +244,11 @@ export const Todolist = React.memo((props: TodolistPropsType) => {
         <div>
             <h3><EditableSpan title={title} onChange={onChangeHandlerTitleTodolist}/></h3>
             {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
-            <IconButton onClick={() => onClickHandlerDeleteTodolist(id)} color={'error'}>
+            <IconButton onClick={() => onClickHandlerDeleteTodolist(id)} color={'error'} disabled={props.todolist.entityStatus === 'loading'}>
                 <Delete/>
             </IconButton>
             <div className={s.block}>
-                <FullInput addItem={addTask}/>
+                <FullInput addItem={addTask} disabled={props.todolist.entityStatus === 'loading'}/>
                 {/*<UniversalInput setAddTitle={setAddTitle}*/}
                 {/*                addTitle={addTitle}*/}
                 {/*                callback={onClickHandlerAddTask}*/}

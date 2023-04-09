@@ -13,7 +13,7 @@ export default {
 
 const Template: ComponentStory<typeof AppRedux> = () => {
     return (
-        <AppRedux/>
+        <AppRedux demo={true}/>
     )
 }
 

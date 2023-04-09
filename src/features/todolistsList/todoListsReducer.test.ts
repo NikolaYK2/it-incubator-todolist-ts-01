@@ -1,6 +1,6 @@
 import {
     addTodolistAC,
-    changeTasksFilterAC,
+    changeTasksFilterAC, changeTodoEntStatusAC,
     deleteTodolistAC, onChangeTitleTodolistAC, setTodolistsAC, TodoAppType,
     todoListsReducer,
 } from "./todoListsReducer";
@@ -38,6 +38,12 @@ test('CHANGE TITLE TODO', () => {
 
     const newTodolist = todoListsReducer(todoLists, onChangeTitleTodolistAC('todolistID_1', 'Hi'));
     expect(newTodolist[0].title).toBe('Hi')
+})
+test('CHANGE ENTITY STATUS TODO', () => {
+
+    const newTodolist = todoListsReducer(todoLists, changeTodoEntStatusAC('todolistID_1', 'loading'));
+    expect(newTodolist[0].entityStatus).toBe('loading')
+    expect(todoLists[0].entityStatus).toBe('idle')
 })
 
 test('TASK FILTER TODO', () => {

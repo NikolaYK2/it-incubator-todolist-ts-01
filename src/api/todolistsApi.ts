@@ -23,7 +23,7 @@ export type TodolistType = {
 //     },
 // }
 
-type ResponsTodolistsType<D = {}> = {//D - уточняем наш дженерик D-типо data/ D = {} - если дженерик не передовать, он по умолчанию может являться пустым обьектом
+export type ResponsTodolistsType<D = {}> = {//D - уточняем наш дженерик D-типо data/ D = {} - если дженерик не передовать, он по умолчанию может являться пустым обьектом
     resultCode: number
     messages: string[],
     data: D,
