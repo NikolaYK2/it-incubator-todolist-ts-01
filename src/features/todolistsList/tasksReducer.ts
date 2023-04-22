@@ -1,8 +1,14 @@
 import {TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType} from "../../api/todolistsApi";
 import {Dispatch} from "redux";
 import {AppRootState} from "../../app/store";
-import {AddTodoACType, DeleteTodoACType, SetTodoACType} from "./todoListsReducer";
-import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../../app/appReducer";
+import {
+    AddTodoACType,
+    changeTodoEntStatusAC,
+    ChangeTodoEntStatusACType,
+    DeleteTodoACType,
+    SetTodoACType
+} from "./todoListsReducer";
+import {setAppErrorAC, SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../../app/appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 
 // export type TasksPropsType = {
@@ -110,12 +116,17 @@ export const tasksReducer = (state = initialState, action: complexACType): taskS
 };
 
 //AC ===============================================================================
+export enum ResCode {
+    ok = 0,
+    error = 1,
+}
 type complexACType =
     | DeleteTodoACType
     | SetTodoACType
     | AddTodoACType
     | SetAppErrorACType
     | SetAppStatusACType
+    | ChangeTodoEntStatusACType
     | ReturnType<typeof addTaskAC>
     | ReturnType<typeof deleteTaskAC>
     | ReturnType<typeof updateTaskAC>
@@ -197,7 +208,6 @@ export const setTasksTC = (todolistID: string) => (dispatch: Dispatch<complexACT
 
 export const deleteTasksTC = (todoId: string, taskId: string,) => (dispatch: Dispatch<complexACType>) => {
     dispatch(setAppStatusAC('loading'));
-
     todolistsApi.deleteTask(todoId, taskId)
         .then(res => {
             dispatch(deleteTaskAC(todoId, taskId));
@@ -208,21 +218,31 @@ export const deleteTasksTC = (todoId: string, taskId: string,) => (dispatch: Dis
         })
 }
 
+
+
 export const addTasksTC = (todoId: string, title: string) => (dispatch: Dispatch<complexACType>) => {
     dispatch(setAppStatusAC('loading'));
-
+    dispatch(changeTodoEntStatusAC(todoId, 'loading'))
     todolistsApi.createTask(todoId, title)
         .then(res => {
-            if (res.data.resultCode === 0) {
+            if (res.data.resultCode === ResCode.ok) {
                 dispatch(addTaskAC(res.data.data.item));
                 dispatch(setAppStatusAC('succeeded'));
             } else {
-                handleServerAppError(res.data, dispatch);
+                // if  (res.data.messages.length){
+                //     dispatch(setAppErrorAC(res.data.messages[0]));
+                // } else {
+                //     dispatch(setAppErrorAC('Some error'));
+                // }
+                dispatch(setAppStatusAC('failed'));
+                handleServerAppError(res.data, dispatch);//Отдельная fn ошибок
             }
-
+            dispatch(changeTodoEntStatusAC(todoId, 'idle'))
         })
         .catch((error) => {
             handleServerNetworkError(error.message, dispatch);
+            dispatch(changeTodoEntStatusAC(todoId, 'idle'))
+
         })
 }
 
@@ -250,7 +270,6 @@ export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCTyp
         dispatch(setAppStatusAC('loading'));
 
         if (task) {
-
             const apiModel: UpdTaskType = {
                 title: task.title,
                 description: task.description,

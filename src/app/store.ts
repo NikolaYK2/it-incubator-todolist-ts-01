@@ -27,7 +27,7 @@ export const store = createStore(rootReducer, compose(applyMiddleware(thunkMiddl
 export const useAppSelector: TypedUseSelectorHook<AppRootState> = useSelector;//здесь мы его не вызываем
 
 // 2. Create a type for thunk dispatch ===========================
-export type AppThunkDispatch = ThunkDispatch<AppRootState, any, AnyAction>;
+export type AppThunkDispatch = ThunkDispatch<AppRootState, unknown, AnyAction>;
 // export const useAppDispatch =()=> useDispatch<AppThunkDispatch>();
 
 // @ts-ignore

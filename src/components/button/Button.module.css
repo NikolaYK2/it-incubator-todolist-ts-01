@@ -1,7 +1,8 @@
-.universalButton{
+.universalButton {
     display: inline-block;
 }
-.button{
+
+.button {
     margin: 0 10px 0 0;
     padding: 5px 10px;
     border: none;
@@ -9,4 +10,8 @@
     font-weight: 700;
     cursor: pointer;
     border-radius: 0 5px 0 5px;
+}
+
+.disabled {
+    opacity: 0.3;
 }

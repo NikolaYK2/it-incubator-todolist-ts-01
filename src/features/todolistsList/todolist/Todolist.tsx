@@ -244,7 +244,9 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
         <div>
             <h3><EditableSpan title={title} onChange={onChangeHandlerTitleTodolist}/></h3>
             {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
-            <IconButton onClick={() => onClickHandlerDeleteTodolist(id)} color={'error'} disabled={props.todolist.entityStatus === 'loading'}>
+            <IconButton onClick={() => onClickHandlerDeleteTodolist(id)}
+                        color={'error'}
+                        disabled={props.todolist.entityStatus === 'loading'}>
                 <Delete/>
             </IconButton>
             <div className={s.block}>

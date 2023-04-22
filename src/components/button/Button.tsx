@@ -14,7 +14,9 @@ export const Button: React.FC<ButtonType> = memo(({name, ...props}) => {
     }, [props])
     return (
         <div className={s.universalButton}>
-            <button onClick={onclickHandler} className={`${props.style} ${s.button}`} disabled={props.disabled}>{name}</button>
+            <button onClick={onclickHandler}
+                    className={`${props.style} ${s.button} ${props.disabled && s.disabled}`}
+                    disabled={props.disabled}>{name}</button>
         </div>
     );
 });
