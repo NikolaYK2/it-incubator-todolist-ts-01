@@ -8,8 +8,9 @@ import {
     DeleteTodoACType,
     SetTodoACType
 } from "./todoListsReducer";
-import {setAppErrorAC, SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../../app/appReducer";
+import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../../app/appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
+import {AxiosError} from "axios";
 
 // export type TasksPropsType = {
 //     id: string,
@@ -120,6 +121,7 @@ export enum ResCode {
     ok = 0,
     error = 1,
 }
+
 type complexACType =
     | DeleteTodoACType
     | SetTodoACType
@@ -219,7 +221,6 @@ export const deleteTasksTC = (todoId: string, taskId: string,) => (dispatch: Dis
 }
 
 
-
 export const addTasksTC = (todoId: string, title: string) => (dispatch: Dispatch<complexACType>) => {
     dispatch(setAppStatusAC('loading'));
     dispatch(changeTodoEntStatusAC(todoId, 'loading'))
@@ -234,15 +235,14 @@ export const addTasksTC = (todoId: string, title: string) => (dispatch: Dispatch
                 // } else {
                 //     dispatch(setAppErrorAC('Some error'));
                 // }
-                dispatch(setAppStatusAC('failed'));
+                // dispatch(setAppStatusAC('failed'));
                 handleServerAppError(res.data, dispatch);//Отдельная fn ошибок
             }
             dispatch(changeTodoEntStatusAC(todoId, 'idle'))
         })
-        .catch((error) => {
-            handleServerNetworkError(error.message, dispatch);
+        .catch((error: AxiosError<{ messages: string[] }>) => {
+            handleServerNetworkError(error, dispatch);
             dispatch(changeTodoEntStatusAC(todoId, 'idle'))
-
         })
 }
 
@@ -254,52 +254,94 @@ export type UpdTaskTCType = {
     startDate?: string,
     deadline?: string,
 }
-export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCType) => {
-    return (dispatch: Dispatch<complexACType>, getState: () => AppRootState) => {
-
+export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCType) => (
+    async (dispatch: Dispatch<complexACType>, getState: () => AppRootState) => {
         // const state = getState();
         // const task = state.tasks[todoId].find(t => t.id === taskId);
-
-        // if (!task) {
-        //     // throw new Error('task not found')
-        //     console.warn('task not found');
-        //     return;
-        // }
 
         const task = getState().tasks[todoId].find(t => t.id === taskId);//Будет бежать по массиву только до первого совпадения
         dispatch(setAppStatusAC('loading'));
 
-        if (task) {
-            const apiModel: UpdTaskType = {
-                title: task.title,
-                description: task.description,
-                status: task.status,
-                priority: task.priority,
-                startDate: task.startDate,
-                deadline: task.deadline,
-                // ...task - нельзя, отправим много чего лишнего
-                ...model
-            }
-
-            todolistsApi.updateTask(todoId, taskId, apiModel)
-                .then(res => {
-                    if (res.data.resultCode === 0) {
-                        dispatch(updateTaskAC(todoId, taskId, apiModel));
-                        dispatch(setAppStatusAC('succeeded'));
-                    } else {
-                        handleServerAppError(res.data, dispatch);
-                        // if (res.data.messages.length) {
-                        //     dispatch(setAppErrorAC(res.data.messages[0]));
-                        // }
-                        // dispatch(setAppStatusAC('failed'));
-                    }
-                })
-                .catch((error) => {
-                    handleServerNetworkError(error.message, dispatch);
-                    // dispatch(setAppErrorAC(error));
-                    // dispatch(setAppStatusAC('failed'));
-                })
+        if (!task) {
+            // throw new Error('task not found')
+            console.warn('task not found');
+            return;
         }
-    }
-}
+
+        // if (task) {
+        const apiModel: UpdTaskType = {
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            priority: task.priority,
+            startDate: task.startDate,
+            deadline: task.deadline,
+            // ...task - нельзя, отправим много чего лишнего
+            ...model
+        }
+
+        try {
+            const res = await todolistsApi.updateTask(todoId, taskId, apiModel)
+
+            if (res.data.resultCode === ResCode.ok) {
+                dispatch(updateTaskAC(todoId, taskId, apiModel));
+                dispatch(setAppStatusAC('succeeded'));
+            } else {
+                handleServerAppError(res.data, dispatch);
+            }
+        } catch (error:any) {
+            // if (axios.isAxiosError<{ messages: string[] }>(error)) {
+            //     return error;
+            // }
+            handleServerNetworkError(error.message, dispatch);
+        }
+        // }
+    })
+// -----------------------------
+// export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCType) => {
+//     return (dispatch: Dispatch<complexACType>, getState: () => AppRootState) => {
+//         // const state = getState();
+//         // const task = state.tasks[todoId].find(t => t.id === taskId);
+//
+//         // if (!task) {
+//         //     // throw new Error('task not found')
+//         //     console.warn('task not found');
+//         //     return;
+//         // }
+//         const task = getState().tasks[todoId].find(t => t.id === taskId);//Будет бежать по массиву только до первого совпадения
+//         dispatch(setAppStatusAC('loading'));
+//
+//         if (task) {
+//             const apiModel: UpdTaskType = {
+//                 title: task.title,
+//                 description: task.description,
+//                 status: task.status,
+//                 priority: task.priority,
+//                 startDate: task.startDate,
+//                 deadline: task.deadline,
+//                 // ...task - нельзя, отправим много чего лишнего
+//                 ...model
+//             }
+//
+//             todolistsApi.updateTask(todoId, taskId, apiModel)
+//                 .then(res => {
+//                     if (res.data.resultCode === ResCode.ok) {
+//                         dispatch(updateTaskAC(todoId, taskId, apiModel));
+//                         dispatch(setAppStatusAC('succeeded'));
+//                     } else {
+//                         handleServerAppError(res.data, dispatch);
+//                         // if (res.data.messages.length) {
+//                         //     dispatch(setAppErrorAC(res.data.messages[0]));
+//                         // }
+//                         // dispatch(setAppStatusAC('failed'));
+//                     }
+//                 })
+//                 .catch((error) => {
+//                     handleServerNetworkError(error.message, dispatch);
+//                     // dispatch(setAppErrorAC(error));
+//                     // dispatch(setAppStatusAC('failed'));
+//                 })
+//         }
+//     }
+// }
 

@@ -13,3 +13,4 @@ export const handleServerNetworkError = <D>(error: {message: string}, dispatch: 
     dispatch(setAppErrorAC(error.message ? error.message : 'Network error!'));
     dispatch(setAppStatusAC('failed'));
 }
+
