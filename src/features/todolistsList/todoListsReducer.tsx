@@ -17,7 +17,6 @@ export type filterValueType = "All" | 'Active' | 'Completed';
 export type TodoAppType = TodolistType & {
     filter: filterValueType,
     entityStatus: StatusType,
-
 }
 const initialState: TodoAppType[] = [//первым параметром принимаем редьюсер
     // {id: todolistID_1, title: 'What to learn', filter: 'All'},
@@ -153,7 +152,7 @@ export const deleteTodoThunkCreator = (todoId: string) => (dispatch: Dispatch<co
     dispatch(changeTodoEntStatusAC(todoId, 'loading'))
     todolistsApi.deleteTodolists(todoId)
         .then(res => {
-            if (res.data.resultCode === ResCode.ok){
+            if (res.data.resultCode === ResCode.ok) {
                 dispatch(deleteTodolistAC(todoId));
                 dispatch(setAppStatusAC('succeeded'));
             } else {
@@ -174,8 +173,12 @@ export const changeTitleTodoThunkCreator = (todoId: string, title: string) => (d
     dispatch(setAppStatusAC('loading'));
     todolistsApi.updateTodolists(todoId, title)
         .then(res => {
-            dispatch(onChangeTitleTodolistAC(todoId, title));
-            dispatch(setAppStatusAC('succeeded'));
+            if (res.data.resultCode === ResCode.ok) {
+                dispatch(onChangeTitleTodolistAC(todoId, title));
+                dispatch(setAppStatusAC('succeeded'));
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
         })
         .catch(error => {
             handleServerNetworkError(error, dispatch)

@@ -1,6 +1,6 @@
 import {TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType} from "../../api/todolistsApi";
 import {Dispatch} from "redux";
-import {AppRootState} from "../../app/store";
+import {AppRootState, AppThunk} from "../../app/store";
 import {
     AddTodoACType,
     changeTodoEntStatusAC,
@@ -8,7 +8,7 @@ import {
     DeleteTodoACType,
     SetTodoACType
 } from "./todoListsReducer";
-import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "../../app/appReducer";
+import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType, StatusType} from "../../app/appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 import {AxiosError} from "axios";
 
@@ -17,6 +17,9 @@ import {AxiosError} from "axios";
 //     title: string,
 //     isDone: boolean,
 // }
+export type EntStatusType = {
+    entityStatus?: StatusType,
+}
 export type taskStateType = {
     [todolistID: string]: TaskType[];
 }
@@ -87,6 +90,14 @@ export const tasksReducer = (state = initialState, action: complexACType): taskS
                     {...task, ...action.payload.model} : task)
             }
         }
+        case 'CHANGE-ENT-STATUS-TASK': {
+            return {
+                ...state, [action.payload.todolistID]:
+                    state[action.payload.todolistID].map(t => t.id === action.payload.taskId
+                        ? {...t, entityStatus: action.payload.status} : t)
+            }
+        }
+
         case 'SET-TODOLISTS': {
             // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)});
             // const copy = {...state};
@@ -122,7 +133,7 @@ export enum ResCode {
     error = 1,
 }
 
-type complexACType =
+export type complexACType =
     | DeleteTodoACType
     | SetTodoACType
     | AddTodoACType
@@ -132,7 +143,8 @@ type complexACType =
     | ReturnType<typeof addTaskAC>
     | ReturnType<typeof deleteTaskAC>
     | ReturnType<typeof updateTaskAC>
-    | ReturnType<typeof setTasksAC>;
+    | ReturnType<typeof setTasksAC>
+    | ReturnType<typeof changeTaskStatusAC>;
 
 /*| AddTaskTodoACType*/
 // | ChangeTaskTitleACType
@@ -188,6 +200,16 @@ export const updateTaskAC = (todolistID: string, taskId: string, model: UpdTaskT
         }
     } as const;
 }
+export const changeTaskStatusAC = (todolistID: string, taskId: string, status: StatusType) => {
+    return {
+        type: 'CHANGE-ENT-STATUS-TASK',
+        payload: {
+            todolistID,
+            taskId,
+            status,
+        }
+    } as const;
+}
 
 export const setTasksAC = (todolistID: string, tasks: TaskType[]) => ({
     type: 'SET-TASKS',
@@ -208,17 +230,26 @@ export const setTasksTC = (todolistID: string) => (dispatch: Dispatch<complexACT
         })
 }
 
-export const deleteTasksTC = (todoId: string, taskId: string,) => (dispatch: Dispatch<complexACType>) => {
-    dispatch(setAppStatusAC('loading'));
-    todolistsApi.deleteTask(todoId, taskId)
-        .then(res => {
-            dispatch(deleteTaskAC(todoId, taskId));
-            dispatch(setAppStatusAC('succeeded'));
-        })
-        .catch(error => {
-            handleServerNetworkError(error, dispatch)
-        })
-}
+export const deleteTasksTC = (todoId: string, taskId: string): AppThunk =>
+    (dispatch) => {
+        dispatch(setAppStatusAC('loading'));
+        dispatch(changeTaskStatusAC(todoId, taskId, 'loading'));
+        // dispatch(changeTaskStatusAC(todoId, taskId, 2))
+        todolistsApi.deleteTask(todoId, taskId)
+            .then(res => {
+                if (res.data.resultCode === ResCode.ok) {
+
+                    dispatch(deleteTaskAC(todoId, taskId));
+                    dispatch(setAppStatusAC('succeeded'));
+                } else {
+                    handleServerAppError(res.data, dispatch);
+                }
+                // dispatch(changeTaskStatusAC(todoId, taskId, 0))
+            })
+            .catch(error => {
+                handleServerNetworkError(error, dispatch)
+            })
+    }
 
 
 export const addTasksTC = (todoId: string, title: string) => (dispatch: Dispatch<complexACType>) => {
@@ -261,6 +292,7 @@ export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCTyp
 
         const task = getState().tasks[todoId].find(t => t.id === taskId);//Будет бежать по массиву только до первого совпадения
         dispatch(setAppStatusAC('loading'));
+        dispatch(changeTaskStatusAC(todoId, taskId, 'loading'));
 
         if (!task) {
             // throw new Error('task not found')
@@ -289,11 +321,13 @@ export const updateTaskTC = (todoId: string, taskId: string, model: UpdTaskTCTyp
             } else {
                 handleServerAppError(res.data, dispatch);
             }
-        } catch (error:any) {
+        } catch (error: any) {
             // if (axios.isAxiosError<{ messages: string[] }>(error)) {
             //     return error;
             // }
             handleServerNetworkError(error.message, dispatch);
+        } finally {
+            dispatch(changeTaskStatusAC(todoId, taskId, 'idle'));
         }
         // }
     })

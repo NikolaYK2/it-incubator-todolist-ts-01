@@ -1,4 +1,5 @@
 import axios from "axios";
+import {EntStatusType} from "../features/todolistsList/tasksReducer";
 
 const instance = axios.create({
     withCredentials: true,
@@ -63,12 +64,13 @@ export type UpdTaskType = {
     startDate: string,
     deadline: string,
 }
-export type TaskType = {
+export type TaskType = EntStatusType &{
     id: string,
     title: string,
     description: string,
     // completed: boolean,
     status: TaskStatuses,
+    // entityStatus?: StatusType,
     priority: TodoTaskPriorities,
     startDate: string,
     deadline: string,

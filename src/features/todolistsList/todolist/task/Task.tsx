@@ -11,7 +11,8 @@ import {AppThunkDispatch} from "../../../../app/store";
 
 export type  TaskTypeP = {
     task: TaskType,
-    idTodolist: string
+    idTodolist: string,
+    disabled?:boolean,
 }
 export const Task = React.memo((props: TaskTypeP) => {
     const {id, status, title} = props.task
@@ -51,13 +52,17 @@ export const Task = React.memo((props: TaskTypeP) => {
         <>
             {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
             {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
-            <Button callBack={() => onClickHandlerDeleteTask(props.idTodolist, id)} style={s.dellTask}/>
+            <Button callBack={() => onClickHandlerDeleteTask(props.idTodolist, id)}
+                    style={s.dellTask}
+                    disabled={props.task.entityStatus === 'loading'}
+            />
             <Checkbox
                 checked={status === TaskStatuses.Completed}
                 onChange={() => changeTaskStatusHandler(id, status)}
                 icon={<BookmarkBorder/>}
                 checkedIcon={<Bookmark/>}
                 style={{color: 'darkred'}}
+                disabled={props.task.entityStatus === 'loading'}
             />
             {/*<input type="checkbox" checked={Task.isDone}*/}
             {/*       onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>*/}

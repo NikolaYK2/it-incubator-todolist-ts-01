@@ -174,7 +174,7 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
                 <li key={task.id} className={task.status ? s.activeTask : ''}>
                     {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
                     {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
-                    <Task task={task} idTodolist={id}/>
+                    <Task task={task} idTodolist={id} />
                     {/*<Button callBack={() => onClickHandlerDeleteTask(task.id)} style={s.dellTask}/>*/}
                     {/*<Checkbox*/}
                     {/*    checked={task.isDone}*/}

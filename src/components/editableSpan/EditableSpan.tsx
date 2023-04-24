@@ -1,10 +1,11 @@
 import s from "./EditableSpan.module.css";
-import React, {useState, KeyboardEvent, ChangeEvent, useCallback, memo} from "react";
+import React, {ChangeEvent, KeyboardEvent, memo, useCallback, useState} from "react";
 import {TextField} from "@mui/material";
 
 type EditableSpanType = {
     title: string,
     onChange: (newValue: string) => void,
+    disabled?:boolean,
 
 }
 //Делаем спан инпутом когданужно=========================================================
