@@ -4,6 +4,7 @@ import {complexTypeActions, todoListsReducer} from "../features/todolistsList/to
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {ActionsAppType, appReducer} from "./appReducer";
+import {ComplexLoginACType, authReducer} from "../features/login/authReducer";
 
 //помогает следить за нашим редаксковским стором
 declare global {
@@ -16,7 +17,8 @@ declare global {
 const rootReducer = combineReducers({
     todoLists: todoListsReducer,
     tasks: tasksReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer,
 })
 
 //функция нашего плагина для слежки за стором
@@ -29,7 +31,8 @@ export const store = createStore(rootReducer, compose(applyMiddleware(thunkMiddl
 export type ActionsType =
     | complexTypeActions
     | complexACType
-    | ActionsAppType;
+    | ActionsAppType
+    | ComplexLoginACType;
 //TYPE THUNK---
 export type AppThunk<ReturnType = void> = ThunkAction<
     ReturnType, //-void типо

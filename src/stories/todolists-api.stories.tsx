@@ -125,8 +125,8 @@ export const GetTasks = () => {
 
     useEffect(() => {
         todolistsApi.getTodolists()
-            .then((data) => {
-                setTodoId(data.map(e => e.id));
+            .then((res) => {
+                setTodoId(res.data.map(e => e.id));
             })
     }, []);
 

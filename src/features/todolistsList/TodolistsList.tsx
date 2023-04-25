@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux/";
-import {AppRootState, AppThunkDispatch} from "../../app/store";
+import {AppRootState, AppThunkDispatch, useAppSelector} from "../../app/store";
 import {addTodoThunkCreator, setTodolistsThunkCreator, TodoAppType} from "./todoListsReducer";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {Todolist} from "./todolist/Todolist";
 import {FullInput} from "../../components/fullInputButton/FullInput";
+import {Navigate} from "react-router-dom";
 
 type TodolistsListType = {
     demo?: boolean
@@ -15,10 +16,12 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
 
     const dispatch = useDispatch<AppThunkDispatch>();
     const todoLists = useSelector<AppRootState, TodoAppType[]>((state) => state.todoLists);
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
+
 
     //Достаем тудулисты ========================================
     useEffect(() => {
-        if (demo){
+        if (demo || !isLoggedIn) {
             return;
         }
         dispatch(setTodolistsThunkCreator());//С функцией TC
@@ -30,6 +33,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
         //         dispatch(setTodolistsAC(res.data));
         //     })
     }, [])
+
 
 //         const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
 // //=======Добавление таски=====================================================================================================
@@ -122,6 +126,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
 //===============================================================================================
 
 
+
     const todoListsComponents = todoLists.map(tl => {
         // //=========================ФиЛЬТРАЦИЯ==============================
         // let filterTasks = tasks[tl.id];//[tl.id] - обращение к конкретному тудулисту, то есть его id
@@ -162,7 +167,9 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
     })
 
 //============================================================================================
-
+    if (!isLoggedIn){
+        return <Navigate to={'/login'}/>
+    }
     return (
         <Container fixed>
             <Grid container style={{padding: '10px', height: '70px'}}>

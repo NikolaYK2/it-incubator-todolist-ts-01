@@ -8,12 +8,14 @@ import {todoListsReducer} from "../../features/todolistsList/todoListsReducer";
 import {TaskStatuses, TodoTaskPriorities} from "../../api/todolistsApi";
 import {appReducer} from "../../app/appReducer";
 import thunkMiddleware from "redux-thunk";
+import {authReducer} from "../../features/login/authReducer";
 
 
 const rootReducer = combineReducers({
     todoLists: todoListsReducer,
     tasks: tasksReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer,
 })
 
 //StoryBook =========================================
@@ -94,7 +96,14 @@ const initialState = {
     },
     app:{
         status: 'idle',
-        error: null
+        error: null,
+        initialized:false,
+    },
+    auth:{
+        isLoggedIn:false
+        // email: '',
+        // password: '',
+        // rememberMe:false
     }
 };
 export const storyBookStore = createStore(rootReducer, initialState as AppRootState, applyMiddleware(thunkMiddleware));

@@ -124,8 +124,8 @@ export const changeTodoEntStatusAC = (todoId: string, status: StatusType,) => {
 export const setTodolistsThunkCreator = () => /*{*//*return */(dispatch: Dispatch<complexTypeActions>) => {
     dispatch(setAppStatusAC('loading'));
     todolistsApi.getTodolists()
-        .then(data => {
-            dispatch(setTodolistsAC(data))
+        .then(res => {
+            dispatch(setTodolistsAC(res.data));
             dispatch(setAppStatusAC('succeeded'));
         })
         .catch(error => {

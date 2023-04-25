@@ -8,7 +8,9 @@ const instance = axios.create({
     // },
     baseURL: `https://social-network.samuraijs.com/api/1.1/`,
 })
-// ========= todolistss typeee =================================
+
+
+//TODOL typeee =================================
 export type TodolistType = {
     id: string,
     title: string,
@@ -41,13 +43,14 @@ export type ResponsTodolistsType<D = {}> = {//D - уточняем наш дже
 //     data: {},
 // }
 
-//tasks type==============================================
+//TASK type==============================================
 export enum TaskStatuses {//Тип данных. Перечисление всех возможных вариантов
     New = 0,//Где isDOne false = New
     InProgress = 1,
     Completed = 2,//выполнено,типо isDone ture
     Draft = 3
 }
+
 export enum TodoTaskPriorities {//Тип данных. Перечисление всех возможных вариантов
     Low = 0,
     Middle = 1,
@@ -64,7 +67,7 @@ export type UpdTaskType = {
     startDate: string,
     deadline: string,
 }
-export type TaskType = EntStatusType &{
+export type TaskType = EntStatusType & {
     id: string,
     title: string,
     description: string,
@@ -92,7 +95,7 @@ export const todolistsApi = {
         //Уточняем что к нам придет массив тудулистов axios.get<Array<TodolistType>>
         // return axios.get<Array<TodolistType>>('https://social-network.samuraijs.com/api/1.1/todo-lists/', settings);
         //Типизируя запросы, нужно ссылаться на тот обьект что прихзодит в response
-        return instance.get<Array<TodolistType>>(`todo-lists/`).then((res) => res.data);
+        return instance.get<Array<TodolistType>>(`todo-lists/`);
     },
     createTodolists(title: string) {//Мы будем хотеть поменять tittle, по этому нужен параметр
         return instance.post<ResponsTodolistsType<{ item: TodolistType }>>('todo-lists/', {title: title});
@@ -117,4 +120,28 @@ export const todolistsApi = {
     updateTask(todoId: string, taskId: string, data: UpdTaskType) {
         return instance.put<ResponsTodolistsType<{ item: TaskType }>>(`todo-lists/${todoId}/tasks/${taskId}`, data);
     },
+}
+
+
+export type AuthLoginType = {
+    email: string,
+    password: string,
+    rememberMe: boolean,
+    captcha?: string
+}
+type AuthMeType={
+    id: number,
+    email: string,
+    login: string,
+}
+export const authApi = {
+    auth(/*email: string, password: string, rememberMe: boolean*/ data: AuthLoginType) {
+        return instance.post<ResponsTodolistsType<{userId?:number}>>('auth/login', data);
+    },
+    me() {
+        return instance.get<ResponsTodolistsType<AuthMeType>>('auth/me');
+    },
+    logout() {
+        return instance.delete<ResponsTodolistsType>('auth/login');
+    }
 }
