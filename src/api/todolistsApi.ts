@@ -43,6 +43,13 @@ export type ResponsTodolistsType<D = {}> = {//D - уточняем наш дже
 //     data: {},
 // }
 
+//RESULT CODE ===================================
+export enum ResultCOde {
+    Ok = 0,
+    Error = 1,
+    Captcha = 10
+}
+
 //TASK type==============================================
 export enum TaskStatuses {//Тип данных. Перечисление всех возможных вариантов
     New = 0,//Где isDOne false = New
@@ -123,6 +130,7 @@ export const todolistsApi = {
 }
 
 
+//AUTH =======================================================================
 export type AuthLoginType = {
     email: string,
     password: string,
@@ -135,7 +143,7 @@ type AuthMeType={
     login: string,
 }
 export const authApi = {
-    auth(/*email: string, password: string, rememberMe: boolean*/ data: AuthLoginType) {
+    authLogin(/*email: string, password: string, rememberMe: boolean*/ data: AuthLoginType) {
         return instance.post<ResponsTodolistsType<{userId?:number}>>('auth/login', data);
     },
     me() {

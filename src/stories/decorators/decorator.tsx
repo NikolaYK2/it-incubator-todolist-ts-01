@@ -110,9 +110,9 @@ export const storyBookStore = createStore(rootReducer, initialState as AppRootSt
 
 export const decorators = [
     (Story: any) => (
-        <div style={{margin: '3em'}}>
-            <Provider store={storyBookStore}>{Story()}</Provider>
-        </div>
+            <div style={{margin: '3em'}}>
+                <Provider store={storyBookStore}>{Story()}</Provider>
+            </div>
     ),
 ];
 //========================================================

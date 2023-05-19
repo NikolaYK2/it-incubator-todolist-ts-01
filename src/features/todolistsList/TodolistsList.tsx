@@ -21,10 +21,14 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
 
     //Достаем тудулисты ========================================
     useEffect(() => {
+        // if (isLoggedIn) {
+        //     dispatch(setTodolistsThunkCreator());//С функцией TC
+        // }
         if (demo || !isLoggedIn) {
             return;
         }
         dispatch(setTodolistsThunkCreator());//С функцией TC
+
         // dispatch(setTodolistsThunkCreator); //Без функции TC
         // setTodolistsThunkCreator(dispatch);
         //
@@ -33,7 +37,6 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
         //         dispatch(setTodolistsAC(res.data));
         //     })
     }, [])
-
 
 //         const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
 // //=======Добавление таски=====================================================================================================
@@ -124,8 +127,6 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
 //         dispatch(changeTasksFilterAC(todoListsID, filter))
 //     }
 //===============================================================================================
-
-
 
     const todoListsComponents = todoLists.map(tl => {
         // //=========================ФиЛЬТРАЦИЯ==============================

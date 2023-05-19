@@ -18,7 +18,7 @@ export type InitialStateAppType = {
 const initialState: InitialStateAppType = {
     status: 'idle',
     error: null,
-    initialized: false,
+    initialized: false,//Делаем для того что бы небыло маргания на логин
 }
 
 
@@ -29,7 +29,7 @@ export const appReducer = (state: InitialStateAppType = initialState, action: Ac
         case 'APP/SET-ERROR':
             return {...state, error: action.error}
         case 'app/INITIALIZED':
-            return {...state, initialized: action.value}
+            return {...state, initialized: action.value}//Делаем для того что бы небыло маргания на логин
         default:
             return state;
     }
@@ -65,19 +65,36 @@ export const initializedAppTC = () => (dispatch: Dispatch<ActionsType>) => {
             handleServerNetworkError(error, dispatch)
         })
 }
-export const logoutAppTC = () => (dispatch: Dispatch<ActionsType>) => {
+//LOGOUT THEN .CATCH --------------------------------
+// export const logoutAppTC = () => (dispatch: Dispatch<ActionsType>) => {
+//     dispatch(setAppStatusAC('loading'));
+//     authApi.logout()
+//         .then(res => {
+//             if (res.data.resultCode === 0) {
+//                 dispatch(setInLoginAC(false));//Говорим что мы залогинены
+//                 dispatch(setAppStatusAC('succeeded'));
+//             } else {
+//                 handleServerAppError(res.data, dispatch)
+//             }
+//             dispatch(initializedAppAC(true));
+//         })
+//         .catch(error => {
+//             handleServerNetworkError(error, dispatch)
+//         })
+// }
+//LOGOUT ASYNC AWAIT ------
+export const logoutAppTC = () => async (dispatch: Dispatch<ActionsType>) => {
     dispatch(setAppStatusAC('loading'));
-    authApi.logout()
-        .then(res => {
-            if (res.data.resultCode === 0) {
-                dispatch(setInLoginAC(false));//Говорим что мы залогинены
-                dispatch(setAppStatusAC('succeeded'));
-            } else {
-                handleServerAppError(res.data, dispatch)
-            }
-            dispatch(initializedAppAC(true));
-        })
-        .catch(error => {
-            handleServerNetworkError(error, dispatch)
-        })
+    try {
+        const res = await authApi.logout()
+        if (res.data.resultCode === 0) {
+            dispatch(setInLoginAC(false));
+            dispatch(setAppStatusAC('succeeded'));
+        } else {
+            handleServerAppError(res.data, dispatch)
+        }
+        dispatch(initializedAppAC(true));
+    } catch (error: any) {
+        handleServerNetworkError(error, dispatch)
+    }
 }

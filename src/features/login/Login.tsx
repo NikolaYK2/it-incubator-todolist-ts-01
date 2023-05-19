@@ -14,23 +14,42 @@ import {Navigate} from 'react-router-dom';
 import Paper from "@mui/material/Paper";
 import {createTheme, ThemeProvider} from "@mui/material";
 
+type FormikErrorType = {
+    email?: string
+    password?: string
+    rememberMe?: boolean
+}
 export const Login = () => {
     const dispatch = useAppDispatch();
     const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn);
 
     const formik = useFormik({
         validate: (values) => {
+            const errors: FormikErrorType = {}
             if (!values.email) {
-                return {
-                    email: 'bad email'
-                }
+                errors.email = 'Required'
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                errors.email = 'Invalid email address'
             }
             if (!values.password) {
-                return {
-                    password: 'Password is require'
-                }
+                errors.password = 'Required'
+            } else if (values.password.length < 4) {
+                errors.password = 'Should be more three symbols'
             }
+            return errors
         },
+        // validate: (values) => {
+        //     if (!values.email) {
+        //         return {
+        //             email: 'bad email'
+        //         }
+        //     }
+        //     if (!values.password) {
+        //         return {
+        //             password: 'Password is require'
+        //         }
+        //     }
+        // },
         initialValues: {
             email: '',
             password: '',
@@ -38,12 +57,11 @@ export const Login = () => {
         },
         onSubmit: values => {
             dispatch(authLoginTC(values));
+            formik.resetForm({//зачищаем все поля
+                values: {email: values.email, password: '', rememberMe:false},//А можно указать какое конткретное поле зачищаем
+        });
         },
     });
-
-    if (isLoggedIn) {
-        return <Navigate to='/'/>
-    }
 
     //MUI CHANGE STYLE===============================================
     const theme = createTheme({
@@ -76,13 +94,15 @@ export const Login = () => {
                     },
                     input: {
                         color: '#1976D2',
-
                     },
                 },
             },
         },
     });
 //==========================================================
+    if (isLoggedIn) {
+        return <Navigate to='/'/>
+    }
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
@@ -93,9 +113,9 @@ export const Login = () => {
                     padding: '10px',
                     margin: '50% 0 0'
                 }}>
-                    <form action="" onSubmit={formik.handleSubmit}>
+                    <form onSubmit={formik.handleSubmit}>
                         <FormControl>
-                            <FormLabel sx={{color: 'grey'}}>
+                            <FormLabel sx={{color: '#1976D2'}}>
                                 <p>To log in get registered
                                     <a href={'https://social-network.samuraijs.com/'} target={'_blank'}> here</a>
                                 </p>
@@ -105,12 +125,45 @@ export const Login = () => {
                             </FormLabel>
                             <FormGroup style={{color: 'brown'}}>
                                 <ThemeProvider theme={theme}>
-                                    <TextField label="Email" margin="normal" {...formik.getFieldProps('email')}/>
-                                    {formik.errors.email ? <div>{formik.errors.email}</div> : null}
+                                    {/*<TextField label="Email"*/}
+                                    {/*           margin="normal"*/}
+                                    {/*           name={'email'}*/}
+                                    {/*           onChange={formik.handleChange}*/}
+                                    {/*           value={formik.values.email}*/}
+                                    {/*           onBlur={formik.handleBlur}*/}
+                                    {/*           sx={{margin: '0'}}*/}
+                                    {/*/>*/}
+                                    {/*<div style={{height: '30px'}}>{formik.touched.email &&*/}
+                                    {/*formik.errors.email ? formik.errors.email : null}</div>*/}
 
-                                    <TextField type="password" label="Password"
+                                    {/*<TextField type="password"*/}
+                                    {/*           label="Password"*/}
+                                    {/*           name={'password'}*/}
+                                    {/*           onChange={formik.handleChange}*/}
+                                    {/*           value={formik.values.password}*/}
+                                    {/*           onBlur={formik.handleBlur}*/}
+                                    {/*           autoComplete='off'*/}
+                                    {/*/>*/}
+                                    {/*<div*/}
+                                    {/*    style={{height: '20px'}}>{formik.touched.password &&*/}
+                                    {/*formik.errors.password ? formik.errors.password : null}</div>*/}
+
+                                    {/*<FormControlLabel sx={{'svg': {color: '#1976D2'}, color: 'grey'}}*/}
+                                    {/*                  label={'Remember me'}*/}
+                                    {/*                  control={<Checkbox name={'rememberMe'}*/}
+                                    {/*                                     onChange={formik.handleChange}*/}
+                                    {/*                                     value={formik.values.rememberMe}*/}
+                                    {/*                                     checked={formik.values.rememberMe}*/}
+                                    {/*                  />}/>*/}
+                                    {/*Сокращенный вариант props*/}
+                                    <TextField label="Email" margin="normal" {...formik.getFieldProps('email')}/>
+                                    <div style={{height: '30px'}}>{formik.touched.email &&
+                                    formik.errors.email ? formik.errors.email : null}</div>
+
+                                    <TextField type="password" label="Password" autoComplete='off'
                                                margin="normal" {...formik.getFieldProps('password')}/>
-                                    {formik.errors.password ? <div>{formik.errors.password}</div> : null}
+                                    <div style={{height: '30px'}}>{formik.touched.password &&
+                                    formik.errors.password ? formik.errors.password : null}</div>
 
                                     <FormControlLabel sx={{'svg': {color: '#1976D2'}}} label={'Remember me'}
                                                       control={<Checkbox {...formik.getFieldProps('rememberMe')}
