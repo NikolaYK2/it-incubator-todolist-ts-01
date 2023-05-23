@@ -36,6 +36,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
         //     .then(res=>{
         //         dispatch(setTodolistsAC(res.data));
         //     })
+
     }, [])
 
 //         const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);

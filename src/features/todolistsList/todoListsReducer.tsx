@@ -2,7 +2,8 @@ import {todolistsApi, TodolistType} from "../../api/todolistsApi";
 import {Dispatch} from "redux";
 import {setAppStatusAC, SetAppStatusACType, StatusType} from "../../app/appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
-import {ResCode} from "./tasksReducer";
+import {ResCode, setTasksTC} from "./tasksReducer";
+import {AppThunk} from "../../app/store";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 
@@ -57,6 +58,9 @@ export const todoListsReducer = (state = initialState, action: complexTypeAction
 
     } else if (action.type === "SET-TODOLISTS") {
         return action.payload.todoLists.map(tl => ({...tl, filter: 'All', entityStatus: 'idle'}));
+
+    }else if (action.type === "CLEAR-DATA") {//зачищаем наши данные когда выходим с приложухи
+        return []
     }
     return state;
 };
@@ -69,6 +73,7 @@ export type complexTypeActions =
     | SetTodoACType
     | SetAppStatusACType
     | ChangeTodoEntStatusACType
+    | ClearTodosDataACType
     | ReturnType<typeof onChangeTitleTodolistAC>
     | ReturnType<typeof changeTasksFilterAC>;
 
@@ -111,6 +116,9 @@ export const changeTodoEntStatusAC = (todoId: string, status: StatusType,) => {
         }
     } as const;
 }
+//ЗАЧИСТКА ДАННЫХ ----------------------------
+export type ClearTodosDataACType = ReturnType<typeof clearTodosDataAC>;
+export const clearTodosDataAC=()=>({type:'CLEAR-DATA'}as const);
 
 //THUNK ===========================================================================
 // export const setTodolistsThunk =/*()=>{
@@ -121,12 +129,18 @@ export const changeTodoEntStatusAC = (todoId: string, status: StatusType,) => {
 //         })
 // }
 
-export const setTodolistsThunkCreator = () => /*{*//*return */(dispatch: Dispatch<complexTypeActions>) => {
+export const setTodolistsThunkCreator = ():AppThunk => /*{*//*return */(dispatch) => {
     dispatch(setAppStatusAC('loading'));
     todolistsApi.getTodolists()
         .then(res => {
             dispatch(setTodolistsAC(res.data));
             dispatch(setAppStatusAC('succeeded'));
+            return res.data//Делаем для того, что б сетать таски только после того, как загрузятся тудулисты
+        })
+        .then((todos)=>{//а вот только теперь достаем наши таски
+            todos.forEach((todo)=>{
+                dispatch(setTasksTC(todo.id))
+            })
         })
         .catch(error => {
             handleServerNetworkError(error, dispatch)

@@ -44,7 +44,7 @@ export type ResponsTodolistsType<D = {}> = {//D - уточняем наш дже
 // }
 
 //RESULT CODE ===================================
-export enum ResultCOde {
+export enum ResultCode {
     Ok = 0,
     Error = 1,
     Captcha = 10

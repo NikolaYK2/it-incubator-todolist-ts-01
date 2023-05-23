@@ -1,5 +1,5 @@
 import {setAppStatusAC} from "../../app/appReducer";
-import {authApi, AuthLoginType, ResultCOde} from "../../api/todolistsApi";
+import {authApi, AuthLoginType, ResultCode} from "../../api/todolistsApi";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 import {AppThunk} from "../../app/store";
 
@@ -59,7 +59,7 @@ export const authLoginTC = (data: AuthLoginType): AppThunk => async (dispatch) =
     dispatch(setAppStatusAC('loading'));
     try {
         const res = await authApi.authLogin(data);
-        if (res.data.resultCode === ResultCOde.Ok) {
+        if (res.data.resultCode === ResultCode.Ok) {
             // dispatch(authLoginAC(data));
             dispatch(setInLoginAC(true))
             dispatch(setAppStatusAC('succeeded'))

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback} from "react";
 import {Button} from "../../../components/button/Button";
 import s from "./Todolist.module.css";
 import {FullInput} from "../../../components/fullInputButton/FullInput";
@@ -7,7 +7,7 @@ import {IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState, AppThunkDispatch} from "../../../app/store";
-import {addTasksTC, setTasksTC} from "../tasksReducer";
+import {addTasksTC} from "../tasksReducer";
 import {
     changeTasksFilterAC,
     changeTitleTodoThunkCreator,
@@ -45,12 +45,12 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
     const dispatch = useDispatch<AppThunkDispatch>();
     const tasks = useSelector<AppRootState, TaskType[]>((state) => state.tasks[id]);
 
-    useEffect(() => {
-        if (demo) {
-            return;
-        }
-        dispatch(setTasksTC(id));
-    }, [])
+    // useEffect(() => {//Эту функцию теперь выполняется последовательнов then
+    //     if (demo) {
+    //         return;
+    //     }
+    //     dispatch(setTasksTC(id));
+    // }, [])
     //=======Добавление таски=====================================================================================================
 //     const addTask = (addTitle: string, todolistID: string) => {
 // //         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])

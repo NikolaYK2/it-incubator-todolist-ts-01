@@ -4,7 +4,7 @@ import {AppRootState, AppThunk} from "../../app/store";
 import {
     AddTodoACType,
     changeTodoEntStatusAC,
-    ChangeTodoEntStatusACType,
+    ChangeTodoEntStatusACType, ClearTodosDataACType,
     DeleteTodoACType,
     SetTodoACType
 } from "./todoListsReducer";
@@ -120,6 +120,9 @@ export const tasksReducer = (state = initialState, action: complexACType): taskS
             // return copy;
             return {...state, [action.payload.todolistID]: action.payload.tasks}//[action.payload.tasks]- он и так массив, так что ...spred не нужно
         }
+        case 'CLEAR-DATA': {
+            return {}
+        }
 
         default:
             return state
@@ -140,6 +143,7 @@ export type complexACType =
     | SetAppErrorACType
     | SetAppStatusACType
     | ChangeTodoEntStatusACType
+    | ClearTodosDataACType
     | ReturnType<typeof addTaskAC>
     | ReturnType<typeof deleteTaskAC>
     | ReturnType<typeof updateTaskAC>

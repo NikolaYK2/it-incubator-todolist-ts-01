@@ -1,8 +1,9 @@
-import {authApi} from "../api/todolistsApi";
+import {authApi, ResultCode} from "../api/todolistsApi";
 import {Dispatch} from "redux";
 import {ActionsType} from "./store";
 import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
 import {setInLoginAC} from "../features/login/authReducer";
+import {clearTodosDataAC} from "../features/todolistsList/todoListsReducer";
 
 export type StatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
@@ -87,9 +88,10 @@ export const logoutAppTC = () => async (dispatch: Dispatch<ActionsType>) => {
     dispatch(setAppStatusAC('loading'));
     try {
         const res = await authApi.logout()
-        if (res.data.resultCode === 0) {
+        if (res.data.resultCode === ResultCode.Ok) {
             dispatch(setInLoginAC(false));
             dispatch(setAppStatusAC('succeeded'));
+            dispatch(clearTodosDataAC());
         } else {
             handleServerAppError(res.data, dispatch)
         }
