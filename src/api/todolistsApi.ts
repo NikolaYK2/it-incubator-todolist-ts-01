@@ -1,5 +1,5 @@
 import axios from "axios";
-import {EntStatusType} from "../features/todolistsList/tasksReducer";
+import {EntStatusType} from "features/todolistsList/tasksReducer";
 
 const instance = axios.create({
     withCredentials: true,

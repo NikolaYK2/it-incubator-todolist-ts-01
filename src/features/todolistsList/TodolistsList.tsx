@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux/";
-import {AppRootState, AppThunkDispatch, useAppSelector} from "../../app/store";
+import {AppRootState, AppThunkDispatch, useAppSelector} from "app/store";
 import {addTodoThunkCreator, setTodolistsThunkCreator, TodoAppType} from "./todoListsReducer";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {Todolist} from "./todolist/Todolist";
-import {FullInput} from "../../components/fullInputButton/FullInput";
+import {FullInput} from "components/fullInputButton/FullInput";
 import {Navigate} from "react-router-dom";
 
 type TodolistsListType = {

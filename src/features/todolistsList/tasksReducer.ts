@@ -1,6 +1,6 @@
-import {TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType} from "../../api/todolistsApi";
+import {TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType} from "api/todolistsApi";
 import {Dispatch} from "redux";
-import {AppRootState, AppThunk} from "../../app/store";
+import {AppRootState, AppThunk} from "app/store";
 import {
     AddTodoACType,
     changeTodoEntStatusAC,
@@ -8,8 +8,8 @@ import {
     DeleteTodoACType,
     SetTodoACType
 } from "./todoListsReducer";
-import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType, StatusType} from "../../app/appReducer";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
+import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType, StatusType} from "app/appReducer";
+import {handleServerAppError, handleServerNetworkError} from "utils/errorUtils";
 import {AxiosError} from "axios";
 
 // export type TasksPropsType = {

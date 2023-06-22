@@ -1,9 +1,9 @@
-import {todolistsApi, TodolistType} from "../../api/todolistsApi";
+import {todolistsApi, TodolistType} from "api/todolistsApi";
 import {Dispatch} from "redux";
-import {setAppStatusAC, SetAppStatusACType, StatusType} from "../../app/appReducer";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
+import {setAppStatusAC, SetAppStatusACType, StatusType} from "app/appReducer";
+import {handleServerAppError, handleServerNetworkError} from "utils/errorUtils";
 import {ResCode, setTasksTC} from "./tasksReducer";
-import {AppThunk} from "../../app/store";
+import {AppThunk} from "app/store";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 

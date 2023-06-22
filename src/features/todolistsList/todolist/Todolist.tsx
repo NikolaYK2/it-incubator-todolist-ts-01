@@ -1,12 +1,12 @@
 import React, {useCallback} from "react";
-import {Button} from "../../../components/button/Button";
+import {Button} from "components/button/Button";
 import s from "./Todolist.module.css";
-import {FullInput} from "../../../components/fullInputButton/FullInput";
-import {EditableSpan} from "../../../components/editableSpan/EditableSpan";
+import {FullInput} from "components/fullInputButton/FullInput";
+import {EditableSpan} from "components/editableSpan/EditableSpan";
 import {IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootState, AppThunkDispatch} from "../../../app/store";
+import {AppRootState, AppThunkDispatch} from "app/store";
 import {addTasksTC} from "../tasksReducer";
 import {
     changeTasksFilterAC,
@@ -16,7 +16,7 @@ import {
     TodoAppType,
 } from "../todoListsReducer";
 import {Task} from "./task/Task";
-import {TaskStatuses, TaskType} from "../../../api/todolistsApi";
+import {TaskStatuses, TaskType} from "api/todolistsApi";
 
 export type TodolistPropsType = {
     todolist: TodoAppType,

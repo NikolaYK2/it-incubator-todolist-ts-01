@@ -1,14 +1,14 @@
 import React from 'react';
 import {Provider} from "react-redux";
-import {AppRootState} from "../../app/store";
+import {AppRootState} from "app/store";
 import {applyMiddleware, combineReducers, legacy_createStore as createStore} from "redux";
 import {v1} from "uuid";
-import {tasksReducer} from "../../features/todolistsList/tasksReducer";
-import {todoListsReducer} from "../../features/todolistsList/todoListsReducer";
-import {TaskStatuses, TodoTaskPriorities} from "../../api/todolistsApi";
-import {appReducer} from "../../app/appReducer";
+import {tasksReducer} from "features/todolistsList/tasksReducer";
+import {todoListsReducer} from "features/todolistsList/todoListsReducer";
+import {TaskStatuses, TodoTaskPriorities} from "api/todolistsApi";
+import {appReducer} from "app/appReducer";
 import thunkMiddleware from "redux-thunk";
-import {authReducer} from "../../features/login/authReducer";
+import {authReducer} from "features/login/authReducer";
 
 
 const rootReducer = combineReducers({

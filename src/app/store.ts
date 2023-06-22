@@ -1,10 +1,10 @@
 import {applyMiddleware, combineReducers, compose, legacy_createStore as createStore} from "redux";
-import {complexACType, tasksReducer} from "../features/todolistsList/tasksReducer";
-import {complexTypeActions, todoListsReducer} from "../features/todolistsList/todoListsReducer";
+import {complexACType, tasksReducer} from "features/todolistsList/tasksReducer";
+import {complexTypeActions, todoListsReducer} from "features/todolistsList/todoListsReducer";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {ActionsAppType, appReducer} from "./appReducer";
-import {ComplexLoginACType, authReducer} from "../features/login/authReducer";
+import {ComplexLoginACType, authReducer} from "features/login/authReducer";
 
 //помогает следить за нашим редаксковским стором
 declare global {
@@ -44,7 +44,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 
 // Create a type for thunk dispatch ===========================
 export type AppThunkDispatch = ThunkDispatch<AppRootState, unknown, ActionsType>;
-export const useAppDispatch =()=> useDispatch<AppThunkDispatch>();
+export const useAppDispatch = () => useDispatch<AppThunkDispatch>();
 export const useAppSelector: TypedUseSelectorHook<AppRootState> = useSelector;//здесь мы его не вызываем
 
 

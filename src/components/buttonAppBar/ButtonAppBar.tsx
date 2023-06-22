@@ -8,9 +8,9 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import LinearProgress from "@mui/material/LinearProgress";
-import {ErrorSnackbar} from "../errorSnackbar/ErrorSnackbar";
-import {useAppDispatch, useAppSelector} from "../../app/store";
-import {logoutAppTC, StatusType} from "../../app/appReducer";
+import {ErrorSnackbar} from "components/errorSnackbar/ErrorSnackbar";
+import {useAppDispatch, useAppSelector} from "app/store";
+import {logoutAppTC, StatusType} from "app/appReducer";
 
 export default function ButtonAppBar() {
     const status = useAppSelector<StatusType>(state => state.app.status);

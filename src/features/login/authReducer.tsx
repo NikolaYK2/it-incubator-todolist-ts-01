@@ -1,7 +1,7 @@
-import {setAppStatusAC} from "../../app/appReducer";
-import {authApi, AuthLoginType, ResultCode} from "../../api/todolistsApi";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
-import {AppThunk} from "../../app/store";
+import {setAppStatusAC} from "app/appReducer";
+import {authApi, AuthLoginType, ResultCode} from "api/todolistsApi";
+import {handleServerAppError, handleServerNetworkError} from "utils/errorUtils";
+import {AppThunk} from "app/store";
 
 type initialStateType = {
     isLoggedIn: boolean,

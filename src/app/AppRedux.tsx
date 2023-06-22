@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import './App.css';
-import ButtonAppBar from "../components/buttonAppBar/ButtonAppBar";
-import {TodolistsList} from "../features/todolistsList/TodolistsList";
-import {Login} from "../features/login/Login";
+import ButtonAppBar from "components/buttonAppBar/ButtonAppBar";
+import {TodolistsList} from "features/todolistsList/TodolistsList";
+import {Login} from "features/login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "./store";
 import CircularProgress from "@mui/material/CircularProgress";

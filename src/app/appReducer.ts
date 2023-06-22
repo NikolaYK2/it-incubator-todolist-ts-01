@@ -1,9 +1,9 @@
-import {authApi, ResultCode} from "../api/todolistsApi";
+import {authApi, ResultCode} from "api/todolistsApi";
 import {Dispatch} from "redux";
 import {ActionsType} from "./store";
-import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
-import {setInLoginAC} from "../features/login/authReducer";
-import {clearTodosDataAC} from "../features/todolistsList/todoListsReducer";
+import {handleServerAppError, handleServerNetworkError} from "utils/errorUtils";
+import {setInLoginAC} from "features/login/authReducer";
+import {clearTodosDataAC} from "features/todolistsList/todoListsReducer";
 
 export type StatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
