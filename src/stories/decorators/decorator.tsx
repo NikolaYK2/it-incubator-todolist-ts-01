@@ -1,6 +1,5 @@
 import React from 'react';
 import {Provider} from "react-redux";
-import {AppRootState} from "app/store";
 import {applyMiddleware, combineReducers, legacy_createStore as createStore} from "redux";
 import {v1} from "uuid";
 import {tasksReducer} from "features/todolistsList/tasksReducer";
@@ -9,6 +8,7 @@ import {TaskStatuses, TodoTaskPriorities} from "api/todolistsApi";
 import {appReducer} from "app/appReducer";
 import thunkMiddleware from "redux-thunk";
 import {authReducer} from "features/login/authReducer";
+import {AppRootStateType} from "app/store";
 
 
 const rootReducer = combineReducers({
@@ -26,93 +26,109 @@ const initialState = {
     ],
     tasks: {
         ['todolistID_1']: [
-            {id: v1(), title: "HTML&CSS", status: TaskStatuses.Completed,
+            {
+                id: v1(), title: "HTML&CSS", status: TaskStatuses.Completed,
                 addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_1',
-                description: ''},
-            {id: v1(), title: "JS", status: TaskStatuses.Completed,
-            addedDate: '',
+                description: ''
+            },
+            {
+                id: v1(), title: "JS", status: TaskStatuses.Completed,
+                addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_1',
-                description: ''},
-            {id: v1(), title: "ReactJS", status: TaskStatuses.Completed,
-            addedDate: '',
+                description: ''
+            },
+            {
+                id: v1(), title: "ReactJS", status: TaskStatuses.Completed,
+                addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_1',
-                description: ''},
-            {id: v1(), title: "Next", status: TaskStatuses.New,
-            addedDate: '',
+                description: ''
+            },
+            {
+                id: v1(), title: "Next", status: TaskStatuses.New,
+                addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_1',
-                description: ''},
+                description: ''
+            },
         ],
         ['todolistID_2']: [
-            {id: v1(), title: "Beer", status: TaskStatuses.Completed,
-            addedDate: '',
+            {
+                id: v1(), title: "Beer", status: TaskStatuses.Completed,
+                addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_2',
-                description: ''},
-            {id: v1(), title: "Meat", status: TaskStatuses.Completed,
-            addedDate: '',
+                description: ''
+            },
+            {
+                id: v1(), title: "Meat", status: TaskStatuses.Completed,
+                addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_2',
-                description: ''},
-            {id: v1(), title: "Fish", status: TaskStatuses.Completed,
-            addedDate: '',
+                description: ''
+            },
+            {
+                id: v1(), title: "Fish", status: TaskStatuses.Completed,
+                addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_2',
-                description: ''},
-            {id: v1(), title: "Drink", status: TaskStatuses.New,
-            addedDate: '',
+                description: ''
+            },
+            {
+                id: v1(), title: "Drink", status: TaskStatuses.New,
+                addedDate: '',
                 startDate: '',
                 deadline: '',
                 order: 0,
                 priority: TodoTaskPriorities.Low,
                 todoListId: 'todolistID_2',
-                description: ''},
+                description: ''
+            },
         ],
     },
-    app:{
+    app: {
         status: 'idle',
         error: null,
-        initialized:false,
+        initialized: false,
     },
-    auth:{
-        isLoggedIn:false
+    auth: {
+        isLoggedIn: false
         // email: '',
         // password: '',
         // rememberMe:false
     }
 };
-export const storyBookStore = createStore(rootReducer, initialState as AppRootState, applyMiddleware(thunkMiddleware));
+export const storyBookStore = createStore(rootReducer, initialState as AppRootStateType, applyMiddleware(thunkMiddleware));
 
 export const decorators = [
     (Story: any) => (
-            <div style={{margin: '3em'}}>
-                <Provider store={storyBookStore}>{Story()}</Provider>
-            </div>
+        <div style={{margin: '3em'}}>
+            <Provider store={storyBookStore}>{Story()}</Provider>
+        </div>
     ),
 ];
 //========================================================

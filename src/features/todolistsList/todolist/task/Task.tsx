@@ -2,21 +2,20 @@ import React, {useCallback} from 'react';
 import {Checkbox} from "@mui/material";
 import {Bookmark, BookmarkBorder} from "@mui/icons-material";
 import {deleteTasksTC, updateTaskTC} from "../../tasksReducer";
-import {useDispatch} from "react-redux";
 import s from "../Todolist.module.css";
 import {Button} from "components/button/Button";
 import {EditableSpan} from "components/editableSpan/EditableSpan";
 import {TaskStatuses, TaskType} from "api/todolistsApi";
-import {AppThunkDispatch} from "app/store";
+import {useAppDispatch} from "app/store";
 
 export type  TaskTypeP = {
     task: TaskType,
     idTodolist: string,
-    disabled?:boolean,
+    disabled?: boolean,
 }
 export const Task = React.memo((props: TaskTypeP) => {
     const {id, status, title} = props.task
-    const dispatch = useDispatch<AppThunkDispatch>();
+    const dispatch = useAppDispatch();
 
     //============CHecked===============================
     const changeTaskStatusHandler = useCallback((taskId: string, status: TaskStatuses) => {
@@ -28,7 +27,7 @@ export const Task = React.memo((props: TaskTypeP) => {
     }, [dispatch, props.idTodolist]);
 
     // //Удаление таски==============================================================
-    const onClickHandlerDeleteTask = useCallback((todoId:string, taskId: string, ) => {
+    const onClickHandlerDeleteTask = useCallback((todoId: string, taskId: string,) => {
         // props.deleteTask(props.todoListID, taskId)
         // dispatch(deleteTaskAC(props.idTodolist, taskId))
 

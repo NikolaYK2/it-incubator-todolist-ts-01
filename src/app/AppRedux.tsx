@@ -6,7 +6,7 @@ import {Login} from "features/login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "./store";
 import CircularProgress from "@mui/material/CircularProgress";
-import {initializedAppTC} from "./appReducer";
+import {initializedApp} from "app/appReducer";
 
 type AppReduxType = {
     demo?: boolean
@@ -18,7 +18,7 @@ function AppRedux({demo = false}: AppReduxType) {
     const initialized = useAppSelector<boolean>(state => state.app.initialized)
 
     useEffect(() => {
-        dispatch(initializedAppTC());
+        dispatch(initializedApp({initialized: true}));
     }, [])
 
     if (!initialized) {//Убираем моргания перехода на логин при обновлении
@@ -34,7 +34,8 @@ function AppRedux({demo = false}: AppReduxType) {
                 <Route path="/it-incubator-todolist-ts-01" element={<Navigate to={'/'}/>}/>
                 <Route path="/" element={<TodolistsList demo={demo}/>}/>
                 <Route path='/login' element={<Login/>}/>
-                <Route path='/404' element={<h1 style={{color: 'brown', textAlign: 'center'}}>404: PAGE NOT FOUND</h1>}/>
+                <Route path='/404'
+                       element={<h1 style={{color: 'brown', textAlign: 'center'}}>404: PAGE NOT FOUND</h1>}/>
                 <Route path='*' element={<Navigate to={'/404'}/>}/>
             </Routes>
         </div>

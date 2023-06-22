@@ -1,6 +1,6 @@
 import {addTaskAC, deleteTaskAC, setTasksAC, tasksReducer, taskStateType, updateTaskAC,} from "./tasksReducer";
-import {addTodolistAC, setTodolistsAC} from "./todoListsReducer";
 import {TaskStatuses, TodoTaskPriorities} from "api/todolistsApi";
+import {todoActions} from "features/todolistsList/todoListsReducer";
 
 let tasks: taskStateType;
 beforeEach(() => {
@@ -130,8 +130,8 @@ test('add task', () => {
 
 test('add todolist and null tasks', () => {
 
-    const newTasks = tasksReducer(tasks, addTodolistAC({
-        id: 'todolistID', title: 'new todolistsList', order: 0, addedDate:''
+    const newTasks = tasksReducer(tasks, todoActions.addTodo({
+        id: 'todolistID', title: 'new todolistsList', order: 0, addedDate: '',
     }));
     const keys = Object.keys(newTasks);//Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
     //Находим новый ключ
@@ -190,7 +190,7 @@ test('change task status', () => {
 
 test('пустые массивы должны быть добавлены, когда мы set todolists', () => {
 
-    const newTasks = tasksReducer({}, setTodolistsAC([
+    const newTasks = tasksReducer({}, todoActions.setTodo([
         {id: '1', title: 'title1', order: 0, addedDate: ''},
         {id: '2', title: 'title2', order: 0, addedDate: ''},]));
 
@@ -204,8 +204,8 @@ test('пустые массивы должны быть добавлены, ко
 test('tasks для todolistsList должны быть добавлены', () => {
 
     const newTasks = tasksReducer({
-        'todolistID_2':[],
-        'todolistID_1':[]
+        'todolistID_2': [],
+        'todolistID_1': []
     }, setTasksAC('todolistID_1', tasks['todolistID_1']));
 
 

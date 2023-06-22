@@ -1,10 +1,9 @@
 import {ComponentMeta, ComponentStory} from "@storybook/react";
 import React from "react";
 import {Task} from "./Task";
-import {useSelector} from "react-redux";
-import {AppRootState} from "app/store";
-import {TaskStatuses, TaskType, TodoTaskPriorities} from "api/todolistsApi";
+import {TaskStatuses, TodoTaskPriorities} from "api/todolistsApi";
 import {decorators} from "stories/decorators/decorator";
+import {useAppSelector} from "app/store";
 
 export default {
     title: 'Components/Task',
@@ -101,7 +100,8 @@ TaskExamplete2.parameters = {
 
 //REDUX нужно обернуть в оболочку редакторскую компоненту======================================================================================
 const TaskWithRedux = () => {
-    const tasks = useSelector<AppRootState, TaskType>((state) => state.tasks['todolistID_1'][0]);
+    const tasks = useAppSelector((state) => state.tasks['todolistID_1'][0]);
+    // const tasks = useSelector<AppRootState, TaskType>((state) => state.tasks['todolistID_1'][0]);
 
     return <Task task={tasks} idTodolist={'todolistID_1'}/>
 }

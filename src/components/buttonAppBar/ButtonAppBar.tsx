@@ -10,7 +10,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LinearProgress from "@mui/material/LinearProgress";
 import {ErrorSnackbar} from "components/errorSnackbar/ErrorSnackbar";
 import {useAppDispatch, useAppSelector} from "app/store";
-import {logoutAppTC, StatusType} from "app/appReducer";
+import {appThunk, StatusType} from "app/appReducer";
 
 export default function ButtonAppBar() {
     const status = useAppSelector<StatusType>(state => state.app.status);
@@ -18,8 +18,8 @@ export default function ButtonAppBar() {
     const dispatch = useAppDispatch();
 
     const logoutHandle = useCallback(() => {
-        dispatch(logoutAppTC());
-    },[]);
+        dispatch(appThunk.logoutApp());
+    }, []);
 
     return (
         <Box sx={{flexGrow: 1}}>

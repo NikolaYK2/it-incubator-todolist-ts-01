@@ -9,10 +9,10 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import {useAppDispatch, useAppSelector} from "app/store";
-import {authLoginTC} from "./authReducer";
 import {Navigate} from 'react-router-dom';
 import Paper from "@mui/material/Paper";
 import {createTheme, ThemeProvider} from "@mui/material";
+import {authThunk} from "features/login/authReducer";
 
 type FormikErrorType = {
     email?: string
@@ -56,7 +56,7 @@ export const Login = () => {
             rememberMe: false,
         },
         onSubmit: values => {
-            dispatch(authLoginTC(values));
+            dispatch(authThunk.authLogin(values));
             formik.resetForm({//зачищаем все поля
                 values: {email: values.email, password: '', rememberMe:false},//А можно указать какое конткретное поле зачищаем
         });
