@@ -5,18 +5,17 @@ import {FullInput} from "components/fullInputButton/FullInput";
 import {EditableSpan} from "components/editableSpan/EditableSpan";
 import {IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootState, AppThunkDispatch} from "app/store";
 import {addTasksTC} from "../tasksReducer";
 import {
-    changeTasksFilterAC,
     changeTitleTodoThunkCreator,
     deleteTodoThunkCreator,
     filterValueType,
+    todoActions,
     TodoAppType,
 } from "../todoListsReducer";
 import {Task} from "./task/Task";
-import {TaskStatuses, TaskType} from "api/todolistsApi";
+import {TaskStatuses} from "api/todolistsApi";
+import {useAppDispatch, useAppSelector} from "app/store";
 
 export type TodolistPropsType = {
     todolist: TodoAppType,
@@ -42,8 +41,9 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
     // if (typeof props.demo === 'undefined') props.demo = false;//что бы не делать тут проверки,  делаем ее в пропсах
 
     const {id, title, filter} = props.todolist
-    const dispatch = useDispatch<AppThunkDispatch>();
-    const tasks = useSelector<AppRootState, TaskType[]>((state) => state.tasks[id]);
+
+    const dispatch = useAppDispatch();
+    const tasks = useAppSelector((state) => state.tasks[id]);
 
     // useEffect(() => {//Эту функцию теперь выполняется последовательнов then
     //     if (demo) {
@@ -91,7 +91,7 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
     //================addTask===================================================
     const addTask = useCallback((title: string) => {
         // dispatch(addTaskAC(addTitle, id));
-        dispatch(addTasksTC(id, title))
+        dispatch(addTasksTC({todoId: id, title: title}))
 
         // props.addItem(title, props.todoListID);
     }, [dispatch, id]);
@@ -174,7 +174,7 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
                 <li key={task.id} className={task.status ? s.activeTask : ''}>
                     {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
                     {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
-                    <Task task={task} idTodolist={id} />
+                    <Task task={task} idTodolist={id}/>
                     {/*<Button callBack={() => onClickHandlerDeleteTask(task.id)} style={s.dellTask}/>*/}
                     {/*<Checkbox*/}
                     {/*    checked={task.isDone}*/}
@@ -195,7 +195,7 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
 //===============================================================================
 //Фильтр ==================================================
     const changeTasksFilterHandler = useCallback((filter: filterValueType,) => {
-        dispatch(changeTasksFilterAC(id, filter,))
+        dispatch(todoActions.taskFilterTodo({todoListsID: id, filter}))
         // props.changeTasksFilter(props.todoListID, filter,);
 
     }, [dispatch, id]);
@@ -235,7 +235,7 @@ export const Todolist = React.memo(({demo = false, ...props}: TodolistPropsType)
         // dispatch(onChangeTitleTodolistAC(newValue, id))
         // props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
 
-        dispatch(changeTitleTodoThunkCreator(id, newValue));
+        dispatch(changeTitleTodoThunkCreator({todoId: id, title: newValue}));
     }, [dispatch, id]);
     // ========================================================================================================
 

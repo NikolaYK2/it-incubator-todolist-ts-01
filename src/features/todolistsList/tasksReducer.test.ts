@@ -1,8 +1,8 @@
-import {addTaskAC, deleteTaskAC, setTasksAC, tasksReducer, taskStateType, updateTaskAC,} from "./tasksReducer";
 import {TaskStatuses, TodoTaskPriorities} from "api/todolistsApi";
 import {todoActions} from "features/todolistsList/todoListsReducer";
+import {taskActions, tasksReducer, TaskStateType} from "features/todolistsList/tasksReducer";
 
-let tasks: taskStateType;
+let tasks: TaskStateType;
 beforeEach(() => {
     tasks = {
         ['todolistID_1']: [
@@ -109,17 +109,19 @@ test('add task', () => {
     //     ],
     // }
 
-    const newTasks = tasksReducer(tasks, addTaskAC({
-        id: '3',
-        title: "He",
-        status: TaskStatuses.New,
-        addedDate: '',
-        startDate: '',
-        deadline: '',
-        order: 0,
-        priority: TodoTaskPriorities.Low,
-        todoListId: 'todolistID_2',
-        description: ''
+    const newTasks = tasksReducer(tasks, taskActions.addTask({
+        tasks: {
+            id: '3',
+            title: "He",
+            status: TaskStatuses.New,
+            addedDate: '',
+            startDate: '',
+            deadline: '',
+            order: 0,
+            priority: TodoTaskPriorities.Low,
+            todoListId: 'todolistID_2',
+            description: '',
+        }
     }));
 
     expect(newTasks['todolistID_2'].length).toBe(5);
@@ -147,7 +149,7 @@ test('add todolist and null tasks', () => {
 
 test('remove task', () => {
 
-    const newTasks = tasksReducer(tasks, deleteTaskAC('todolistID_1', '1'));
+    const newTasks = tasksReducer(tasks, taskActions.deleteTask({todolistID: 'todolistID_1', tId: '1'}));
 
     expect(newTasks['todolistID_1'].length).toBe(3);
     expect(newTasks['todolistID_2'].length).toBe(4);
@@ -170,8 +172,12 @@ test('remove task', () => {
 
 test('change task title', () => {
 
-    const newTasks = tasksReducer(tasks, updateTaskAC('todolistID_1', '1', {
-        title: 'hi',
+    const newTasks = tasksReducer(tasks, taskActions.updTask({
+        todolistID: 'todolistID_1',
+        taskId: '1',
+        model: {
+            title: 'hi',
+        }
     }));
 
     expect(newTasks['todolistID_1'][1].title).toBe('JS');
@@ -180,8 +186,12 @@ test('change task title', () => {
 
 test('change task status', () => {
 
-    const newTasks = tasksReducer(tasks, updateTaskAC('todolistID_1', '2', {
-        status: TaskStatuses.New,
+    const newTasks = tasksReducer(tasks, taskActions.updTask({
+        todolistID: 'todolistID_1',
+        taskId: '2',
+        model: {
+            status: TaskStatuses.New,
+        }
     }));
 
     expect(newTasks['todolistID_1'][1].status).toBe(TaskStatuses.New);
@@ -206,7 +216,7 @@ test('tasks для todolistsList должны быть добавлены', () =
     const newTasks = tasksReducer({
         'todolistID_2': [],
         'todolistID_1': []
-    }, setTasksAC('todolistID_1', tasks['todolistID_1']));
+    }, taskActions.setTasks({todolistID: 'todolistID_1', tasks: tasks['todolistID_1']}));
 
 
     expect(newTasks['todolistID_1'].length).toBe(4);

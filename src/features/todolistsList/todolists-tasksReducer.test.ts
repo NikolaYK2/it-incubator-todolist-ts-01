@@ -1,18 +1,18 @@
-import {addTodolistAC, deleteTodolistAC, TodoAppType, todoListsReducer} from "./todoListsReducer";
-import {tasksReducer, taskStateType} from "./tasksReducer";
 import {TaskStatuses, TodolistType, TodoTaskPriorities} from "api/todolistsApi";
+import {todoActions, TodoAppType, todoListsReducer} from "features/todolistsList/todoListsReducer";
+import {tasksReducer, TaskStateType} from "features/todolistsList/tasksReducer";
 
 
 test('ids should be equals', () => {
     const todoLists: TodoAppType[] = [];
-    const tasks: taskStateType = {};
+    const tasks: TaskStateType = {};
 
     // const action = addTaskTodoAC('new todolist');
 
-    const newTodoLists = todoListsReducer(todoLists, addTodolistAC({
+    const newTodoLists = todoListsReducer(todoLists, todoActions.addTodo({
         id: 'todolistID', title: 'What to learn', order: 0, addedDate: ''
     }))
-    const newTasks = tasksReducer(tasks, addTodolistAC({
+    const newTasks = tasksReducer(tasks, todoActions.addTodo({
         id: 'todolistID', title: 'What to learn', order: 0, addedDate: ''
     }));
 
@@ -25,7 +25,7 @@ test('ids should be equals', () => {
 })
 
 test('delete todolist and task', () => {
-    const tasks: taskStateType = {//tasks переменная в которой лежат данные, в данном случаи обьекты
+    const tasks: TaskStateType = {//tasks переменная в которой лежат данные, в данном случаи обьекты
         ['todolistID_1']: [
             {
                 id: '1',
@@ -116,7 +116,7 @@ test('delete todolist and task', () => {
     }
 
 
-    const newTask = tasksReducer(tasks, deleteTodolistAC('todolistID_1'));
+    const newTask = tasksReducer(tasks, todoActions.deleteTodo({todolistID: 'todolistID_1'}));
     const keys = Object.keys(newTask)
 
     expect(keys.length).toBe(1);
@@ -125,7 +125,7 @@ test('delete todolist and task', () => {
 
 test('set todolistsList and task', () => {
     const todoLists: TodoAppType[] = [];
-    const tasks: taskStateType = {};
+    const tasks: TaskStateType = {};
 
     let todolist: TodolistType = {
         id: 'todolistID_1',
@@ -136,8 +136,8 @@ test('set todolistsList and task', () => {
     }
 
 
-    const newTodoLists = todoListsReducer(todoLists, addTodolistAC(todolist))
-    const newTasks = tasksReducer(tasks, addTodolistAC(todolist));
+    const newTodoLists = todoListsReducer(todoLists, todoActions.addTodo(todolist))
+    const newTasks = tasksReducer(tasks, todoActions.addTodo(todolist));
 
     const keys = Object.keys(newTasks);
     const idFromTodoLists = newTodoLists[0].id;

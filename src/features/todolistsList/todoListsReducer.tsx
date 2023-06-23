@@ -201,9 +201,12 @@
 // }
 
 //RTK ====================================================
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {StatusType} from "app/appReducer";
-import {TodolistType} from "api/todolistsApi";
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {appAction, StatusType} from "app/appReducer";
+import {ResultCode, todolistsApi, TodolistType} from "api/todolistsApi";
+import {tasksThunk} from "features/todolistsList/tasksReducer";
+import {handleServerAppError, handleServerNetworkError} from "utils/errorUtils";
+import {Simulate} from "react-dom/test-utils";
 
 export type filterValueType = "All" | 'Active' | 'Completed';
 export type TodoAppType = TodolistType & {
@@ -214,6 +217,88 @@ const initialState: TodoAppType[] = [//первым параметром при�
     // {id: todolistID_1, title: 'What to learn', filter: 'All'},
     // {id: todolistID_2, title: 'What to buy', filter: 'All'},
 ];
+
+export const setTodolistsThunkCreator = createAsyncThunk(
+    'todo/setTodo',
+
+    async (arg, thunkAPI) => {
+        const {dispatch} = thunkAPI
+        dispatch(appAction.setStatus({status: 'loading'}));
+        try {
+            const res = await todolistsApi.getTodolists()
+            dispatch(todoActions.setTodo(res.data));
+            dispatch(appAction.setStatus({status: 'succeeded'}));
+            const todos = await res.data
+            todos.forEach((todo) => {
+                dispatch(tasksThunk.setTasksTC(todo.id))
+            })
+        } catch (error: any) {
+            handleServerNetworkError(error, dispatch)
+        }
+    })
+
+export const addTodoThunkCreator = createAsyncThunk(
+    'todo/addTodo',
+    async (title: string, {dispatch}) => {
+
+        dispatch(appAction.setStatus({status: 'loading'}));
+        try {
+            const res = await todolistsApi.createTodolists(title)
+            dispatch(todoActions.addTodo(res.data.data.item));
+            dispatch(appAction.setStatus({status: 'succeeded'}));
+
+        } catch (error: any) {
+            handleServerNetworkError(error, dispatch)
+
+        }
+    })
+
+export const deleteTodoThunkCreator = createAsyncThunk(
+    'todo/deletTodo',
+
+    async (todoId: string, {dispatch}) => {
+        dispatch(appAction.setStatus({status: 'loading'}));
+        dispatch(todoActions.changeEntStatusTodo({todoId: todoId, status: 'loading'}))
+        try {
+            const res = await todolistsApi.deleteTodolists(todoId)
+            if (res.data.resultCode === ResultCode.Ok) {
+                dispatch(todoActions.deleteTodo({todolistID: todoId}));
+                dispatch(appAction.setStatus({status: 'succeeded'}));
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+            dispatch(appAction.setStatus({status: 'failed'}));
+            dispatch(todoActions.changeEntStatusTodo({todoId: todoId, status: 'idle'}))
+
+        } catch (error: any) {
+            handleServerNetworkError(error.message, dispatch);
+            dispatch(appAction.setStatus({status: 'failed'}));
+            dispatch(todoActions.changeEntStatusTodo({todoId: todoId, status: 'idle'}))
+
+        }
+    })
+
+
+export const changeTitleTodoThunkCreator = createAsyncThunk(
+    'todo/changeTitleTodo',
+
+    async (arg: { todoId: string, title: string }, {dispatch}) => {
+        dispatch(appAction.setStatus({status: 'loading'}));
+        try {
+            const res = await todolistsApi.updateTodolists(arg.todoId, arg.title)
+            if (res.data.resultCode === ResultCode.Ok) {
+                dispatch(todoActions.changeTitleTodo({todoId: arg.todoId, newValue: arg.title}));
+                dispatch(appAction.setStatus({status: 'succeeded'}));
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+
+        } catch (error: any) {
+            handleServerNetworkError(error, dispatch)
+
+        }
+    })
+
 
 const slice = createSlice({
     name: 'todoLists',

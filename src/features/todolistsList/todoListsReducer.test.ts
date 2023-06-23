@@ -1,9 +1,4 @@
-import {
-    addTodolistAC,
-    changeTasksFilterAC, changeTodoEntStatusAC,
-    deleteTodolistAC, onChangeTitleTodolistAC, setTodolistsAC, TodoAppType,
-    todoListsReducer,
-} from "./todoListsReducer";
+import {todoActions, TodoAppType, todoListsReducer} from "./todoListsReducer";
 
 
 let todoLists: TodoAppType[];
@@ -20,7 +15,7 @@ test('add new todolist', () => {
     //     {id: todolistID_1, title: 'What to learn', filter: 'All'},
     //     {id: todolistID_2, title: 'What to buy', filter: 'All'},
     // ];
-    const newTodolist = todoListsReducer(todoLists, addTodolistAC({
+    const newTodolist = todoListsReducer(todoLists, todoActions.addTodo({
             id: 'todolistID_1', title: 'What to learn', order: 0, addedDate: ''
         },
     ));
@@ -30,29 +25,38 @@ test('add new todolist', () => {
 
 test('delete todolist', () => {
 
-    const newTodolist = todoListsReducer(todoLists, deleteTodolistAC('todolistID_1'));
+    const newTodolist = todoListsReducer(todoLists, todoActions.deleteTodo({todolistID: 'todolistID_1'}));
     expect(newTodolist.length).toBe(1)
 })
 
 test('CHANGE TITLE TODO', () => {
 
-    const newTodolist = todoListsReducer(todoLists, onChangeTitleTodolistAC('todolistID_1', 'Hi'));
+    const newTodolist = todoListsReducer(todoLists, todoActions.changeTitleTodo({
+        todoId: 'todolistID_1',
+        newValue: 'Hi'
+    }));
     expect(newTodolist[0].title).toBe('Hi')
 })
 test('CHANGE ENTITY STATUS TODO', () => {
 
-    const newTodolist = todoListsReducer(todoLists, changeTodoEntStatusAC('todolistID_1', 'loading'));
+    const newTodolist = todoListsReducer(todoLists, todoActions.changeEntStatusTodo({
+        todoId: 'todolistID_1',
+        status: 'loading'
+    }));
     expect(newTodolist[0].entityStatus).toBe('loading')
     expect(todoLists[0].entityStatus).toBe('idle')
 })
 
 test('TASK FILTER TODO', () => {
-    const newTodolist = todoListsReducer(todoLists, changeTasksFilterAC('todolistID_1', 'Active'));
+    const newTodolist = todoListsReducer(todoLists, todoActions.taskFilterTodo({
+        todoListsID: 'todolistID_1',
+        filter: 'Active'
+    }));
     expect(newTodolist[0].filter).toBe('Active')
 })
 
 test('SET TODO', () => {
-    const newTodolist = todoListsReducer([], setTodolistsAC(todoLists));
+    const newTodolist = todoListsReducer([], todoActions.setTodo(todoLists));
     expect(newTodolist.length).toBe(2)
 })
 

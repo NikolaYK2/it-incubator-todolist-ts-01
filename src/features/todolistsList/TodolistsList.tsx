@@ -1,21 +1,20 @@
 import React, {useCallback, useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux/";
-import {AppRootState, AppThunkDispatch, useAppSelector} from "app/store";
-import {addTodoThunkCreator, setTodolistsThunkCreator, TodoAppType} from "./todoListsReducer";
+import {addTodoThunkCreator, setTodolistsThunkCreator} from "./todoListsReducer";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {Todolist} from "./todolist/Todolist";
 import {FullInput} from "components/fullInputButton/FullInput";
 import {Navigate} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "app/store";
 
 type TodolistsListType = {
     demo?: boolean
 }
 export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
 
-    const dispatch = useDispatch<AppThunkDispatch>();
-    const todoLists = useSelector<AppRootState, TodoAppType[]>((state) => state.todoLists);
+    const dispatch = useAppDispatch();
+    const todoLists = useAppSelector((state) => state.todoLists);
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
 
 
@@ -169,7 +168,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({demo = false}) => {
     })
 
 //============================================================================================
-    if (!isLoggedIn){
+    if (!isLoggedIn) {
         return <Navigate to={'/login'}/>
     }
     return (

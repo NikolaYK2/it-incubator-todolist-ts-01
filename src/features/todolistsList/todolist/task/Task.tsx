@@ -22,7 +22,12 @@ export const Task = React.memo((props: TaskTypeP) => {
         // dispatch(changeStatusAC(taskId, status ? TaskStatuses.New : TaskStatuses.Completed, props.idTodolist))
         // props.changeStatus(taskId, filter, props.todoListID)
 
-        dispatch(updateTaskTC(props.idTodolist, taskId, {status: status ? TaskStatuses.New : TaskStatuses.Completed}))
+        dispatch(updateTaskTC({
+            todoId: props.idTodolist, taskId: taskId,
+            model: {
+                status: status ? TaskStatuses.New : TaskStatuses.Completed
+            }
+        }))
 
     }, [dispatch, props.idTodolist]);
 
@@ -35,7 +40,7 @@ export const Task = React.memo((props: TaskTypeP) => {
         //     .then(res=>{
         //         dispatch(deleteTaskAC(todoId, taskId))
         //     })
-        dispatch(deleteTasksTC(todoId, taskId));
+        dispatch(deleteTasksTC({todoId: todoId, taskId: taskId}));
     }, [dispatch, props.idTodolist]);
 
     //====Редактирование в task title===============================================
@@ -43,7 +48,12 @@ export const Task = React.memo((props: TaskTypeP) => {
         // props.changeTaskTitle(taskId, newValue, props.todoListID)
         //props.todoListID что б знали наверху в каком тудулисте поменять
         // dispatch(changeTaskTitleAC(taskId, newValue, props.idTodolist))
-        dispatch(updateTaskTC(props.idTodolist, taskId, {title: newValue}))
+        dispatch(updateTaskTC({
+            todoId: props.idTodolist, taskId: taskId,
+            model: {
+                title: newValue
+            }
+        }))
 
     }, [dispatch, props.idTodolist]);
 
@@ -63,8 +73,6 @@ export const Task = React.memo((props: TaskTypeP) => {
                 style={{color: 'darkred'}}
                 disabled={props.task.entityStatus === 'loading'}
             />
-            {/*<input type="checkbox" checked={Task.isDone}*/}
-            {/*       onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>*/}
             <EditableSpan title={title} onChange={(newValue) => onChangeHandlerTitle(id, newValue)}/>
             {/*<span className={s.text}>{Task.title}</span>*/}
         </>
