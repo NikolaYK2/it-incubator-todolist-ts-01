@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {authApi, ResultCode} from "api/todolistsApi";
 import {handleServerAppError, handleServerNetworkError} from "utils/errorUtils";
-import {setIsLoggedIn} from "features/login/authReducer";
+import {authActions, setIsLoggedIn} from "features/login/authReducer";
 import {todoActions} from "features/todolistsList/todoListsReducer";
 
 //REDUX --------------------------------------------------------------------
@@ -116,6 +116,25 @@ const initialState: AppStateType = {
     initialized: false,//Делаем для того что бы небыло маргания на логин
 
 }
+export const initializedAppTC = createAsyncThunk(
+    'app/init',
+
+    async (_, {dispatch}) => {
+        dispatch(appAction.setStatus({status: 'loading'}));
+        try {
+            const res = await authApi.me()
+            if (res.data.resultCode === ResultCode.Ok) {
+                dispatch(authActions.setIsLoggedIn({isLoggedIn: true}));//Говорим что мы залогинены
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+            dispatch(initializedApp({initialized: true}));
+
+        } catch (error: any) {
+            handleServerNetworkError(error, dispatch)
+
+        }
+    })
 
 const logoutApp = createAsyncThunk(
     'app/logout',
@@ -137,6 +156,7 @@ const logoutApp = createAsyncThunk(
         }
     }
 )
+
 
 const slice = createSlice({
     name: 'app',

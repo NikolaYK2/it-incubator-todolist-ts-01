@@ -6,7 +6,7 @@ import {Login} from "features/login/Login";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "./store";
 import CircularProgress from "@mui/material/CircularProgress";
-import {initializedApp} from "app/appReducer";
+import {initializedAppTC} from "app/appReducer";
 
 type AppReduxType = {
     demo?: boolean
@@ -18,7 +18,7 @@ function AppRedux({demo = false}: AppReduxType) {
     const initialized = useAppSelector<boolean>(state => state.app.initialized)
 
     useEffect(() => {
-        dispatch(initializedApp({initialized: true}));
+        dispatch(initializedAppTC());
     }, [])
 
     if (!initialized) {//Убираем моргания перехода на логин при обновлении
