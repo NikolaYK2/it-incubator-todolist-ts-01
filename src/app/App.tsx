@@ -1,6 +1,4 @@
-export default {
-
-}
+export default {};
 
 // import React, {useReducer} from "react";
 // import './App.css';

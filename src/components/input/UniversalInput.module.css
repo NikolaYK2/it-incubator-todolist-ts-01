@@ -1,36 +1,35 @@
 @keyframes inputBorder {
-    0%{
-        border-image: linear-gradient(to right, #fff 99%, dodgerblue 1%, #fff 99%);
-        border-image-slice: 1;
-    }
+  0% {
+    border-image: linear-gradient(to right, #fff 99%, dodgerblue 1%, #fff 99%);
+    border-image-slice: 1;
+  }
 
-    100%{
-        border-image: linear-gradient(to right, dodgerblue 100%, #fff 1%);
-        border-bottom: dodgerblue 2px solid;
-        border-image-slice: 1;
-
-    }
+  100% {
+    border-image: linear-gradient(to right, dodgerblue 100%, #fff 1%);
+    border-bottom: dodgerblue 2px solid;
+    border-image-slice: 1;
+  }
 }
 
-.universalInput{
-    display: inline-block;
-    margin: 0 10px 0 0;
+.universalInput {
+  display: inline-block;
+  margin: 0 10px 0 0;
 }
-.sss{
-    background-color: #000;
-    color: green;
+.sss {
+  background-color: #000;
+  color: green;
 }
-.modified{
-    outline: none;
-    border: none;
-    border-bottom: #fff 1px solid;
-    background-color: transparent;
-    color: white;
-    }
-    /*.modified:hover{*/
-    /*    border-bottom: #fff 2px solid;*/
-    /*    transition: all 0.2s ease;*/
-    /*}    .modified:focus{*/
-    /*        animation: inputBorder .3s ease forwards;*/
+.modified {
+  outline: none;
+  border: none;
+  border-bottom: #fff 1px solid;
+  background-color: transparent;
+  color: white;
+}
+/*.modified:hover{*/
+/*    border-bottom: #fff 2px solid;*/
+/*    transition: all 0.2s ease;*/
+/*}    .modified:focus{*/
+/*        animation: inputBorder .3s ease forwards;*/
 
-    /*}*/
+/*}*/

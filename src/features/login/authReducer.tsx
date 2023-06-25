@@ -73,59 +73,55 @@
 // }
 
 //RTK --------------------------------------------------
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {authApi, AuthLoginType} from "api/todolistsApi";
-import {appAction} from "app/appReducer";
-import {handleServerAppError, handleServerNetworkError} from "utils/errorUtils";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { authApi, AuthLoginType } from "api/todolistsApi";
+import { appAction } from "app/appReducer";
+import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 
-const authLogin = createAsyncThunk(
-    'auth/login',
-    async (data: AuthLoginType, thunkAPI) => {
-        const {dispatch} = thunkAPI;
-        dispatch(appAction.setStatus({status: 'loading'}));
-        try {
-            const res = await authApi.authLogin(data)
-            if (res.data.resultCode === 0) {
-                // dispatch(authLoginAC(data));
-                dispatch(setIsLoggedIn({isLoggedIn: true}))
-                dispatch(appAction.setStatus({status: 'succeeded'}))
-            } else {
-                handleServerAppError(res.data, dispatch)
-            }
-
-        } catch (error: any) {
-            handleServerNetworkError(error, dispatch)
-
-        }
+const authLogin = createAsyncThunk("auth/login", async (data: AuthLoginType, thunkAPI) => {
+  const { dispatch } = thunkAPI;
+  dispatch(appAction.setStatus({ status: "loading" }));
+  try {
+    const res = await authApi.authLogin(data);
+    if (res.data.resultCode === 0) {
+      // dispatch(authLoginAC(data));
+      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+      dispatch(appAction.setStatus({ status: "succeeded" }));
+    } else {
+      handleServerAppError(res.data, dispatch);
     }
-)
+  } catch (error: any) {
+    handleServerNetworkError(error, dispatch);
+  }
+});
+
 // slice - редьюсеры создаем с помощью функции createSlice
 const slice = createSlice({
-    // важно чтобы не дублировалось, будет в качетве приставки согласно соглашению redux ducks
-    name: 'auth',
-    //❗Если будут писаться тесты на slice или где понадобится типизация,
-    // тогда выносим initialState наверх
-    initialState: {
-        isLoggedIn: false
+  // важно чтобы не дублировалось, будет в качетве приставки согласно соглашению redux ducks
+  name: "auth",
+  //❗Если будут писаться тесты на slice или где понадобится типизация,
+  // тогда выносим initialState наверх
+  initialState: {
+    isLoggedIn: false,
+  },
+  // состоит из подредьюсеров, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+  reducers: {
+    //❗в жизни setIsLoggedInAC c AC писать не надо.
+    // оставим только для того чтобы делать плавный рефакторинг
+    // Объект payload. Типизация через PayloadAction
+    setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+      // логику в подредьюсерах пишем мутабельным образом,
+      // т.к. иммутабельность достигается благодаря immer.js
+      state.isLoggedIn = action.payload.isLoggedIn;
     },
-    // состоит из подредьюсеров, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
-    reducers: {
-        //❗в жизни setIsLoggedInAC c AC писать не надо.
-        // оставим только для того чтобы делать плавный рефакторинг
-        // Объект payload. Типизация через PayloadAction
-        setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-            // логику в подредьюсерах пишем мутабельным образом,
-            // т.к. иммутабельность достигается благодаря immer.js
-            state.isLoggedIn = action.payload.isLoggedIn
-        }
-    }
-})
+  },
+});
 
 // Создаем reducer с помощью slice
 export const authReducer = slice.reducer;
 // Action creator также достаем с помощью slice
-export const {setIsLoggedIn} = slice.actions
+// export const {setIsLoggedIn} = slice.actions
 // либо вот так. ❗Делаем так, в дальнейшем пригодиться
-export const authActions = slice.actions
+export const authActions = slice.actions;
 
-export const authThunk = {authLogin}
+export const authThunk = { authLogin };

@@ -1,10 +1,10 @@
-.text__input{
-    color: black;
-    outline: none;
-    max-width: 80px;
-    opacity: initial;
+.text__input {
+  color: black;
+  outline: none;
+  max-width: 80px;
+  opacity: initial;
 }
 /*//==============text tasks===============================*/
 .text {
-    color: aliceblue;
+  color: aliceblue;
 }
