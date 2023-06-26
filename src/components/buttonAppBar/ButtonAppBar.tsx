@@ -24,7 +24,7 @@ export default function ButtonAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <ErrorSnackbar />
-      <AppBar position="static" style={{ backgroundColor: "brown" }}>
+      <AppBar position="static" style={{ backgroundColor: "brown", position: 'relative'}}>
         <Toolbar>
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
@@ -38,7 +38,9 @@ export default function ButtonAppBar() {
             </Button>
           )}
         </Toolbar>
-        {status === "loading" && <LinearProgress />}
+        {status === "loading" && (
+          <LinearProgress style={{ position: "absolute", left: "0", bottom: "-3px", height:'3px', width: '100%' }} />
+        )}
       </AppBar>
     </Box>
   );

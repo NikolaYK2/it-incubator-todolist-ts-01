@@ -264,6 +264,26 @@ export const deleteTodoThunkCreator = createAsyncThunk("todo/deletTodo", async (
     dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" }));
   }
 });
+// export const deleteTodoThunkCreator = (todoId: string) => (dispatch: Dispatch<complexTypeActions>) => {
+//     dispatch(setAppStatusAC('loading'));
+//     dispatch(changeTodoEntStatusAC(todoId, 'loading'))
+//     todolistsApi.deleteTodolists(todoId)
+//         .then(res => {
+//             if (res.data.resultCode === ResCode.ok) {
+//                 dispatch(deleteTodolistAC(todoId));
+//                 dispatch(setAppStatusAC('succeeded'));
+//             } else {
+//                 handleServerAppError(res.data, dispatch)
+//             }
+//             dispatch(setAppStatusAC('failed'));
+//             dispatch(changeTodoEntStatusAC(todoId, 'idle'))
+//         })
+//         .catch(error => {
+//             handleServerNetworkError(error.message, dispatch);
+//             dispatch(setAppStatusAC('failed'));
+//             dispatch(changeTodoEntStatusAC(todoId, 'idle'))
+//         })
+// }
 
 export const changeTitleTodoThunkCreator = createAsyncThunk(
   "todo/changeTitleTodo",

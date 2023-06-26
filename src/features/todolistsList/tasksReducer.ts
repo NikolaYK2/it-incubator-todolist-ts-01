@@ -387,15 +387,7 @@
 //RTK ====================================================================================
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
-import {
-  ResultCode,
-  TaskStatuses,
-  TaskType,
-  todolistsApi,
-  TodolistType,
-  TodoTaskPriorities,
-  UpdTaskType,
-} from "api/todolistsApi";
+import { ResultCode, TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType } from "api/todolistsApi";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 import { todoActions } from "features/todolistsList/todoListsReducer";
 import { AppRootStateType } from "app/store";
@@ -501,7 +493,7 @@ export type UpdTaskTCType = {
   deadline?: string;
 };
 export const updateTaskTC = createAsyncThunk<
-  any,
+  unknown,
   { todoId: string; taskId: string; model: UpdTaskTCType },
   { state: AppRootStateType }
 >("task/updateTas", async (arg, { getState, dispatch }) => {
@@ -582,9 +574,9 @@ const slice = createSlice({
       //   [taskNew.todoListId]: [taskNew, ...state[taskNew.todoListId]],
       // };
     },
-    addTodo: (state, action: PayloadAction<{ todolist: TodolistType }>) => {
-      return { ...state, [action.payload.todolist.id]: [] };
-    },
+    // addTodo: (state, action: PayloadAction<{ todolist: TodolistType }>) => {
+    //   return { ...state, [action.payload.todolist.id]: [] };
+    // },
     deleteTask: (state, action: PayloadAction<{ todolistID: string; taskId: string }>) => {
       const tasks = state[action.payload.todolistID];
       const index = tasks.findIndex((t) => t.id === action.payload.taskId);
@@ -647,7 +639,37 @@ const slice = createSlice({
     //   return {};
     // },
   },
-  extraReducers: {
+  extraReducers: (builder) => {
+    builder
+      .addCase(todoActions.addTodo, (state, action) => {
+        //Экшэн на этот раз типизировать не нужно, так как мы его передели
+        state[action.payload.todolist.id] = [];
+
+        // return { ...state, [action.payload.todolist.id]: [] };
+      })
+      .addCase(todoActions.deleteTodo, (state, action) => {
+        delete state[action.payload.todolistID];
+
+        // let copyState = { ...state };
+        // delete copyState[action.payload.todolistID];
+        // return copyState;
+      })
+      .addCase(todoActions.setTodo, (state, action) => {
+        action.payload.todolist.forEach((tl) => {
+          state[tl.id] = [];
+        });
+
+        // const copy = { ...state };
+        // action.payload.todolist.forEach((tl) => {
+        //   //прост опробежим по всем еуду и присвоим пустой массив, map не нужен
+        //   copy[tl.id] = [];
+        // });
+        // return copy;
+      })
+      .addCase(todoActions.clearData, (state, action) => {
+        return {};
+      });
+
     // [todoActions.addTodo.type]: (state, action: PayloadAction<{}>) => {},
     // [todoActions.deleteTodo.type]: (state, action: PayloadAction<{}>) => {},
     // [todoActions.setTodo.type]: (state, action: PayloadAction<{}>) => {},
