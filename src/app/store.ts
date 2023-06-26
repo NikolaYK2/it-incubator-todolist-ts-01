@@ -8,10 +8,10 @@ import thunkMiddleware from "redux-thunk";
 
 export const store = configureStore({
   reducer: {
-    todoLists: todoListsReducer,
-    tasks: tasksReducer,
     app: appReducer,
     auth: authReducer,
+    todoLists: todoListsReducer,
+    tasks: tasksReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
 });

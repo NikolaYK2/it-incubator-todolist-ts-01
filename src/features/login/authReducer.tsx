@@ -74,7 +74,7 @@
 
 //RTK --------------------------------------------------
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { authApi, AuthLoginType } from "api/todolistsApi";
+import { authApi, AuthLoginType, ResultCode } from "api/todolistsApi";
 import { appAction } from "app/appReducer";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 
@@ -83,8 +83,7 @@ const authLogin = createAsyncThunk("auth/login", async (data: AuthLoginType, thu
   dispatch(appAction.setStatus({ status: "loading" }));
   try {
     const res = await authApi.authLogin(data);
-    if (res.data.resultCode === 0) {
-      // dispatch(authLoginAC(data));
+    if (res.data.resultCode === ResultCode.Ok) {
       dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
       dispatch(appAction.setStatus({ status: "succeeded" }));
     } else {
@@ -96,14 +95,19 @@ const authLogin = createAsyncThunk("auth/login", async (data: AuthLoginType, thu
 });
 
 // slice - редьюсеры создаем с помощью функции createSlice
+export type AuthInitType = {
+  isLoggedIn: boolean
+}
+const initialState: AuthInitType = {
+  isLoggedIn: false
+};
+
 const slice = createSlice({
   // важно чтобы не дублировалось, будет в качетве приставки согласно соглашению redux ducks
   name: "auth",
   //❗Если будут писаться тесты на slice или где понадобится типизация,
   // тогда выносим initialState наверх
-  initialState: {
-    isLoggedIn: false,
-  },
+  initialState,
   // состоит из подредьюсеров, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
   reducers: {
     //❗в жизни setIsLoggedInAC c AC писать не надо.
@@ -113,8 +117,8 @@ const slice = createSlice({
       // логику в подредьюсерах пишем мутабельным образом,
       // т.к. иммутабельность достигается благодаря immer.js
       state.isLoggedIn = action.payload.isLoggedIn;
-    },
-  },
+    }
+  }
 });
 
 // Создаем reducer с помощью slice
