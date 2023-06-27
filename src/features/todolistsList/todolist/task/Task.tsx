@@ -48,7 +48,7 @@ export const Task = React.memo((props: TaskTypeP) => {
       //     })
       dispatch(deleteTasksTC({ todoId: todoId, taskId: taskId }));
     },
-    [dispatch, props.idTodolist]
+    [dispatch]
   );
 
   //====Редактирование в task title===============================================

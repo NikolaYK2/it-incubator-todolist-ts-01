@@ -345,7 +345,7 @@ const slice = createSlice({
         entityStatus: "idle",
       }));
     },
-    clearData: (state) => {
+    clearData: () => {
       return [];
     },
   },
@@ -353,4 +353,3 @@ const slice = createSlice({
 
 export const todoListsReducer = slice.reducer;
 export const todoActions = slice.actions;
-export const authActions = slice.actions;

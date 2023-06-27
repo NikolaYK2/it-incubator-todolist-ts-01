@@ -392,26 +392,6 @@ import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils
 import { todoActions } from "features/todolistsList/todoListsReducer";
 import { AppRootStateType } from "app/store";
 
-export type EntStatusType = {
-  entityStatus?: StatusType;
-};
-export type TaskStateType = {
-  [todolistID: string]: TaskType[];
-};
-export const initialState: TaskStateType = {
-  // [todolistID_1]: [
-  //     {id: v1(), title: "HTML&CSS", isDone: true},
-  //     {id: v1(), title: "JS", isDone: true},
-  //     {id: v1(), title: "ReactJS", isDone: true},
-  //     {id: v1(), title: "Next", isDone: false},
-  // ],
-  // [todolistID_2]: [
-  //     {id: v1(), title: "Beer", isDone: true},
-  //     {id: v1(), title: "Meat", isDone: true},
-  //     {id: v1(), title: "Fish", isDone: true},
-  //     {id: v1(), title: "Drink", isDone: false},
-  // ],
-};
 
 export const setTasksTC = createAsyncThunk("task/setTAsk", async (todolistID: string, thunkAPI) => {
   const { dispatch } = thunkAPI;
@@ -557,6 +537,28 @@ export const updateTaskTC = createAsyncThunk<
   // }
 });
 
+//reducer --------------------------------------------------------
+export type EntStatusType = {
+  entityStatus?: StatusType;
+};
+export type TaskStateType = {
+  [todolistID: string]: TaskType[];
+};
+export const initialState: TaskStateType = {
+  // [todolistID_1]: [
+  //     {id: v1(), title: "HTML&CSS", isDone: true},
+  //     {id: v1(), title: "JS", isDone: true},
+  //     {id: v1(), title: "ReactJS", isDone: true},
+  //     {id: v1(), title: "Next", isDone: false},
+  // ],
+  // [todolistID_2]: [
+  //     {id: v1(), title: "Beer", isDone: true},
+  //     {id: v1(), title: "Meat", isDone: true},
+  //     {id: v1(), title: "Fish", isDone: true},
+  //     {id: v1(), title: "Drink", isDone: false},
+  // ],
+};
+
 const slice = createSlice({
   // важно чтобы не дублировалось, будет в качетве приставки согласно соглашению redux ducks
   name: "tasks",
@@ -666,7 +668,7 @@ const slice = createSlice({
         // });
         // return copy;
       })
-      .addCase(todoActions.clearData, (state, action) => {
+      .addCase(todoActions.clearData, () => {
         return {};
       });
 

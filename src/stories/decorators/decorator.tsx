@@ -7,14 +7,14 @@ import { todoListsReducer } from "features/todolistsList/todoListsReducer";
 import { TaskStatuses, TodoTaskPriorities } from "api/todolistsApi";
 import { appReducer } from "app/appReducer";
 import thunkMiddleware from "redux-thunk";
-import { authReducer } from "features/login/authReducer";
+import { authReducer } from "features/auth/authReducer";
 import { AppRootStateType } from "app/store";
 
 const rootReducer = combineReducers({
   todoLists: todoListsReducer,
   tasks: tasksReducer,
   app: appReducer,
-  auth: authReducer,
+  auth: authReducer
 });
 
 //StoryBook =========================================
@@ -26,7 +26,7 @@ const initialState = {
       filter: "All",
       addedDate: "",
       order: 0,
-      entityStatus: "idle",
+      entityStatus: "idle"
     },
     {
       id: "todolistID_2",
@@ -34,11 +34,11 @@ const initialState = {
       filter: "All",
       addedDate: "",
       order: 0,
-      entityStatus: "loading",
-    },
+      entityStatus: "loading"
+    }
   ],
   tasks: {
-    ["todolistID_1"]: [
+    "todolistID_1": [
       {
         id: v1(),
         title: "HTML&CSS",
@@ -49,7 +49,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
+        description: ""
       },
       {
         id: v1(),
@@ -61,7 +61,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
+        description: ""
       },
       {
         id: v1(),
@@ -73,7 +73,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
+        description: ""
       },
       {
         id: v1(),
@@ -85,10 +85,10 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
-      },
+        description: ""
+      }
     ],
-    ["todolistID_2"]: [
+    "todolistID_2": [
       {
         id: v1(),
         title: "Beer",
@@ -99,7 +99,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
+        description: ""
       },
       {
         id: v1(),
@@ -111,7 +111,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
+        description: ""
       },
       {
         id: v1(),
@@ -123,7 +123,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
+        description: ""
       },
       {
         id: v1(),
@@ -135,21 +135,21 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
-      },
-    ],
+        description: ""
+      }
+    ]
   },
   app: {
     status: "idle",
     error: null,
-    initialized: false,
+    initialized: false
   },
   auth: {
-    isLoggedIn: false,
+    isLoggedIn: false
     // email: '',
     // password: '',
     // rememberMe:false
-  },
+  }
 };
 export const storyBookStore = createStore(
   rootReducer,
@@ -162,7 +162,7 @@ export const decorators = [
     <div style={{ margin: "3em" }}>
       <Provider store={storyBookStore}>{Story()}</Provider>
     </div>
-  ),
+  )
 ];
 //========================================================
 

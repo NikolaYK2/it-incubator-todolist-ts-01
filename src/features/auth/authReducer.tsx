@@ -8,7 +8,7 @@
 //
 // export const authReducer = (state = initialState, action: ComplexLoginACType): initialStateType => {
 //     switch (action.type) {
-//         case 'login/LOGIN-IN': {
+//         case 'auth/LOGIN-IN': {
 //             return {...state, isLoggedIn: action.value}
 //         }
 //         default:
@@ -25,7 +25,7 @@
 //
 // export const setInLoginAC = (value: boolean) => {
 //     return {
-//         type: 'login/LOGIN-IN',
+//         type: 'auth/LOGIN-IN',
 //         value,
 //     } as const
 // }
@@ -78,7 +78,7 @@ import { authApi, AuthLoginType, ResultCode } from "api/todolistsApi";
 import { appAction } from "app/appReducer";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 
-const authLogin = createAsyncThunk("auth/login", async (data: AuthLoginType, thunkAPI) => {
+const authLogin = createAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
   const { dispatch } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
   try {

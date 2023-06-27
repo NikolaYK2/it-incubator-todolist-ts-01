@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authApi, ResultCode } from "api/todolistsApi";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
-import { authActions } from "features/login/authReducer";
+import { authActions } from "features/auth/authReducer";
 import { todoActions } from "features/todolistsList/todoListsReducer";
 
 //REDUX --------------------------------------------------------------------

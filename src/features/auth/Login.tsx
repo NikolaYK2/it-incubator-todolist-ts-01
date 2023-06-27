@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "app/store";
 import { Navigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { authThunk } from "features/login/authReducer";
+import { authThunk } from "features/auth/authReducer";
 
 type FormikErrorType = {
   email?: string;

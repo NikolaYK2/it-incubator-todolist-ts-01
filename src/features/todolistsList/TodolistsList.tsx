@@ -7,14 +7,16 @@ import { Todolist } from "./todolist/Todolist";
 import { FullInput } from "components/fullInputButton/FullInput";
 import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "app/store";
+import { todolistSelector } from "features/todolistsList/todolist/todolistSelector";
+import { authSelect } from "features/auth/authSelector";
 
 type TodolistsListType = {
   demo?: boolean;
 };
 export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => {
   const dispatch = useAppDispatch();
-  const todoLists = useAppSelector((state) => state.todoLists);
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const todoLists = useAppSelector(todolistSelector);
+  const isLoggedIn = useAppSelector(authSelect);
 
   //Достаем тудулисты ========================================
   useEffect(() => {
@@ -33,7 +35,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
     //     .then(res=>{
     //         dispatch(setTodolistsAC(res.data));
     //     })
-  }, []);
+  }, [dispatch, demo, isLoggedIn]);
 
   //         const tasks = useSelector<AppRootState, taskStateType>((state)=>state.tasks);
   // //=======Добавление таски=====================================================================================================
@@ -175,7 +177,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
 
   //============================================================================================
   if (!isLoggedIn) {
-    return <Navigate to={"/login"} />;
+    return <Navigate to={"/auth"} />;
   }
   return (
     <Container fixed>

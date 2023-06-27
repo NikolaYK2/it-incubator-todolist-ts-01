@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { todoListsReducer } from "features/todolistsList/todoListsReducer";
 import { tasksReducer } from "features/todolistsList/tasksReducer";
 import { appReducer } from "app/appReducer";
-import { authReducer } from "features/login/authReducer";
+import { authReducer } from "features/auth/authReducer";
 import thunkMiddleware from "redux-thunk";
 
 export const store = configureStore({
@@ -13,7 +13,7 @@ export const store = configureStore({
     todoLists: todoListsReducer,
     tasks: tasksReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

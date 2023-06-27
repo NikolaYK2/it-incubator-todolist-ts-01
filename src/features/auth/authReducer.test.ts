@@ -1,4 +1,4 @@
-import { authActions, AuthInitType, authReducer } from "features/login/authReducer";
+import { authActions, AuthInitType, authReducer } from "features/auth/authReducer";
 
 let auth: AuthInitType;
 beforeEach(() => {
