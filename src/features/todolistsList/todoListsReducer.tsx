@@ -349,6 +349,11 @@ const slice = createSlice({
       return [];
     },
   },
+  extraReducers: () => {
+    // builder.addCase(clearTodoTask, (state, action) => {
+    //   return action.payload.todoLists
+    // });
+  },
 });
 
 export const todoListsReducer = slice.reducer;

@@ -392,7 +392,6 @@ import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils
 import { todoActions } from "features/todolistsList/todoListsReducer";
 import { AppRootStateType } from "app/store";
 
-
 export const setTasksTC = createAsyncThunk("task/setTAsk", async (todolistID: string, thunkAPI) => {
   const { dispatch } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
@@ -591,6 +590,23 @@ const slice = createSlice({
       //   ),
       // };
     },
+    //Либо сделать так --------------
+    // delTask: {
+    //   reducer: (state, action: PayloadAction<{ todolistID: string; taskId: string }>) => {
+    //     const tasks = state[action.payload.todolistID];
+    //     const index = tasks.findIndex((t) => t.id === action.payload.taskId);
+    //     if (index !== -1) tasks.splice(index, 1);
+    //   },
+    //   prepare: (todolistID: string, taskId: string) => {
+    //     //Всегда отрабатывает первым
+    //     return {
+    //       payload:{
+    //         todolistID,
+    //         taskId
+    //       }
+    //     };
+    //   },
+    // },
     // deleteTodo: (state, action: PayloadAction<{ todoId: string; taskId: string }>) => {
     //   let copyState = { ...state };
     //   delete copyState[action.payload.todoId];
@@ -671,6 +687,10 @@ const slice = createSlice({
       .addCase(todoActions.clearData, () => {
         return {};
       });
+    //Или используем commonAction --------
+    //   .addCase(clearTodoTask, (state, action)=>{
+    //     return action.payload.tasks
+    //   })
 
     // [todoActions.addTodo.type]: (state, action: PayloadAction<{}>) => {},
     // [todoActions.deleteTodo.type]: (state, action: PayloadAction<{}>) => {},

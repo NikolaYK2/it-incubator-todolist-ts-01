@@ -145,6 +145,8 @@ const logoutApp = createAsyncThunk("app/logout", async (_, thunkAPI) => {
       dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
       dispatch(appAction.setStatus({ status: "succeeded" }));
       dispatch(todoActions.clearData());
+      // dispatch(clearTodoTask({tasks:{}, todoLists:[]}));
+      // dispatch(clearTodoTask({}, []));
     } else {
       handleServerAppError(res.data, dispatch);
     }
