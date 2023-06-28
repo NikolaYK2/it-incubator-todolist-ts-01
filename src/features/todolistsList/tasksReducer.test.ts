@@ -1,11 +1,11 @@
 import { TaskStatuses, TodoTaskPriorities } from "api/todolistsApi";
 import { todoActions } from "features/todolistsList/todoListsReducer";
-import { taskActions, tasksReducer, TaskStateType } from "features/todolistsList/tasksReducer";
+import { taskActions, tasksReducer, TaskStateType, tasksThunk } from "features/todolistsList/tasksReducer";
 
 let tasks: TaskStateType;
 beforeEach(() => {
   tasks = {
-    ["todolistID_1"]: [
+    "todolistID_1": [
       {
         id: "1",
         title: "HTML&CSS",
@@ -55,7 +55,7 @@ beforeEach(() => {
         description: "",
       },
     ],
-    ["todolistID_2"]: [
+    "todolistID_2": [
       {
         id: "1",
         title: "Beer",
@@ -162,7 +162,7 @@ test("add todolist and null tasks", () => {
   );
   const keys = Object.keys(newTasks); //Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
   //Находим новый ключ
-  const newKey = keys.find((k) => k != "todolistID_1" && k != "todolistID_2");
+  const newKey = keys.find((k) => k !== "todolistID_1" && k !== "todolistID_2");
   if (!newKey) {
     //Если не нашелся то генерируем ошибку
     throw Error("Бляяяяя!");
@@ -174,12 +174,18 @@ test("add todolist and null tasks", () => {
 });
 
 test("remove task", () => {
-  const newTasks = tasksReducer(tasks, taskActions.deleteTask({ todolistID: "todolistID_1", taskId: "1" }));
+  const newTasks = tasksReducer(tasks, tasksThunk.deleteTasksTC.fulfilled(
+    { todoId: "todolistID_1", taskId: "1" },
+    '',
+    { todoId: 'todolistID_1', taskId: '1'},
+    'todolistID_1'
+  ));
+  // const newTasks = tasksReducer(tasks, taskActions.deleteTask({ todolistID: "todolistID_1", taskId: "1" }));
 
   expect(newTasks["todolistID_1"].length).toBe(3);
   expect(newTasks["todolistID_2"].length).toBe(4);
   expect(tasks["todolistID_1"].length).toBe(4);
-  expect(newTasks["todolistID_1"].every((t) => t.id != "1")).toBeTruthy();
+  expect(newTasks["todolistID_1"].every((t) => t.id !== "1")).toBeTruthy();
   // expect(newTasks).toEqual({//tasks переменная в которой лежат данные, в данном случаи обьекты
   //     ['todolistID_1']: [
   //         {id: '2', title: "JS", status: TaskStatuses.Completed},
@@ -251,10 +257,19 @@ test("tasks для todolistsList должны быть добавлены", () =
       todolistID_2: [],
       todolistID_1: [],
     },
-    taskActions.setTasks({
-      todolistID: "todolistID_1",
-      tasks: tasks["todolistID_1"],
-    })
+    // taskActions.setTasks({
+    //   todolistID: "todolistID_1",
+    //   tasks: tasks["todolistID_1"],
+    // })
+
+    tasksThunk.setTasksTC.fulfilled(
+      {
+        todolistID: "todolistID_1",
+        tasks: tasks["todolistID_1"],
+      },
+      "",
+      "todolistID_1"
+    )
   );
 
   expect(newTasks["todolistID_1"].length).toBe(4);

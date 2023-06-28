@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { applyMiddleware, combineReducers, legacy_createStore as createStore } from "redux";
+import { combineReducers } from "redux";
 import { v1 } from "uuid";
 import { tasksReducer } from "features/todolistsList/tasksReducer";
 import { todoListsReducer } from "features/todolistsList/todoListsReducer";
@@ -9,12 +9,13 @@ import { appReducer } from "app/appReducer";
 import thunkMiddleware from "redux-thunk";
 import { authReducer } from "features/auth/authReducer";
 import { AppRootStateType } from "app/store";
+import { configureStore } from "@reduxjs/toolkit";
 
 const rootReducer = combineReducers({
   todoLists: todoListsReducer,
   tasks: tasksReducer,
   app: appReducer,
-  auth: authReducer
+  auth: authReducer,
 });
 
 //StoryBook =========================================
@@ -26,7 +27,7 @@ const initialState = {
       filter: "All",
       addedDate: "",
       order: 0,
-      entityStatus: "idle"
+      entityStatus: "idle",
     },
     {
       id: "todolistID_2",
@@ -34,11 +35,11 @@ const initialState = {
       filter: "All",
       addedDate: "",
       order: 0,
-      entityStatus: "loading"
-    }
+      entityStatus: "loading",
+    },
   ],
   tasks: {
-    "todolistID_1": [
+    todolistID_1: [
       {
         id: v1(),
         title: "HTML&CSS",
@@ -49,7 +50,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
+        description: "",
       },
       {
         id: v1(),
@@ -61,7 +62,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
+        description: "",
       },
       {
         id: v1(),
@@ -73,7 +74,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
+        description: "",
       },
       {
         id: v1(),
@@ -85,10 +86,10 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
-      }
+        description: "",
+      },
     ],
-    "todolistID_2": [
+    todolistID_2: [
       {
         id: v1(),
         title: "Beer",
@@ -99,7 +100,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
+        description: "",
       },
       {
         id: v1(),
@@ -111,7 +112,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
+        description: "",
       },
       {
         id: v1(),
@@ -123,7 +124,7 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
+        description: "",
       },
       {
         id: v1(),
@@ -135,34 +136,39 @@ const initialState = {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
-      }
-    ]
+        description: "",
+      },
+    ],
   },
   app: {
     status: "idle",
     error: null,
-    initialized: false
+    initialized: false,
   },
   auth: {
-    isLoggedIn: false
+    isLoggedIn: false,
     // email: '',
     // password: '',
     // rememberMe:false
-  }
+  },
 };
-export const storyBookStore = createStore(
-  rootReducer,
-  initialState as AppRootStateType,
-  applyMiddleware(thunkMiddleware)
-);
+export const storyBookStore = configureStore({
+  reducer: rootReducer,
+  preloadedState: initialState as AppRootStateType,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunkMiddleware),
+});
+// export const storyBookStore = createStore(
+//   rootReducer,
+//   initialState as AppRootStateType,
+//   applyMiddleware(thunkMiddleware)
+// );
 
 export const decorators = [
   (Story: any) => (
     <div style={{ margin: "3em" }}>
       <Provider store={storyBookStore}>{Story()}</Provider>
     </div>
-  )
+  ),
 ];
 //========================================================
 
