@@ -78,28 +78,48 @@ import { authApi, AuthLoginType, ResultCode } from "api/todolistsApi";
 import { appAction } from "app/appReducer";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 
+// const authLogin = createAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
+//   const { dispatch } = thunkAPI;
+//   dispatch(appAction.setStatus({ status: "loading" }));
+//   try {
+//     const res = await authApi.authLogin(data);
+//     if (res.data.resultCode === ResultCode.Ok) {
+//       dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+//       dispatch(appAction.setStatus({ status: "succeeded" }));
+//     } else {
+//       handleServerAppError(res.data, dispatch);
+//     }
+//   } catch (error: any) {
+//     handleServerNetworkError(error, dispatch);
+//   }
+// });
+//extra ------------------------------
 const authLogin = createAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
-  const { dispatch } = thunkAPI;
+  const { dispatch, rejectWithValue } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
   try {
     const res = await authApi.authLogin(data);
     if (res.data.resultCode === ResultCode.Ok) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
       dispatch(appAction.setStatus({ status: "succeeded" }));
+      return { isLoggedIn: true };
     } else {
       handleServerAppError(res.data, dispatch);
+      return rejectWithValue({ isLoggedIn: false });
+
     }
   } catch (error: any) {
     handleServerNetworkError(error, dispatch);
+    return { isLoggedIn: false };
+
   }
 });
 
 // slice - редьюсеры создаем с помощью функции createSlice
 export type AuthInitType = {
-  isLoggedIn: boolean
-}
+  isLoggedIn: boolean;
+};
 const initialState: AuthInitType = {
-  isLoggedIn: false
+  isLoggedIn: false,
 };
 
 const slice = createSlice({
@@ -118,7 +138,12 @@ const slice = createSlice({
       // т.к. иммутабельность достигается благодаря immer.js
       state.isLoggedIn = action.payload.isLoggedIn;
     }
-  }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(authLogin.fulfilled, (state, action) => {
+      /*if (action.payload) */state.isLoggedIn = action.payload.isLoggedIn;
+    });
+  },
 });
 
 // Создаем reducer с помощью slice

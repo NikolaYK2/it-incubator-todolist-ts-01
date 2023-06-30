@@ -1,11 +1,11 @@
 import { TaskStatuses, TodoTaskPriorities } from "api/todolistsApi";
 import { todoActions } from "features/todolistsList/todoListsReducer";
-import { taskActions, tasksReducer, TaskStateType, tasksThunk } from "features/todolistsList/tasksReducer";
+import { tasksReducer, TaskStateType, tasksThunk } from "features/todolistsList/tasksReducer";
 
 let tasks: TaskStateType;
 beforeEach(() => {
   tasks = {
-    "todolistID_1": [
+    todolistID_1: [
       {
         id: "1",
         title: "HTML&CSS",
@@ -55,7 +55,7 @@ beforeEach(() => {
         description: "",
       },
     ],
-    "todolistID_2": [
+    todolistID_2: [
       {
         id: "1",
         title: "Beer",
@@ -126,20 +126,38 @@ test("add task", () => {
 
   const newTasks = tasksReducer(
     tasks,
-    taskActions.addTask({
-      task: {
-        id: "3",
-        title: "He",
-        status: TaskStatuses.New,
-        addedDate: "",
-        startDate: "",
-        deadline: "",
-        order: 0,
-        priority: TodoTaskPriorities.Low,
-        todoListId: "todolistID_2",
-        description: "",
+    tasksThunk.addTasksTC.fulfilled(
+      {
+        task: {
+          id: "3",
+          title: "He",
+          status: TaskStatuses.New,
+          addedDate: "",
+          startDate: "",
+          deadline: "",
+          order: 0,
+          priority: TodoTaskPriorities.Low,
+          todoListId: "todolistID_2",
+          description: "",
+        },
       },
-    })
+      "",
+      { todoId: "todolistID_2", title: "He" }
+    )
+    // taskActions.addTask({
+    //   task: {
+    //     id: "3",
+    //     title: "He",
+    //     status: TaskStatuses.New,
+    //     addedDate: "",
+    //     startDate: "",
+    //     deadline: "",
+    //     order: 0,
+    //     priority: TodoTaskPriorities.Low,
+    //     todoListId: "todolistID_2",
+    //     description: "",
+    //   },
+    // })
   );
 
   expect(newTasks["todolistID_2"].length).toBe(5);
@@ -174,12 +192,15 @@ test("add todolist and null tasks", () => {
 });
 
 test("remove task", () => {
-  const newTasks = tasksReducer(tasks, tasksThunk.deleteTasksTC.fulfilled(
-    { todoId: "todolistID_1", taskId: "1" },
-    '',
-    { todoId: 'todolistID_1', taskId: '1'},
-    'todolistID_1'
-  ));
+  const newTasks = tasksReducer(
+    tasks,
+    tasksThunk.deleteTasksTC.fulfilled(
+      { todoId: "todolistID_1", taskId: "1" },
+      "",
+      { todoId: "todolistID_1", taskId: "1" },
+      "todolistID_1"
+    )
+  );
   // const newTasks = tasksReducer(tasks, taskActions.deleteTask({ todolistID: "todolistID_1", taskId: "1" }));
 
   expect(newTasks["todolistID_1"].length).toBe(3);
@@ -202,31 +223,45 @@ test("remove task", () => {
 });
 
 test("change task title", () => {
-  const newTasks = tasksReducer(
-    tasks,
-    taskActions.updTask({
-      todolistID: "todolistID_1",
-      taskId: "1",
-      model: {
-        title: "hi",
-      },
-    })
-  );
+  const updTask = {
+    todoId: "todolistID_1",
+    taskId: "1",
+    model: {
+      title: "hi",
+    },
+  };
+  const newTasks = tasksReducer(tasks, tasksThunk.updateTaskTC.fulfilled(updTask, "", updTask));
+  // taskActions.updTask({
+  //   todolistID: "todolistID_1",
+  //   taskId: "1",
+  //   model: {
+  //     title: "hi",
+  //   },
+  // })
 
   expect(newTasks["todolistID_1"][1].title).toBe("JS");
   expect(tasks["todolistID_1"][1].title).toBe("JS");
 });
 
 test("change task status", () => {
+  const updTask = {
+    todoId: "todolistID_1",
+    taskId: "2",
+    model: {
+      status: TaskStatuses.New,
+    },
+  };
+
   const newTasks = tasksReducer(
     tasks,
-    taskActions.updTask({
-      todolistID: "todolistID_1",
-      taskId: "2",
-      model: {
-        status: TaskStatuses.New,
-      },
-    })
+    tasksThunk.updateTaskTC.fulfilled(updTask, "", updTask)
+    // taskActions.updTask({
+    //     todolistID: "todolistID_1",
+    //     taskId: "2",
+    //     model: {
+    //       status: TaskStatuses.New,
+    //     },
+    //   })
   );
 
   expect(newTasks["todolistID_1"][1].status).toBe(TaskStatuses.New);
@@ -264,7 +299,7 @@ test("tasks для todolistsList должны быть добавлены", () =
 
     tasksThunk.setTasksTC.fulfilled(
       {
-        todolistID: "todolistID_1",
+        todoId: "todolistID_1",
         tasks: tasks["todolistID_1"],
       },
       "",

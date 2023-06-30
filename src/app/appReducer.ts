@@ -142,6 +142,7 @@ const logoutApp = createAsyncThunk("app/logout", async (_, thunkAPI) => {
   try {
     const res = await authApi.logout();
     if (res.data.resultCode === ResultCode.Ok) {
+      // dispatch(authThunk.authLogin({ isLoggedIn: false }));
       dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
       dispatch(appAction.setStatus({ status: "succeeded" }));
       dispatch(todoActions.clearData());
