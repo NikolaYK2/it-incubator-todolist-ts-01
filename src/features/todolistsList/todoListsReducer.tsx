@@ -200,14 +200,15 @@
 // }
 
 //RTK ====================================================
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
 import { ResultCode, todolistsApi, TodolistType } from "api/todolistsApi";
 import { tasksThunk } from "features/todolistsList/tasksReducer";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
+import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
 //THUNK -----------------------------------------------------------------
-export const setTodolistsThunkCreator = createAsyncThunk("todo/setTodo", async (arg, thunkAPI) => {
+const setTodolistsThunkCreator = createAppAsyncThunk("todo/setTodo", async (_, thunkAPI) => {
   const { dispatch } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
   try {
@@ -223,7 +224,7 @@ export const setTodolistsThunkCreator = createAsyncThunk("todo/setTodo", async (
   }
 });
 
-export const addTodoThunkCreator = createAsyncThunk("todo/addTodo", async (title: string, { dispatch }) => {
+export const addTodoThunkCreator = createAppAsyncThunk("todo/addTodo", async (title: string, { dispatch }) => {
   dispatch(appAction.setStatus({ status: "loading" }));
   try {
     const res = await todolistsApi.createTodolists(title);
@@ -234,7 +235,7 @@ export const addTodoThunkCreator = createAsyncThunk("todo/addTodo", async (title
   }
 });
 
-export const deleteTodoThunkCreator = createAsyncThunk("todo/deletTodo", async (todoId: string, { dispatch }) => {
+export const deleteTodoThunkCreator = createAppAsyncThunk("todo/deletTodo", async (todoId: string, { dispatch }) => {
   dispatch(appAction.setStatus({ status: "loading" }));
   dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "loading" }));
   try {
@@ -254,7 +255,7 @@ export const deleteTodoThunkCreator = createAsyncThunk("todo/deletTodo", async (
   }
 });
 
-export const changeTitleTodoThunkCreator = createAsyncThunk(
+export const changeTitleTodoThunkCreator = createAppAsyncThunk(
   "todo/changeTitleTodo",
   async (arg: { todoId: string; title: string }, { dispatch }) => {
     dispatch(appAction.setStatus({ status: "loading" }));
@@ -358,3 +359,4 @@ const slice = createSlice({
 
 export const todoListsReducer = slice.reducer;
 export const todoActions = slice.actions;
+export const todoThunk = {setTodolistsThunkCreator};

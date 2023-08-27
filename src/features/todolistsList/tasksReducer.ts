@@ -385,12 +385,13 @@
 // // }
 
 //RTK ====================================================================================
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
 import { ResultCode, TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType } from "api/todolistsApi";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 import { todoActions } from "features/todolistsList/todoListsReducer";
 import { AppRootStateType } from "app/store";
+import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
 // export const setTasksTC = createAsyncThunk(
 //   "task/setTask",
@@ -406,8 +407,9 @@ import { AppRootStateType } from "app/store";
 //   }
 // });
 //extra --------------
-export const setTasksTC = createAsyncThunk("task/setTask", async (todoId: string, thunkAPI) => {
-  const { dispatch } = thunkAPI;
+const setTasksTC = createAppAsyncThunk<{todoId:string, tasks: TaskType[]}, string>(
+  "task/setTask", async (todoId, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
   try {
     const res = await todolistsApi.getTasks(todoId);
@@ -415,6 +417,7 @@ export const setTasksTC = createAsyncThunk("task/setTask", async (todoId: string
     return { todoId, tasks: res.data.items };
   } catch (error: any) {
     handleServerNetworkError(error, dispatch);
+    return rejectWithValue(null)//просто заглушка, раз мы сюда ничего не передаем
   }
 });
 
@@ -444,7 +447,7 @@ export const setTasksTC = createAsyncThunk("task/setTask", async (todoId: string
 //   }
 // );
 //extra --------
-export const deleteTasksTC = createAsyncThunk(
+export const deleteTasksTC = createAppAsyncThunk(
   "task/deleteTask",
   async (arg: { todoId: string; taskId: string }, thunkAPI) => {
     const { dispatch } = thunkAPI;
@@ -499,7 +502,7 @@ export const deleteTasksTC = createAsyncThunk(
 //   }
 // );
 //extra -----------------------------
-export const addTasksTC = createAsyncThunk(
+export const addTasksTC = createAppAsyncThunk(
   "task/addTasks",
   async (
     arg: {
@@ -601,7 +604,7 @@ export type UpdTaskTCType = {
 //   // }
 // });
 //extra ---------------------------
-export const updateTaskTC = createAsyncThunk<
+export const updateTaskTC = createAppAsyncThunk<
   unknown,
   { todoId: string; taskId: string; model: UpdTaskTCType },
   { state: AppRootStateType }
@@ -760,7 +763,10 @@ const slice = createSlice({
     //   // };
     // },
 
-    changeEntStatusTask: (state, action: PayloadAction<{ todoId: string; taskId: string; status: StatusType }>) => {
+    changeEntStatusTask: (
+      state,
+      action: PayloadAction<{ todoId: string; taskId: string; status: StatusType }>
+    ) => {
       return {
         ...state,
         [action.payload.todoId]: state[action.payload.todoId].map((t) =>
@@ -791,7 +797,8 @@ const slice = createSlice({
     builder
       .addCase(setTasksTC.fulfilled, (state, action) => {
         //Экшэн на этот раз типизировать не нужно, так как мы его передели
-        if (action?.payload) state[action.payload.todoId] = action.payload.tasks;
+       // if (action?.payload)
+         state[action.payload.todoId] = action.payload.tasks;
       })
       .addCase(addTasksTC.fulfilled, (state, action) => {
         //Экшэн на этот раз типизировать не нужно, так как мы его передели

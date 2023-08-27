@@ -99,28 +99,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
     },
     [dispatch, id]
   );
-  // // //Удаление таски==============================================================
-  // const onClickHandlerDeleteTask = useCallback((Task: string) => {
-  //     // props.deleteTask(props.todoListID, Task,)
-  //     dispatch(deleteTaskAC(id, Task))
-  // }, [dispatch, id]);
-
-  // //====Редактирование в task title===============================================
-  // const onChangeHandlerTitle = useCallback((taskId: string, newValue: string,) => {
-  //     // props.changeTaskTitle(taskId, newValue, props.todoListID)
-  //     //props.todoListID что б знали наверху в каком тудулисте поменять
-  //     dispatch(changeTaskTitleAC(taskId, newValue, id))
-  //
-  // }, [dispatch, id]);
-
-  //status task========================================================================
-  // const changeStatus = (taskId: string, isDone: boolean, todolistID: string) => {//отображения статуса таски true или false
-  //     //     let task = tasks.map((t) => t.id === taskId ? {...t, /*isDone: isDone - это*/ isDone} : t);
-  //     // }
-  //     //======Ассациативный ================
-  //     // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, isDone} : t)})
-  //     dispatch(changeStatusAC(taskId, isDone, todolistID))
-  // }
 
   // delete todolist=======================================
   const onClickHandlerDeleteTodolist = useCallback(
@@ -133,68 +111,21 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   //===============================================================
   //=========================ФиЛЬТРАЦИЯ==============================
   let filterTasks = tasks; //Создаем переменную тасок,и если фильтровать не нужно,
-  // она будет равна таскам которые пришли в пропсах,
-  //[tl.id] - обращение к конкретному тудулисту, то есть его id
   if (filter === "Active") {
-    // filterTasks = tasks.filter((el) => el.isDone);
-    //Ассоциативный ===================================================
     filterTasks = tasks.filter((t) => t.status === TaskStatuses.New);
   }
   if (filter === "Completed") {
-    // filterTasks = tasks.filter(el => !el.isDone);
-    //Ассоциативный ===================================================
     filterTasks = tasks.filter((t) => t.status === TaskStatuses.Completed);
   }
 
-  // filterTasks = useMemo(()=>{
-  //     if (filter === "Active") {
-  //         // filterTasks = tasks.filter((el) => el.isDone);
-  //         //Ассоциативный ===================================================
-  //         filterTasks = tasks.filter(t => t.isDone);
-  //     }
-  //     if (filter === "Completed") {
-  //         // filterTasks = tasks.filter(el => !el.isDone);
-  //         //Ассоциативный ===================================================
-  //         filterTasks = tasks.filter(t => !t.isDone);
-  //     }
-  //
-  //     return filterTasks;
-  // },[filter, filterTasks]);
-  //
-  //==================================================================
 
   // =====================================================================
   //Если лист тасок остался пустой
   const taskListItems = tasks.length ? (
     filterTasks.map((task) => {
-      //elTasks - элемент каждого обьекта в массиве
-      // //Удаление ==============================================================
-      // const onClickHandlerDelete=()=>{
-      //     props.deleteTask(elTask.id)
-      // }
-      // изменение в title========================================
-      // const onChangeHandlerTitle = (newValue: string) => {
-      //     props.changeTaskTitle(Task.id, newValue, props.todoListID)
-      //     //props.todoListID что б знали наверху в каком тудулисте поменять
-      // }
-
       return (
         <li key={task.id} className={task.status ? s.activeTask : ""}>
-          {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
-          {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
           <Task task={task} idTodolist={id} />
-          {/*<Button callBack={() => onClickHandlerDeleteTask(task.id)} style={s.dellTask}/>*/}
-          {/*<Checkbox*/}
-          {/*    checked={task.isDone}*/}
-          {/*    onChange={(event) => changeStatusHandler(task.id, event.currentTarget.checked,)}*/}
-          {/*    icon={<BookmarkBorder/>}*/}
-          {/*    checkedIcon={<Bookmark/>}*/}
-          {/*    style={{color: 'darkred'}}*/}
-          {/*/>*/}
-          {/*/!*<input type="checkbox" checked={Task.isDone}*!/*/}
-          {/*/!*       onChange={(event) => changeStatusHandler(Task.id, event.currentTarget.checked,)}/>*!/*/}
-          {/*<EditableSpan title={task.title} onChange={(newValue) => onChangeHandlerTitle(task.id, newValue)}/>*/}
-          {/*<span className={s.text}>{Task.title}</span>*/}
         </li>
       );
     })
@@ -212,29 +143,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
     [dispatch, id]
   );
 
-  //===========Добавление таски==================================================
-  //=======State Добавление таски======================================================
-  // const [addTitle, setAddTitle] = useState<string>('')
-  //
-  // const onClickHandlerAddTask = () => {
-  //     if (addTitle.trim() !== '') {//что-б и пробелы не считались за символы, убираем
-  //         props.addTask(addTitle.trim(), props.todoListID)//trim()- убираем пробелы вначале и конце
-  //         setAddTitle('')
-  //     } else {
-  //         setError('Заполни полe Чувак!')
-  //     }
-  // }
-  //===========================================================
-
-  //============CHecked===============================
-  //     const changeStatusHandler = useCallback((taskId: string, isDone: boolean,) => {
-  //         dispatch(changeStatusAC(taskId, isDone, id))
-  //         // props.changeStatus(taskId, filter, props.todoListID)
-  //     },[dispatch, id]);
-  //=====State Ошибка в случаи попытка отправки пустого поля========================
-  //     let [error, setError] = useState<string | null>(null)
-  //     const errorStop = error ? s.error : '';
-  //=====================================================================
 
   //=================Focus button filter===================================
   //filterValue - добавили фильтр из локального стейка
@@ -245,8 +153,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   //Изм. todolist======================================================================================
   const onChangeHandlerTitleTodolist = useCallback(
     (newValue: string) => {
-      // dispatch(onChangeTitleTodolistAC(newValue, id))
-      // props.onChangeHandlerTitleTodolist(newValue, props.todoListID,)
 
       dispatch(changeTitleTodoThunkCreator({ todoId: id, title: newValue }));
     },
@@ -259,7 +165,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
       <h3>
         <EditableSpan title={title} onChange={onChangeHandlerTitleTodolist} />
       </h3>
-      {/*<button className={s.todolistTitle} onClick={onClickHandlerDeleteTodolist}>x</button>*/}
       <IconButton
         onClick={() => onClickHandlerDeleteTodolist(id)}
         color={"error"}
@@ -269,47 +174,10 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
       </IconButton>
       <div className={s.block}>
         <FullInput addItem={addTask} disabled={props.todolist.entityStatus === "loading"} />
-        {/*<UniversalInput setAddTitle={setAddTitle}*/}
-        {/*                addTitle={addTitle}*/}
-        {/*                callback={onClickHandlerAddTask}*/}
-        {/*                setError={setError}*/}
-        {/*                style={errorStop}/>*/}
 
-        {/*<Button name='+' callBack={() => onClickHandlerAddTask()}/>*/}
-        {/*{error && <div className={`${errorStop} ${s.block}`}>{error}</div>}*/}
       </div>
-      {/*<div>*/}
-      {/*    <input*/}
-      {/*        value={addTitle}*/}
-      {/*        onChange={onChangeHandlerAddTask}*/}
-      {/*        onKeyDown={onKeyDownHandler}*/}
-      {/*    />*/}
-      {/*    <Button name='+' callBack={onClickHandlerAddTask}/>*/}
-      {/*    /!*<button onClick={onClickHandlerAddTask}>+</button>*!/*/}
-      {/*</div>*/}
       <ul>
         {taskListItems}
-        {/*//==========================================================================================*/}
-        {/*//================================================================================================*/}
-        {/*{props.tasks.map(elTask => {//elTasks - элемент каждого обьекта в массиве*/}
-        {/*    // //Удаление ==============================================================*/}
-        {/*    // const onClickHandlerDelete=()=>{*/}
-        {/*    //     props.deleteTask(elTask.id)*/}
-        {/*    // }*/}
-        {/*    return (*/}
-        {/*        <li key={elTask.id} className={elTask.isDone ? s.activeTask : ''}>*/}
-        {/*            /!*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*!/*/}
-        {/*            /!*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*!/*/}
-        {/*            <Button name='x' callBack={() => onClickHandlerDelete(elTask.id)}/>*/}
-        {/*            <label>*/}
-        {/*                <input type="checkbox" checked={elTask.isDone}*/}
-        {/*                       onChange={(event) => changeStatus(elTask.id, event.currentTarget.checked)}/>*/}
-        {/*                /!*onChange={(event) => checkedTaskHandler(elTask.id, event.currentTarget.checked)}/>*!/*/}
-        {/*                <span className={s.text}>{elTask.title}</span>*/}
-        {/*            </label>*/}
-        {/*        </li>*/}
-        {/*    );*/}
-        {/*})}*/}
       </ul>
       <div>
         <Button
@@ -327,9 +195,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
           callBack={useCallback(() => changeTasksFilterHandler("Completed"), [changeTasksFilterHandler])}
           style={buttonCompleted}
         />
-        {/*<button onClick={() => changeTasksFilter("All")}>All</button>*/}
-        {/*<button onClick={() => changeTasksFilter("Active")}>Active</button>*/}
-        {/*<button onClick={() => changeTasksFilter("Completed")}>Completed</button>*/}
       </div>
     </div>
   );

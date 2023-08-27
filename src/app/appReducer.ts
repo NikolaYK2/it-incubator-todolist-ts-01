@@ -1,8 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authApi, ResultCode } from "api/todolistsApi";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 import { authActions } from "features/auth/authReducer";
 import { todoActions } from "features/todolistsList/todoListsReducer";
+import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
 //REDUX --------------------------------------------------------------------
 // export type StatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
@@ -117,7 +118,7 @@ const initialState: AppStateType = {
 };
 
 //thunk -------------------------------------------------------------
-export const initializedAppTC = createAsyncThunk(
+export const initializedAppTC = createAppAsyncThunk(
   "app/init",
 
   async (_, { dispatch }) => {
@@ -136,7 +137,7 @@ export const initializedAppTC = createAsyncThunk(
   }
 );
 
-const logoutApp = createAsyncThunk("app/logout", async (_, thunkAPI) => {
+const logoutApp = createAppAsyncThunk("app/logout", async (_, thunkAPI) => {
   const { dispatch } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
   try {

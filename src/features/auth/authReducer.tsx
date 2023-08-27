@@ -73,10 +73,11 @@
 // }
 
 //RTK --------------------------------------------------
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authApi, AuthLoginType, ResultCode } from "api/todolistsApi";
 import { appAction } from "app/appReducer";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
+import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
 // const authLogin = createAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
 //   const { dispatch } = thunkAPI;
@@ -94,7 +95,7 @@ import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils
 //   }
 // });
 //extra ------------------------------
-const authLogin = createAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
+const authLogin = createAppAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
   try {
@@ -104,7 +105,7 @@ const authLogin = createAsyncThunk("auth/auth", async (data: AuthLoginType, thun
       return { isLoggedIn: true };
     } else {
       handleServerAppError(res.data, dispatch);
-      return rejectWithValue({ isLoggedIn: false });
+      return rejectWithValue(null);
 
     }
   } catch (error: any) {
