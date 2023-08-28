@@ -5,7 +5,6 @@ import { FullInput } from "components/fullInputButton/FullInput";
 import { EditableSpan } from "components/editableSpan/EditableSpan";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { addTasksTC } from "../tasksReducer";
 import {
   changeTitleTodoThunkCreator,
   deleteTodoThunkCreator,
@@ -16,6 +15,7 @@ import {
 import { Task } from "./task/Task";
 import { TaskStatuses } from "api/todolistsApi";
 import { useAppDispatch, useAppSelector } from "app/store";
+import { tasksThunk } from "features/todolistsList/tasksReducer";
 
 export type TodolistPropsType = {
   todolist: TodoAppType;
@@ -93,7 +93,7 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   const addTask = useCallback(
     (title: string) => {
       // dispatch(addTaskAC(addTitle, id));
-      dispatch(addTasksTC({ todoId: id, title: title }));
+      dispatch(tasksThunk.addTasksTC({ todoId: id, title: title }));
 
       // props.addItem(title, props.todoListID);
     },

@@ -109,56 +109,24 @@ beforeEach(() => {
 });
 
 test("add task", () => {
-  // const tasks: taskStateType = {//tasks переменная в которой лежат данные, в данном случаи обьекты
-  //     [todolistID_1]: [
-  //         {id: '1', title: "HTML&CSS", isDone: true},
-  //         {id: '2', title: "JS", isDone: true},
-  //         {id: '3', title: "ReactJS", isDone: true},
-  //         {id: '4', title: "Next", isDone: false},
-  //     ],
-  //     [todolistID_2]: [
-  //         {id: '1', title: "Beer", isDone: true},
-  //         {id: '2', title: "Meat", isDone: true},
-  //         {id: '3', title: "Fish", isDone: true},
-  //         {id: '4', title: "Drink", isDone: false},
-  //     ],
-  // }
 
-  const newTasks = tasksReducer(
-    tasks,
-    tasksThunk.addTasksTC.fulfilled(
-      {
-        task: {
-          id: "3",
-          title: "He",
-          status: TaskStatuses.New,
-          addedDate: "",
-          startDate: "",
-          deadline: "",
-          order: 0,
-          priority: TodoTaskPriorities.Low,
-          todoListId: "todolistID_2",
-          description: "",
-        },
+  const newTasks = tasksReducer(tasks, {
+    type: tasksThunk.addTasksTC.fulfilled.type,
+    payload: {
+      task: {
+        id: "3",
+        title: "He",
+        status: TaskStatuses.New,
+        addedDate: "",
+        startDate: "",
+        deadline: "",
+        order: 0,
+        priority: TodoTaskPriorities.Low,
+        todoListId: "todolistID_2",
+        description: "",
       },
-      "",
-      { todoId: "todolistID_2", title: "He" }
-    )
-    // taskActions.addTask({
-    //   task: {
-    //     id: "3",
-    //     title: "He",
-    //     status: TaskStatuses.New,
-    //     addedDate: "",
-    //     startDate: "",
-    //     deadline: "",
-    //     order: 0,
-    //     priority: TodoTaskPriorities.Low,
-    //     todoListId: "todolistID_2",
-    //     description: "",
-    //   },
-    // })
-  );
+    },
+  });
 
   expect(newTasks["todolistID_2"].length).toBe(5);
   expect(newTasks["todolistID_2"][0].title).toBe("He");

@@ -387,10 +387,18 @@
 //RTK ====================================================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
-import { ResultCode, TaskStatuses, TaskType, todolistsApi, TodoTaskPriorities, UpdTaskType } from "api/todolistsApi";
+import {
+  ArgUpdateTaskType,
+  CreateTaskType,
+  ResultCode,
+  TaskStatuses,
+  TaskType,
+  todolistsApi,
+  TodoTaskPriorities,
+  UpdTaskType,
+} from "api/todolistsApi";
 import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 import { todoActions } from "features/todolistsList/todoListsReducer";
-import { AppRootStateType } from "app/store";
 import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
 // export const setTasksTC = createAsyncThunk(
@@ -407,17 +415,74 @@ import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 //   }
 // });
 //extra --------------
-const setTasksTC = createAppAsyncThunk<{todoId:string, tasks: TaskType[]}, string>(
-  "task/setTask", async (todoId, thunkAPI) => {
+const setTasksTC = createAppAsyncThunk<
+  {
+    todoId: string;
+    tasks: TaskType[];
+  },
+  string
+>("task/setTask", async (todoId, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
   dispatch(appAction.setStatus({ status: "loading" }));
   try {
     const res = await todolistsApi.getTasks(todoId);
     dispatch(appAction.setStatus({ status: "succeeded" }));
     return { todoId, tasks: res.data.items };
+  } catch (error) {
+    handleServerNetworkError(error, dispatch);
+    return rejectWithValue(null); //просто заглушка, раз мы сюда ничего не передаем
+  }
+});
+
+// export const addTasksTC = createAsyncThunk(
+//   "task/addTasks",
+//   async (
+//     arg: {
+//       todoId: string;
+//       title: string;
+//     },
+//     thunkAPI
+//   ) => {
+//     const { dispatch } = thunkAPI;
+//
+//     dispatch(appAction.setStatus({ status: "loading" }));
+//     dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "loading" }));
+//     try {
+//       const res = await todolistsApi.createTask(arg.todoId, arg.title);
+//       if (res.data.resultCode === ResultCode.Ok) {
+//         dispatch(taskActions.addTask({ task: res.data.data.item }));
+//         dispatch(appAction.setStatus({ status: "succeeded" }));
+//       } else {
+//         handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
+//       }
+//       dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
+//     } catch (error: any) {
+//       handleServerNetworkError(error, dispatch);
+//       dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
+//     }
+//   }
+// );
+//extra -----------------------------
+const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("task/addTasks", async (arg, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
+
+  dispatch(appAction.setStatus({ status: "loading" }));
+  dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "loading" }));
+  try {
+    // const res = await todolistsApi.createTask(arg.todoId, arg.title);
+    const res = await todolistsApi.createTask(arg);
+    if (res.data.resultCode === ResultCode.Ok) {
+      dispatch(appAction.setStatus({ status: "succeeded" }));
+      return { task: res.data.data.item };
+    } else {
+      handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
+    }
+    dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
+    return rejectWithValue(null);
   } catch (error: any) {
     handleServerNetworkError(error, dispatch);
-    return rejectWithValue(null)//просто заглушка, раз мы сюда ничего не передаем
+    dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
+    return rejectWithValue(null);
   }
 });
 
@@ -449,7 +514,13 @@ const setTasksTC = createAppAsyncThunk<{todoId:string, tasks: TaskType[]}, strin
 //extra --------
 export const deleteTasksTC = createAppAsyncThunk(
   "task/deleteTask",
-  async (arg: { todoId: string; taskId: string }, thunkAPI) => {
+  async (
+    arg: {
+      todoId: string;
+      taskId: string;
+    },
+    thunkAPI
+  ) => {
     const { dispatch } = thunkAPI;
     dispatch(appAction.setStatus({ status: "loading" }));
     dispatch(
@@ -469,64 +540,6 @@ export const deleteTasksTC = createAppAsyncThunk(
       }
     } catch (error: any) {
       handleServerNetworkError(error, dispatch);
-    }
-  }
-);
-
-// export const addTasksTC = createAsyncThunk(
-//   "task/addTasks",
-//   async (
-//     arg: {
-//       todoId: string;
-//       title: string;
-//     },
-//     thunkAPI
-//   ) => {
-//     const { dispatch } = thunkAPI;
-//
-//     dispatch(appAction.setStatus({ status: "loading" }));
-//     dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "loading" }));
-//     try {
-//       const res = await todolistsApi.createTask(arg.todoId, arg.title);
-//       if (res.data.resultCode === ResultCode.Ok) {
-//         dispatch(taskActions.addTask({ task: res.data.data.item }));
-//         dispatch(appAction.setStatus({ status: "succeeded" }));
-//       } else {
-//         handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
-//       }
-//       dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
-//     } catch (error: any) {
-//       handleServerNetworkError(error, dispatch);
-//       dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
-//     }
-//   }
-// );
-//extra -----------------------------
-export const addTasksTC = createAppAsyncThunk(
-  "task/addTasks",
-  async (
-    arg: {
-      todoId: string;
-      title: string;
-    },
-    thunkAPI
-  ) => {
-    const { dispatch } = thunkAPI;
-
-    dispatch(appAction.setStatus({ status: "loading" }));
-    dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "loading" }));
-    try {
-      const res = await todolistsApi.createTask(arg.todoId, arg.title);
-      if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(appAction.setStatus({ status: "succeeded" }));
-        return { task: res.data.data.item };
-      } else {
-        handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
-      }
-      dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
-    } catch (error: any) {
-      handleServerNetworkError(error, dispatch);
-      dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
     }
   }
 );
@@ -605,10 +618,11 @@ export type UpdTaskTCType = {
 // });
 //extra ---------------------------
 export const updateTaskTC = createAppAsyncThunk<
-  unknown,
+  // any,any
   { todoId: string; taskId: string; model: UpdTaskTCType },
-  { state: AppRootStateType }
->("task/updateTas", async (arg, { getState, dispatch }) => {
+  // ArgUpdateTaskType,
+  ArgUpdateTaskType
+>("task/updateTas", async (arg, { getState, dispatch, rejectWithValue }) => {
   const task = getState().tasks[arg.todoId].find((t) => t.id === arg.taskId); //Будет бежать по массиву только до первого совпадения
   dispatch(appAction.setStatus({ status: "loading" }));
   dispatch(
@@ -622,7 +636,7 @@ export const updateTaskTC = createAppAsyncThunk<
   if (!task) {
     // throw new Error('task not found')
     console.warn("task not found");
-    return;
+    return rejectWithValue(null);
   }
 
   // if (task) {
@@ -638,19 +652,22 @@ export const updateTaskTC = createAppAsyncThunk<
   };
 
   try {
-    const res = await todolistsApi.updateTask(arg.todoId, arg.taskId, apiModel);
+    const res = await todolistsApi.updateTask(arg, apiModel);
 
     if (res.data.resultCode === ResultCode.Ok) {
       dispatch(appAction.setStatus({ status: "succeeded" }));
       return { todoId: arg.todoId, taskId: arg.taskId, model: apiModel };
     } else {
       handleServerAppError(res.data, dispatch);
+      return rejectWithValue(null);
     }
-  } catch (error: any) {
+  } catch (error) {
     // if (axios.isAxiosError<{ messages: string[] }>(error)) {
     //     return error;
     // }
-    handleServerNetworkError(error.message, dispatch);
+    // handleServerNetworkError(error.message, dispatch);
+    handleServerNetworkError(error, dispatch);
+    return rejectWithValue(null);
   } finally {
     dispatch(
       taskActions.changeEntStatusTask({
@@ -742,7 +759,14 @@ const slice = createSlice({
     //   return copyState;
     // },
 
-    changeTaskTitle: (state, action: PayloadAction<{ taskId: string; newValue: string; todoId: string }>) => {
+    changeTaskTitle: (
+      state,
+      action: PayloadAction<{
+        taskId: string;
+        newValue: string;
+        todoId: string;
+      }>
+    ) => {
       return {
         ...state,
         [action.payload.todoId]: state[action.payload.todoId].map((task) =>
@@ -765,7 +789,11 @@ const slice = createSlice({
 
     changeEntStatusTask: (
       state,
-      action: PayloadAction<{ todoId: string; taskId: string; status: StatusType }>
+      action: PayloadAction<{
+        todoId: string;
+        taskId: string;
+        status: StatusType;
+      }>
     ) => {
       return {
         ...state,
@@ -797,12 +825,13 @@ const slice = createSlice({
     builder
       .addCase(setTasksTC.fulfilled, (state, action) => {
         //Экшэн на этот раз типизировать не нужно, так как мы его передели
-       // if (action?.payload)
-         state[action.payload.todoId] = action.payload.tasks;
+        // if (action?.payload)
+        state[action.payload.todoId] = action.payload.tasks;
       })
       .addCase(addTasksTC.fulfilled, (state, action) => {
         //Экшэн на этот раз типизировать не нужно, так как мы его передели
-        if (action?.payload) state[action.payload.task.todoListId].unshift(action.payload.task);
+        // if (action?.payload)
+        state[action.payload.task.todoListId].unshift(action.payload.task);
       })
       .addCase(deleteTasksTC.fulfilled, (state, action) => {
         if (action?.payload) {
@@ -812,11 +841,9 @@ const slice = createSlice({
         }
       })
       .addCase(updateTaskTC.fulfilled, (state, action) => {
-        if (action?.payload) {
-          const tasks = state[action.meta.arg.todoId];
-          const index = tasks.findIndex((t) => t.id === action.meta.arg.taskId);
-          if (index !== -1) tasks[index] = { ...tasks[index], ...action.meta.arg.model };
-        }
+        const tasks = state[action.meta.arg.todoId];
+        const index = tasks.findIndex((t) => t.id === action.meta.arg.taskId);
+        if (index !== -1) tasks[index] = { ...tasks[index], ...action.meta.arg.model };
       })
       .addCase(todoActions.addTodo, (state, action) => {
         //Экшэн на этот раз типизировать не нужно, так как мы его передели

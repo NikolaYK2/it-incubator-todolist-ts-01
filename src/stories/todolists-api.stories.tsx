@@ -184,6 +184,7 @@ export const CreateTask = () => {
   const [todoId, setTodoId] = useState<any>("");
   const [title, setTitle] = useState<any>("");
 
+  const arg = { todoId: "", title: "" };
   // useEffect(() => {
   //     const todoId = '';
   //     todolistsApi.createTask(todoId, 'Nik')
@@ -194,7 +195,7 @@ export const CreateTask = () => {
   // }, [])
   const taskChangeHandle = () => {
     todolistsApi
-      .createTask(todoId, title)
+      .createTask(arg) //был todoId title
       // axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'Dim'}, settings)
       .then((res) => {
         setState(res.data);
@@ -276,17 +277,36 @@ export const UpdateTaskTitle = () => {
   //         })
   //
   // }, [])
-
+  const arg = {
+    todoId: "",
+    taskId: "",
+    model: {
+      title: title,
+      description: description,
+      status: status,
+      priority: priority,
+      startDate: "",
+      deadline: "",
+    },
+  };
   const clickHandle = () => {
     todolistsApi
-      .updateTask(todoId, taskId, {
+      // .updateTask(todoId, taskId, {
+      //   title: title,
+      //   description: description,
+      //   status: status,
+      //   priority: priority,
+      //   startDate: "",
+      //   deadline: "",
+      // })
+      .updateTask(arg,{
         title: title,
         description: description,
         status: status,
         priority: priority,
         startDate: "",
         deadline: "",
-      })
+      },)
       .then((res) => {
         setState(res.data);
       });

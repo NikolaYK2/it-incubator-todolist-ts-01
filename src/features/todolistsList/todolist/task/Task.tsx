@@ -57,15 +57,7 @@ export const Task = React.memo((props: TaskTypeP) => {
       // props.changeTaskTitle(taskId, newValue, props.todoListID)
       //props.todoListID что б знали наверху в каком тудулисте поменять
       // dispatch(changeTaskTitleAC(taskId, newValue, props.idTodolist))
-      dispatch(
-        updateTaskTC({
-          todoId: props.idTodolist,
-          taskId: taskId,
-          model: {
-            title: newValue,
-          },
-        })
-      );
+      dispatch(updateTaskTC({ todoId: props.idTodolist, taskId: taskId, model: { title: newValue } }));
     },
     [dispatch, props.idTodolist]
   );

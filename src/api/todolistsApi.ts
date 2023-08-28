@@ -1,5 +1,5 @@
 import axios from "axios";
-import { EntStatusType } from "features/todolistsList/tasksReducer";
+import { EntStatusType, UpdTaskTCType } from "features/todolistsList/tasksReducer";
 
 const instance = axios.create({
   withCredentials: true,
@@ -94,6 +94,16 @@ export type GetTaskType = {
   error: string | null;
 };
 
+//arg thunk ----------------
+export type CreateTaskType = {
+  todoId: string;
+  title: string;
+};
+export type ArgUpdateTaskType = {
+  todoId: string;
+  taskId: string;
+  model: UpdTaskTCType;
+};
 export const todolistsApi = {
   //TODolis =====================================================================
   getTodolists() {
@@ -104,7 +114,11 @@ export const todolistsApi = {
   },
   createTodolists(title: string) {
     //Мы будем хотеть поменять tittle, по этому нужен параметр
-    return instance.post<ResponsTodolistsType<{ item: TodolistType }>>("todo-lists/", { title: title });
+    return instance.post<
+      ResponsTodolistsType<{
+        item: TodolistType;
+      }>
+    >("todo-lists/", { title: title });
   },
   deleteTodolists(todoId: string) {
     return instance.delete<ResponsTodolistsType<{}>>(`todo-lists/${todoId}`);
@@ -119,15 +133,22 @@ export const todolistsApi = {
   getTasks(todoId: string) {
     return instance.get<GetTaskType>(`todo-lists/${todoId}/tasks`);
   },
-  createTask(todoId: string, title: string) {
+  createTask(arg: CreateTaskType) {
     //Мы будем хотеть поменять tittle, по этому нужен параметр
-    return instance.post<ResponsTodolistsType<{ item: TaskType }>>(`todo-lists/${todoId}/tasks`, { title });
+    return instance.post<
+      ResponsTodolistsType<{
+        item: TaskType;
+      }>
+    >(`todo-lists/${arg.todoId}/tasks`, { title: arg.title });
   },
   deleteTask(todoId: string, taskId: string) {
     return instance.delete<ResponsTodolistsType>(`todo-lists/${todoId}/tasks/${taskId}`);
   },
-  updateTask(todoId: string, taskId: string, data: UpdTaskType) {
-    return instance.put<ResponsTodolistsType<{ item: TaskType }>>(`todo-lists/${todoId}/tasks/${taskId}`, data);
+  updateTask(arg: ArgUpdateTaskType, model: UpdTaskType) {
+    return instance.put<ResponsTodolistsType<{ item: TaskType }>>(
+      `todo-lists/${arg.todoId}/tasks/${arg.taskId}`,
+      model
+    );
   },
 };
 
@@ -145,7 +166,11 @@ type AuthMeType = {
 };
 export const authApi = {
   authLogin(/*email: string, password: string, rememberMe: boolean*/ data: AuthLoginType) {
-    return instance.post<ResponsTodolistsType<{ userId?: number }>>("auth/login", data);
+    return instance.post<
+      ResponsTodolistsType<{
+        userId?: number;
+      }>
+    >("auth/login", data);
   },
   me() {
     return instance.get<ResponsTodolistsType<AuthMeType>>("auth/me");

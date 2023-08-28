@@ -24,7 +24,7 @@ export const handleServerAppError = <D>(data: ResponsTodolistsType<D>, dispatch:
 //   dispatch(appAction.setStatus({ status: "failed" }));
 // };
 //навароченная версия
-export const handleServerNetworkError = (error: { message: string }, dispatch: AppDispatch) => {
+export const handleServerNetworkError = (error: unknown, dispatch: AppDispatch) => {
   const err = error as Error | AxiosError<{ error: string }>;
   if (axios.isAxiosError(err)) {
     const error = err.message ? err.message : "Network error!";
