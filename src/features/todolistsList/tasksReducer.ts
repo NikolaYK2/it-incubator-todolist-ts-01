@@ -618,9 +618,7 @@ export type UpdTaskTCType = {
 // });
 //extra ---------------------------
 export const updateTaskTC = createAppAsyncThunk<
-  // any,any
-  { todoId: string; taskId: string; model: UpdTaskTCType },
-  // ArgUpdateTaskType,
+  ArgUpdateTaskType,
   ArgUpdateTaskType
 >("task/updateTas", async (arg, { getState, dispatch, rejectWithValue }) => {
   const task = getState().tasks[arg.todoId].find((t) => t.id === arg.taskId); //Будет бежать по массиву только до первого совпадения
