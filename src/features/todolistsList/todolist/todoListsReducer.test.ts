@@ -50,12 +50,12 @@ test("add new todolist", () => {
 });
 
 test("delete todolist", () => {
-  const newTodolist = todoListsReducer(todoLists, {
-    type: todoThunk.addTodo.fulfilled.type,
+  const newTodolist = todoListsReducer(
+    todoLists,
+    {
+    type: todoThunk.deleteTodo.fulfilled.type,
     payload: {
-      todolist: {
         todolistID: "todolistID_1"
-      }
     }
   });
   expect(newTodolist.length).toBe(1);

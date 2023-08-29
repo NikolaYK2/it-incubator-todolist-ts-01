@@ -17,19 +17,19 @@ export type ResponsTodolistsType<D = {}> = {
 };
 
 //RESULT CODE ===================================
-export enum ResultCode {
-  Ok = 0,
-  Error = 1,
-  Captcha = 10,
-}
+// export enum ResultCode {
+//   Ok = 0,
+//   Error = 1,
+//   Captcha = 10,
+// }
 
-const ResCode = {
-  ok: 0,
-  error: 1,
-  captcha: 10,
+export const ResultCode = {
+  Ok: 0,
+  Error: 1,
+  Captcha: 10,
 } as const;
 
-type ResCodeType = keyof typeof ResCode;
+type ResCodeType = keyof typeof ResultCode;
 
 //TASK status type==============================================
 export enum TaskStatuses { //Тип данных. Перечисление всех возможных вариантов

@@ -16,7 +16,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
+        description: ""
       },
       {
         id: "2",
@@ -28,7 +28,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
+        description: ""
       },
       {
         id: "3",
@@ -40,7 +40,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
+        description: ""
       },
       {
         id: "4",
@@ -52,8 +52,8 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: "",
-      },
+        description: ""
+      }
     ],
     todolistID_2: [
       {
@@ -66,7 +66,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
+        description: ""
       },
       {
         id: "2",
@@ -78,7 +78,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
+        description: ""
       },
       {
         id: "3",
@@ -90,7 +90,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
+        description: ""
       },
       {
         id: "4",
@@ -102,9 +102,9 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
-      },
-    ],
+        description: ""
+      }
+    ]
   };
 });
 
@@ -122,9 +122,9 @@ test("add task", () => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: "",
-      },
-    },
+        description: ""
+      }
+    }
   });
 
   expect(newTasks["todolistID_2"].length).toBe(5);
@@ -141,9 +141,9 @@ test("add todolist and null tasks", () => {
         id: "todolistID",
         title: "new todolistsList",
         order: 0,
-        addedDate: "",
-      },
-    },
+        addedDate: ""
+      }
+    }
   });
   const keys = Object.keys(newTasks); //Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
   //Находим новый ключ
@@ -161,13 +161,14 @@ test("add todolist and null tasks", () => {
 test("remove task", () => {
   const newTasks = tasksReducer(
     tasks,
-    tasksThunk.deleteTasksTC.fulfilled(
-      { todoId: "todolistID_1", taskId: "1" },
-      "",
-      { todoId: "todolistID_1", taskId: "1" },
-      "todolistID_1"
-    )
+    {
+      type: tasksThunk.deleteTasksTC.fulfilled.type,
+      payload: {
+        todoId: "todolistID_1", taskId: "1"
+      }
+    }
   );
+
   // const newTasks = tasksReducer(tasks, taskActions.deleteTask({ todolistID: "todolistID_1", taskId: "1" }));
 
   expect(newTasks["todolistID_1"].length).toBe(3);
@@ -194,8 +195,8 @@ test("change task title", () => {
     todoId: "todolistID_1",
     taskId: "1",
     model: {
-      title: "hi",
-    },
+      title: "hi"
+    }
   };
   const newTasks = tasksReducer(tasks, tasksThunk.updateTaskTC.fulfilled(updTask, "", updTask));
   // taskActions.updTask({
@@ -215,8 +216,8 @@ test("change task status", () => {
     todoId: "todolistID_1",
     taskId: "2",
     model: {
-      status: TaskStatuses.New,
-    },
+      status: TaskStatuses.New
+    }
   };
 
   const newTasks = tasksReducer(
@@ -243,9 +244,9 @@ test("пустые массивы должны быть добавлены, ко
       payload: {
         todolist: [
           { id: "1", title: "title1", order: 0, addedDate: "" },
-          { id: "2", title: "title2", order: 0, addedDate: "" },
-        ],
-      },
+          { id: "2", title: "title2", order: 0, addedDate: "" }
+        ]
+      }
     }
   );
 
@@ -260,7 +261,7 @@ test("tasks для todolistsList должны быть добавлены", () =
   const newTasks = tasksReducer(
     {
       todolistID_2: [],
-      todolistID_1: [],
+      todolistID_1: []
     },
     // taskActions.setTasks({
     //   todolistID: "todolistID_1",
@@ -270,7 +271,7 @@ test("tasks для todolistsList должны быть добавлены", () =
     tasksThunk.setTasksTC.fulfilled(
       {
         todoId: "todolistID_1",
-        tasks: tasks["todolistID_1"],
+        tasks: tasks["todolistID_1"]
       },
       "",
       "todolistID_1"
