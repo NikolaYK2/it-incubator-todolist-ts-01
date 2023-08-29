@@ -202,10 +202,11 @@
 //RTK ====================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
-import { ResultCode, todolistsApi, TodolistType } from "api/todolistsApi";
-import { tasksThunk } from "features/todolistsList/tasksReducer";
-import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
-import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
+import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
+import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
+import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
+import { todolistsApi, TodolistType } from "features/todolistsList/todolist/todolistsApi";
+import { ResultCode } from "common/api/todolistsApi";
 
 //THUNK -----------------------------------------------------------------
 const setTodolistsThunkCreator = createAppAsyncThunk("todo/setTodo", async (_, thunkAPI) => {

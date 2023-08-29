@@ -1,5 +1,5 @@
 import React, { ChangeEvent, KeyboardEvent, useCallback } from "react";
-import s from "./UniversalInput.module.css";
+import s from "common/components/input/UniversalInput.module.css";
 import { TextField } from "@mui/material";
 
 type UniversalInputType = {

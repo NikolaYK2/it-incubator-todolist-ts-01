@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
-import { Button } from "components/button/Button";
+import { Button } from "common/components/button/Button";
 import s from "./Todolist.module.css";
-import { FullInput } from "components/fullInputButton/FullInput";
-import { EditableSpan } from "components/editableSpan/EditableSpan";
+import { FullInput } from "common/components/fullInputButton/FullInput";
+import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import {
@@ -11,28 +11,15 @@ import {
   filterValueType,
   todoActions,
   TodoAppType,
-} from "../todoListsReducer";
+} from "features/todolistsList/todolist/todoListsReducer";
 import { Task } from "./task/Task";
-import { TaskStatuses } from "api/todolistsApi";
 import { useAppDispatch, useAppSelector } from "app/store";
-import { tasksThunk } from "features/todolistsList/tasksReducer";
+import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
+import { TaskStatuses } from "common/api/todolistsApi";
 
 export type TodolistPropsType = {
   todolist: TodoAppType;
   demo?: boolean;
-  // todoListID: string;
-  // title: string,
-  // // tasks: TasksPropsType[],
-  // // changeStatus: (taskId: string, isDone: boolean, id: string) => void,
-  // // deleteTask: (id: string, idId: string,) => void,
-  // // addItem: (id: string, addTitle: string) => void
-  // // changeTasksFilter: (filterValue: filterValueType) => void,//если параметр не передаем то пустая функция
-  // // changeTaskTitle: (id: string, newValue: string, taskId: string,) => void,//редактирование title tasks
-  // deleteTodolist: (id: string) => void
-  // // changeTasksFilter: (id: string, filter: filterValueType,) => void
-  // // onChangeHandlerTitleTodolist: (todoId: string, newValue: string,) => void,//изм. title todolist
-  // filter: filterValueType,
-  // //void - ничиег оне возвращает
 };
 
 export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsType) => {

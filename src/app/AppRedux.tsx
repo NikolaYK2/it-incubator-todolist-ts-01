@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./App.css";
-import ButtonAppBar from "components/buttonAppBar/ButtonAppBar";
+// import { ButtonAppBar } from "components/buttonAppBar/ButtonAppBar";
 import { TodolistsList } from "features/todolistsList/TodolistsList";
 import { Login } from "features/auth/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "./store";
 import CircularProgress from "@mui/material/CircularProgress";
 import { initializedAppTC } from "app/appReducer";
 import { appSelector } from "app/appSelector";
+import { ButtonAppBar } from "common/components";
 
 type AppReduxType = {
   demo?: boolean;

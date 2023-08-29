@@ -1,4 +1,4 @@
-import { todoActions, TodoAppType, todoListsReducer } from "./todoListsReducer";
+import { todoActions, TodoAppType, todoListsReducer } from "features/todolistsList/todolist/todoListsReducer";
 
 let todoLists: TodoAppType[];
 beforeEach(() => {

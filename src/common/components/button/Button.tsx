@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import s from "./Button.module.css";
+import s from "common/components/button/Button.module.css";
 
 type ButtonType = {
   name?: string;

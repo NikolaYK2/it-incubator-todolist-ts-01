@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { authApi, ResultCode } from "api/todolistsApi";
-import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
+import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
 import { authActions } from "features/auth/authReducer";
-import { todoActions } from "features/todolistsList/todoListsReducer";
-import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
+import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
+import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
+import { authApi } from "features/auth/authApi";
+import { ResultCode } from "common/api/todolistsApi";
 
 //REDUX --------------------------------------------------------------------
 // export type StatusType = 'idle' | 'loading' | 'succeeded' | 'failed'

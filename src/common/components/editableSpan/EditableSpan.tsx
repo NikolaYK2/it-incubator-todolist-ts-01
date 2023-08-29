@@ -1,4 +1,4 @@
-import s from "./EditableSpan.module.css";
+import s from "common/components/editableSpan/EditableSpan.module.css";
 import React, { ChangeEvent, KeyboardEvent, memo, useCallback, useState } from "react";
 import { TextField } from "@mui/material";
 

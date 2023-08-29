@@ -74,26 +74,12 @@
 
 //RTK --------------------------------------------------
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { authApi, AuthLoginType, ResultCode } from "api/todolistsApi";
 import { appAction } from "app/appReducer";
-import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
-import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
+import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
+import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
+import { authApi, AuthLoginType } from "features/auth/authApi";
+import { ResultCode } from "common/api/todolistsApi";
 
-// const authLogin = createAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
-//   const { dispatch } = thunkAPI;
-//   dispatch(appAction.setStatus({ status: "loading" }));
-//   try {
-//     const res = await authApi.authLogin(data);
-//     if (res.data.resultCode === ResultCode.Ok) {
-//       dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-//       dispatch(appAction.setStatus({ status: "succeeded" }));
-//     } else {
-//       handleServerAppError(res.data, dispatch);
-//     }
-//   } catch (error: any) {
-//     handleServerNetworkError(error, dispatch);
-//   }
-// });
 //extra ------------------------------
 const authLogin = createAppAsyncThunk("auth/auth", async (data: AuthLoginType, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
@@ -124,19 +110,10 @@ const initialState: AuthInitType = {
 };
 
 const slice = createSlice({
-  // важно чтобы не дублировалось, будет в качетве приставки согласно соглашению redux ducks
   name: "auth",
-  //❗Если будут писаться тесты на slice или где понадобится типизация,
-  // тогда выносим initialState наверх
   initialState,
-  // состоит из подредьюсеров, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
   reducers: {
-    //❗в жизни setIsLoggedInAC c AC писать не надо.
-    // оставим только для того чтобы делать плавный рефакторинг
-    // Объект payload. Типизация через PayloadAction
     setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-      // логику в подредьюсерах пишем мутабельным образом,
-      // т.к. иммутабельность достигается благодаря immer.js
       state.isLoggedIn = action.payload.isLoggedIn;
     }
   },
@@ -147,11 +124,6 @@ const slice = createSlice({
   },
 });
 
-// Создаем reducer с помощью slice
 export const authReducer = slice.reducer;
-// Action creator также достаем с помощью slice
-// export const {setIsLoggedIn} = slice.actions
-// либо вот так. ❗Делаем так, в дальнейшем пригодиться
 export const authActions = slice.actions;
-
 export const authThunk = { authLogin };

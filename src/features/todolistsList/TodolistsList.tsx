@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect } from "react";
-import { addTodoThunkCreator, todoThunk } from "./todoListsReducer";
+import { addTodoThunkCreator, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Todolist } from "./todolist/Todolist";
-import { FullInput } from "components/fullInputButton/FullInput";
+import { FullInput } from "common/components/fullInputButton/FullInput";
 import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "app/store";
 import { todolistSelector } from "features/todolistsList/todolist/todolistSelector";

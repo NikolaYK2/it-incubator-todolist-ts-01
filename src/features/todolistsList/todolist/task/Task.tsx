@@ -1,12 +1,13 @@
 import React, { useCallback } from "react";
 import { Checkbox } from "@mui/material";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
-import { deleteTasksTC, updateTaskTC } from "../../tasksReducer";
+import { deleteTasksTC, tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
 import s from "../Todolist.module.css";
-import { Button } from "components/button/Button";
-import { EditableSpan } from "components/editableSpan/EditableSpan";
-import { TaskStatuses, TaskType } from "api/todolistsApi";
+import { Button } from "common/components/button/Button";
+import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { useAppDispatch } from "app/store";
+import { TaskType } from "features/todolistsList/todolist/todolistsApi";
+import { TaskStatuses } from "common/api/todolistsApi";
 
 export type TaskTypeP = {
   task: TaskType;
@@ -20,11 +21,9 @@ export const Task = React.memo((props: TaskTypeP) => {
   //============CHecked===============================
   const changeTaskStatusHandler = useCallback(
     (taskId: string, status: TaskStatuses) => {
-      // dispatch(changeStatusAC(taskId, status ? TaskStatuses.New : TaskStatuses.Completed, props.idTodolist))
-      // props.changeStatus(taskId, filter, props.todoListID)
 
       dispatch(
-        updateTaskTC({
+        tasksThunk.updateTaskTC({
           todoId: props.idTodolist,
           taskId: taskId,
           model: {
@@ -39,13 +38,6 @@ export const Task = React.memo((props: TaskTypeP) => {
   // //Удаление таски==============================================================
   const onClickHandlerDeleteTask = useCallback(
     (todoId: string, taskId: string) => {
-      // props.deleteTask(props.todoListID, taskId)
-      // dispatch(deleteTaskAC(props.idTodolist, taskId))
-
-      // todolistsApi.deleteTask(todoId, taskId)
-      //     .then(res=>{
-      //         dispatch(deleteTaskAC(todoId, taskId))
-      //     })
       dispatch(deleteTasksTC({ todoId: todoId, taskId: taskId }));
     },
     [dispatch]
@@ -54,18 +46,13 @@ export const Task = React.memo((props: TaskTypeP) => {
   //====Редактирование в task title===============================================
   const onChangeHandlerTitle = useCallback(
     (taskId: string, newValue: string) => {
-      // props.changeTaskTitle(taskId, newValue, props.todoListID)
-      //props.todoListID что б знали наверху в каком тудулисте поменять
-      // dispatch(changeTaskTitleAC(taskId, newValue, props.idTodolist))
-      dispatch(updateTaskTC({ todoId: props.idTodolist, taskId: taskId, model: { title: newValue } }));
+      dispatch(tasksThunk.updateTaskTC({ todoId: props.idTodolist, taskId: taskId, model: { title: newValue } }));
     },
     [dispatch, props.idTodolist]
   );
 
   return (
     <>
-      {/*<button onClick={props.deleteTask}>x</button>/!*делаем ссылку на функцию, но не можем ничего передать на верх*!/*/}
-      {/*<button onClick={()=>onClickHandlerDelete(elTask.id)}>x</button> можем передать на верх*/}
       <Button
         callBack={() => onClickHandlerDeleteTask(props.idTodolist, id)}
         style={s.dellTask}
@@ -80,7 +67,6 @@ export const Task = React.memo((props: TaskTypeP) => {
         disabled={props.task.entityStatus === "loading"}
       />
       <EditableSpan title={title} onChange={(newValue) => onChangeHandlerTitle(id, newValue)} />
-      {/*<span className={s.text}>{Task.title}</span>*/}
     </>
   );
 });

@@ -1,7 +1,7 @@
 import { Action, configureStore, createAsyncThunk, ThunkAction } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { todoListsReducer } from "features/todolistsList/todoListsReducer";
-import { tasksReducer } from "features/todolistsList/tasksReducer";
+import { todoListsReducer } from "features/todolistsList/todolist/todoListsReducer";
+import { tasksReducer } from "features/todolistsList/todolist/task/tasksReducer";
 import { appReducer } from "app/appReducer";
 import { authReducer } from "features/auth/authReducer";
 import thunkMiddleware from "redux-thunk";

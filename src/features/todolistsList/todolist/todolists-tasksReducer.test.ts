@@ -1,6 +1,7 @@
-import { TaskStatuses, TodolistType, TodoTaskPriorities } from "api/todolistsApi";
-import { todoActions, TodoAppType, todoListsReducer } from "features/todolistsList/todoListsReducer";
-import { tasksReducer, TaskStateType } from "features/todolistsList/tasksReducer";
+import { todoActions, TodoAppType, todoListsReducer } from "features/todolistsList/todolist/todoListsReducer";
+import { tasksReducer, TaskStateType } from "features/todolistsList/todolist/task/tasksReducer";
+import { TodolistType } from "features/todolistsList/todolist/todolistsApi";
+import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 
 test("ids should be equals", () => {
   const todoLists: TodoAppType[] = [];

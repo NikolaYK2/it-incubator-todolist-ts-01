@@ -8,11 +8,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import LinearProgress from "@mui/material/LinearProgress";
-import { ErrorSnackbar } from "components/errorSnackbar/ErrorSnackbar";
+import { ErrorSnackbar } from "common/components/errorSnackbar/ErrorSnackbar";
 import { useAppDispatch, useAppSelector } from "app/store";
 import { appThunk, StatusType } from "app/appReducer";
 
-export default function ButtonAppBar() {
+export function ButtonAppBar() {
   const status = useAppSelector<StatusType>((state) => state.app.status);
   const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
   const dispatch = useAppDispatch();

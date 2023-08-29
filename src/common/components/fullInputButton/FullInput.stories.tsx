@@ -1,10 +1,10 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { FullInput } from "./FullInput";
+import { FullInput } from "common/components/fullInputButton/FullInput";
 import React, { useCallback, useState } from "react";
 import { action } from "@storybook/addon-actions";
-import s from "../../features/todolistsList/todolist/Todolist.module.css";
-import { UniversalInput } from "../input/UniversalInput";
-import { Button } from "../button/Button";
+import s from "features/todolistsList/todolist/Todolist.module.css";
+import { UniversalInput } from "common/components/input/UniversalInput";
+import { Button } from "common/components/button/Button";
 
 export default {
   title: "Components/FullInput",

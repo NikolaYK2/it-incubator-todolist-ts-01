@@ -1,9 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
 import { Task } from "./Task";
-import { TaskStatuses, TodoTaskPriorities } from "api/todolistsApi";
 import { decorators } from "stories/decorators/decorator";
 import { useAppSelector } from "app/store";
+import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 
 export default {
   title: "Components/Task",
