@@ -6,11 +6,9 @@ import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import {
-  changeTitleTodoThunkCreator,
-  deleteTodoThunkCreator,
   filterValueType,
   todoActions,
-  TodoAppType,
+  TodoAppType, todoThunk
 } from "features/todolistsList/todolist/todoListsReducer";
 import { Task } from "./task/Task";
 import { useAppDispatch, useAppSelector } from "app/store";
@@ -46,7 +44,7 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   const onClickHandlerDeleteTodolist = useCallback(
     (todolistID: string) => {
       // dispatch(deleteTodolistAC(todolistID));
-      dispatch(deleteTodoThunkCreator(todolistID));
+      dispatch(todoThunk.deleteTodo(todolistID));
     },
     [dispatch]
   );
@@ -96,7 +94,7 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   const onChangeHandlerTitleTodolist = useCallback(
     (newValue: string) => {
 
-      dispatch(changeTitleTodoThunkCreator({ todoId: id, title: newValue }));
+      dispatch(todoThunk.changeTitleTodo({ todoId: id, title: newValue }));
     },
     [dispatch, id]
   );

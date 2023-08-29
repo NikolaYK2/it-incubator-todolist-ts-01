@@ -34,7 +34,7 @@ test("add new todolist", () => {
   const newTodolist = todoListsReducer(
     todoLists,
     {
-      type: todoThunk.addTodoThunkCreator.fulfilled.type,
+      type: todoThunk.addTodo.fulfilled.type,
       payload:{
         todolist: {
           id: "todolistID_1",
@@ -51,7 +51,7 @@ test("add new todolist", () => {
 
 test("delete todolist", () => {
   const newTodolist = todoListsReducer(todoLists, {
-    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    type: todoThunk.addTodo.fulfilled.type,
     payload: {
       todolist: {
         todolistID: "todolistID_1"
@@ -64,10 +64,13 @@ test("delete todolist", () => {
 test("CHANGE TITLE TODO", () => {
   const newTodolist = todoListsReducer(
     todoLists,
-    todoActions.changeTitleTodo({
-      todoId: "todolistID_1",
-      title: "Hi",
-    })
+    {
+      type: todoThunk.changeTitleTodo.fulfilled.type,
+      payload: {
+        todoId: "todolistID_1",
+        title: "Hi",
+        }
+      }
   );
   expect(newTodolist[0].title).toBe("Hi");
 });
@@ -96,7 +99,7 @@ test("TASK FILTER TODO", () => {
 
 test("SET TODO", () => {
   const newTodolist = todoListsReducer([], {
-    type: todoThunk.setTodolistsThunkCreator.fulfilled.type,
+    type: todoThunk.setTodolists.fulfilled.type,
     payload: { todolist: todoLists },
   });
   expect(newTodolist.length).toBe(2);

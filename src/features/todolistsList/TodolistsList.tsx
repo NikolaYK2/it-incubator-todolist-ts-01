@@ -23,7 +23,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
     if (demo || !isLoggedIn) {
       return;
     }
-    dispatch(todoThunk.setTodolistsThunkCreator()); //С функцией TC
+    dispatch(todoThunk.setTodolists()); //С функцией TC
 
   }, [dispatch, demo, isLoggedIn]);
 
@@ -31,7 +31,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
 
   // ========Добавление Todolist=============================================================
   const addTodolist = useCallback((title: string) => {
-      dispatch(todoThunk.addTodoThunkCreator(title));
+      dispatch(todoThunk.addTodo(title));
     }, [dispatch]);
 
   const todoListsComponents = todoLists.map((tl) => {

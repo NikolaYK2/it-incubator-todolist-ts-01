@@ -135,7 +135,7 @@ test("add task", () => {
 
 test("add todolist and null tasks", () => {
   const newTasks = tasksReducer(tasks, {
-    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    type: todoThunk.addTodo.fulfilled.type,
     payload: {
       todolist: {
         id: "todolistID",
@@ -239,7 +239,7 @@ test("пустые массивы должны быть добавлены, ко
   const newTasks = tasksReducer(
     {},
     {
-      type: todoThunk.setTodolistsThunkCreator.fulfilled.type,
+      type: todoThunk.setTodolists.fulfilled.type,
       payload: {
         todolist: [
           { id: "1", title: "title1", order: 0, addedDate: "" },

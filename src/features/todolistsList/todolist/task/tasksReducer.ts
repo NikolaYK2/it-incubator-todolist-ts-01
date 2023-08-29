@@ -606,13 +606,13 @@ const slice = createSlice({
         const index = tasks.findIndex((t) => t.id === action.meta.arg.taskId);
         if (index !== -1) tasks[index] = { ...tasks[index], ...action.meta.arg.model };
       })
-      .addCase(todoThunk.addTodoThunkCreator.fulfilled, (state, action) => {
+      .addCase(todoThunk.addTodo.fulfilled, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
-      .addCase(todoThunk.deleteTodoThunkCreator.fulfilled, (state, action) => {
+      .addCase(todoThunk.deleteTodo.fulfilled, (state, action) => {
         delete state[action.payload.todolistID];
       })
-      .addCase(todoThunk.setTodolistsThunkCreator.fulfilled, (state, action) => {
+      .addCase(todoThunk.setTodolists.fulfilled, (state, action) => {
         action.payload.todolist.forEach((tl) => {
           state[tl.id] = [];
         });

@@ -10,7 +10,7 @@ test("ids should be equals", () => {
   // const action = addTaskTodoAC('new todolist');
 
   const newTodoLists = todoListsReducer(todoLists, {
-    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    type: todoThunk.addTodo.fulfilled.type,
     payload: {
       todolist: {
         id: "todolistID",
@@ -21,7 +21,7 @@ test("ids should be equals", () => {
     },
   });
   const newTasks = tasksReducer(tasks, {
-    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    type: todoThunk.addTodo.fulfilled.type,
     payload: {
       todolist: {
         id: "todolistID",
@@ -146,7 +146,7 @@ test("delete todolist and task", () => {
   };
 
   const newTask = tasksReducer(tasks, {
-    type: todoThunk.deleteTodoThunkCreator.fulfilled.type,
+    type: todoThunk.deleteTodo.fulfilled.type,
     payload: {
       todolistID: "todolistID_1",
     },
@@ -170,11 +170,11 @@ test("set todolistsList and task", () => {
   };
 
   const newTodoLists = todoListsReducer(todoLists, {
-    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    type: todoThunk.addTodo.fulfilled.type,
     payload: { todolist: todolist },
   });
   const newTasks = tasksReducer(tasks, {
-    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    type: todoThunk.addTodo.fulfilled.type,
     payload: { todolist: todolist },
   });
 

@@ -61,9 +61,7 @@ export const todolistsApi = {
     return instance.delete<ResponsTodolistsType<{}>>(`todo-lists/${todoId}`);
   },
   updateTodolists(todoId: string, title: string) {
-    return instance.put<ResponsTodolistsType>(`todo-lists/${todoId}`, {
-      title,
-    });
+    return instance.put<ResponsTodolistsType>(`todo-lists/${todoId}`, { title, });
   },
 
   //TASK================================================
