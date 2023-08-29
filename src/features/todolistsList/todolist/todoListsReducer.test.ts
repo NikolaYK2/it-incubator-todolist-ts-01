@@ -1,4 +1,9 @@
-import { todoActions, TodoAppType, todoListsReducer } from "features/todolistsList/todolist/todoListsReducer";
+import {
+  todoActions,
+  TodoAppType,
+  todoListsReducer,
+  todoThunk,
+} from "features/todolistsList/todolist/todoListsReducer";
 
 let todoLists: TodoAppType[];
 beforeEach(() => {
@@ -28,14 +33,17 @@ test("add new todolist", () => {
   // ];
   const newTodolist = todoListsReducer(
     todoLists,
-    todoActions.addTodo({
-      todolist: {
-        id: "todolistID_1",
-        title: "What to learn",
-        order: 0,
-        addedDate: "",
-      },
-    })
+    {
+      type: todoThunk.addTodoThunkCreator.fulfilled.type,
+      payload:{
+        todolist: {
+          id: "todolistID_1",
+          title: "What to learn",
+          order: 0,
+          addedDate: "",
+        },
+      }
+    }
   );
   expect(newTodolist.length).toBe(3);
   expect(todoLists.length).toBe(2);
@@ -80,7 +88,10 @@ test("TASK FILTER TODO", () => {
 });
 
 test("SET TODO", () => {
-  const newTodolist = todoListsReducer([], todoActions.setTodo({ todolist: todoLists }));
+  const newTodolist = todoListsReducer([], {
+    type: todoThunk.setTodolistsThunkCreator.fulfilled.type,
+    payload: { todolist: todoLists },
+  });
   expect(newTodolist.length).toBe(2);
 });
 

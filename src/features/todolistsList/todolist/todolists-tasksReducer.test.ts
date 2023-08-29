@@ -1,4 +1,9 @@
-import { todoActions, TodoAppType, todoListsReducer } from "features/todolistsList/todolist/todoListsReducer";
+import {
+  todoActions,
+  TodoAppType,
+  todoListsReducer,
+  todoThunk,
+} from "features/todolistsList/todolist/todoListsReducer";
 import { tasksReducer, TaskStateType } from "features/todolistsList/todolist/task/tasksReducer";
 import { TodolistType } from "features/todolistsList/todolist/todolistsApi";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
@@ -9,28 +14,28 @@ test("ids should be equals", () => {
 
   // const action = addTaskTodoAC('new todolist');
 
-  const newTodoLists = todoListsReducer(
-    todoLists,
-    todoActions.addTodo({
+  const newTodoLists = todoListsReducer(todoLists, {
+    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    payload: {
       todolist: {
         id: "todolistID",
         title: "What to learn",
         order: 0,
         addedDate: "",
       },
-    })
-  );
-  const newTasks = tasksReducer(
-    tasks,
-    todoActions.addTodo({
+    },
+  });
+  const newTasks = tasksReducer(tasks, {
+    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    payload: {
       todolist: {
         id: "todolistID",
         title: "What to learn",
         order: 0,
         addedDate: "",
       },
-    })
-  );
+    },
+  });
 
   const keys = Object.keys(newTasks);
   const idFromTodoLists = newTodoLists[0].id;
@@ -163,8 +168,14 @@ test("set todolistsList and task", () => {
     addedDate: "",
   };
 
-  const newTodoLists = todoListsReducer(todoLists, todoActions.addTodo({ todolist: todolist }));
-  const newTasks = tasksReducer(tasks, todoActions.addTodo({ todolist: todolist }));
+  const newTodoLists = todoListsReducer(todoLists, {
+    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    payload: { todolist: todolist },
+  });
+  const newTasks = tasksReducer(tasks, {
+    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    payload: { todolist: todolist },
+  });
 
   const keys = Object.keys(newTasks);
   const idFromTodoLists = newTodoLists[0].id;

@@ -1,4 +1,4 @@
-import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
+import { todoThunk } from "features/todolistsList/todolist/todoListsReducer";
 import { tasksReducer, TaskStateType, tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 
@@ -109,7 +109,6 @@ beforeEach(() => {
 });
 
 test("add task", () => {
-
   const newTasks = tasksReducer(tasks, {
     type: tasksThunk.addTasksTC.fulfilled.type,
     payload: {
@@ -135,17 +134,17 @@ test("add task", () => {
 });
 
 test("add todolist and null tasks", () => {
-  const newTasks = tasksReducer(
-    tasks,
-    todoActions.addTodo({
+  const newTasks = tasksReducer(tasks, {
+    type: todoThunk.addTodoThunkCreator.fulfilled.type,
+    payload: {
       todolist: {
         id: "todolistID",
         title: "new todolistsList",
         order: 0,
         addedDate: "",
       },
-    })
-  );
+    },
+  });
   const keys = Object.keys(newTasks); //Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
   //Находим новый ключ
   const newKey = keys.find((k) => k !== "todolistID_1" && k !== "todolistID_2");
@@ -239,12 +238,15 @@ test("change task status", () => {
 test("пустые массивы должны быть добавлены, когда мы set todolists", () => {
   const newTasks = tasksReducer(
     {},
-    todoActions.setTodo({
-      todolist: [
-        { id: "1", title: "title1", order: 0, addedDate: "" },
-        { id: "2", title: "title2", order: 0, addedDate: "" },
-      ],
-    })
+    {
+      type: todoThunk.setTodolistsThunkCreator.fulfilled.type,
+      payload: {
+        todolist: [
+          { id: "1", title: "title1", order: 0, addedDate: "" },
+          { id: "2", title: "title2", order: 0, addedDate: "" },
+        ],
+      },
+    }
   );
 
   const keys = Object.keys(newTasks);

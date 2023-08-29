@@ -16,6 +16,7 @@ import { Task } from "./task/Task";
 import { useAppDispatch, useAppSelector } from "app/store";
 import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
 import { TaskStatuses } from "common/api/todolistsApi";
+import { statusSelector } from "features/todolistsList/todolist/todolistSelector";
 
 export type TodolistPropsType = {
   todolist: TodoAppType;
@@ -32,60 +33,14 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
 
   const dispatch = useAppDispatch();
   const tasks = useAppSelector((state) => state.tasks[id]);
+  const status = useAppSelector(statusSelector)
 
-  // useEffect(() => {//Эту функцию теперь выполняется последовательнов then
-  //     if (demo) {
-  //         return;
-  //     }
-  //     dispatch(setTasksTC(id));
-  // }, [])
-  //=======Добавление таски=====================================================================================================
-  //     const addTask = (addTitle: string, todolistID: string) => {
-  // //         setTasks([{id: v1(), title: addTitle, isDone: false}, ...tasks,])
-  // // Acc. масс. =====================================================================
-  // // const todoListsTasks = tasks[todolistID];
-  // //         const updatedTasks = [{id: v1(), title: addTitle, isDone: false}, ...todoListsTasks];
-  // //         const copyTasks = {...tasks};
-  // //         copyTasks[todolistID] = updatedTasks;
-  // //         setTasks(copyTasks);
-  // //         Сокращенный вариант=================================================================
-  // //         setTasks({...tasks, [todolistID]: [{id: v1(), title: addTitle, isDone: false}, ...tasks[todolistID]]})
-  // //         ...tasks- раскрываем все такси и делаем копию,
-  // //         В объекте есть св-в[todolistID] в которое вносим изм.
-  // //         [todolistID]: [кладем сюда новый массив и все старые таски]Закидываем старые 4 таксик ...tasks[todolistID + одну новую {id: v1(), title: addTitle, isDone: false}
-  //         dispatch(addTaskAC(addTitle, todolistID))
-  //     }
-  //Удаление таски ===============================================================================================================
-  //     const deleteTask = (todolistID: string, tId: string,) => {
-  //         // tasks = tasks.filter((el) => el.id !== elId)
-  //         // setTasks(tasks.filter((el) => el.id !== elId));//для обычного массива методы
-  //         //Ассоциативный массив =======================================
-  //         // const todoListsTasks = tasks[todolistID];
-  //         // const updatedTasks = todoListsTasks.filter(el=>el.id !== elId)
-  //         // const copyTasks = {...tasks}
-  //         // copyTasks[todolistID] = updatedTasks
-  //         // setTasks(copyTasks);
-  //         //Сокращенный вариант ================================================
-  //         // setTasks({...tasks, [todolistID]: tasks[todolistID].filter(t => t.id !== tId)})
-  //         //tasks[todolistID] не надо, так как мы уже в объекте после копии ...tasks, по этому просто [todolistID]
-  //         dispatch(deleteTaskAC(todolistID, tId))
-  //     }
-  // Передача наверх изм. title tasks=============================================================================
-  //     const changeTaskTitle = (taskId: string, newValue: string, todolistID: string) => {
-  //         // setTasks({...tasks, [todolistID]: tasks[todolistID].map(t => t.id === taskId ? {...t, title: newValue} : t)});
-  //         dispatch(changeTaskTitleAC(taskId, newValue, todolistID))
-  //     }
+
 
   //================addTask===================================================
-  const addTask = useCallback(
-    (title: string) => {
-      // dispatch(addTaskAC(addTitle, id));
+  const addTask = useCallback((title: string) => {
       dispatch(tasksThunk.addTasksTC({ todoId: id, title: title }));
-
-      // props.addItem(title, props.todoListID);
-    },
-    [dispatch, id]
-  );
+    }, [dispatch, id]);
 
   // delete todolist=======================================
   const onClickHandlerDeleteTodolist = useCallback(
@@ -155,13 +110,12 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
       <IconButton
         onClick={() => onClickHandlerDeleteTodolist(id)}
         color={"error"}
-        disabled={props.todolist.entityStatus === "loading"}
+        disabled={status === "loading"}
       >
         <Delete />
       </IconButton>
       <div className={s.block}>
-        <FullInput addItem={addTask} disabled={props.todolist.entityStatus === "loading"} />
-
+        <FullInput addItem={addTask} disabled={status === "loading"} />
       </div>
       <ul>
         {taskListItems}

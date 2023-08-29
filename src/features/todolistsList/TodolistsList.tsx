@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { addTodoThunkCreator, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
+import { todoThunk } from "features/todolistsList/todolist/todoListsReducer";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -30,18 +30,9 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
 
 
   // ========Добавление Todolist=============================================================
-  const addTodolist = useCallback(
-    (title: string) => {
-      // let todolist: TodolistType = {id: v1(), title, filter: 'All',}
-      // setTodoLists([todolist, ...todoLists])
-      // setTasks({...tasks, [todolist.id]: []})
-      // dispatch(addTodolistAC(title, todolistID));
-      // const todolistID = v1();
-      // dispatch(addTodolistAC(title, todolistID));
-      dispatch(addTodoThunkCreator(title));
-    },
-    [dispatch]
-  );
+  const addTodolist = useCallback((title: string) => {
+      dispatch(todoThunk.addTodoThunkCreator(title));
+    }, [dispatch]);
 
   const todoListsComponents = todoLists.map((tl) => {
     // //=========================ФиЛЬТРАЦИЯ==============================

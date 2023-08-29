@@ -387,37 +387,35 @@
 //RTK ====================================================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
-import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
+import { todoActions, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import {
   ArgUpdateTaskType,
   CreateTaskType,
   TaskType,
-  todolistsApi, UpdTaskType
+  todolistsApi,
+  UpdTaskType,
 } from "features/todolistsList/todolist/todolistsApi";
 import { ResultCode, TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 // import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 // import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
 //extra --------------
-const setTasksTC = createAppAsyncThunk<
-  {
-    todoId: string;
-    tasks: TaskType[];
-  },
-  string
->("task/setTask", async (todoId, thunkAPI) => {
-  const { dispatch, rejectWithValue } = thunkAPI;
-  dispatch(appAction.setStatus({ status: "loading" }));
-  try {
-    const res = await todolistsApi.getTasks(todoId);
-    dispatch(appAction.setStatus({ status: "succeeded" }));
-    return { todoId, tasks: res.data.items };
-  } catch (error) {
-    handleServerNetworkError(error, dispatch);
-    return rejectWithValue(null); //просто заглушка, раз мы сюда ничего не передаем
+const setTasksTC = createAppAsyncThunk<{ todoId: string; tasks: TaskType[] }, string>(
+  "task/setTask",
+  async (todoId, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI;
+    dispatch(appAction.setStatus({ status: "loading" }));
+    try {
+      const res = await todolistsApi.getTasks(todoId);
+      dispatch(appAction.setStatus({ status: "succeeded" }));
+      return { todoId, tasks: res.data.items };
+    } catch (error) {
+      handleServerNetworkError(error, dispatch);
+      return rejectWithValue(null); //просто заглушка, раз мы сюда ничего не передаем
+    }
   }
-});
+);
 
 //extra -----------------------------
 const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("task/addTasks", async (arg, thunkAPI) => {
@@ -608,13 +606,13 @@ const slice = createSlice({
         const index = tasks.findIndex((t) => t.id === action.meta.arg.taskId);
         if (index !== -1) tasks[index] = { ...tasks[index], ...action.meta.arg.model };
       })
-      .addCase(todoActions.addTodo, (state, action) => {
+      .addCase(todoThunk.addTodoThunkCreator.fulfilled, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
       .addCase(todoActions.deleteTodo, (state, action) => {
         delete state[action.payload.todolistID];
       })
-      .addCase(todoActions.setTodo, (state, action) => {
+      .addCase(todoThunk.setTodolistsThunkCreator.fulfilled, (state, action) => {
         action.payload.todolist.forEach((tl) => {
           state[tl.id] = [];
         });
