@@ -208,24 +208,6 @@ import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { todolistsApi, TodolistType } from "features/todolistsList/todolist/todolistsApi";
 import { ResultCode } from "common/api/todolistsApi";
 
-//THUNK -----------------------------------------------------------------
-// const setTodolistsThunkCreator = createAppAsyncThunk<any,any>(
-//   "todo/setTodo", async (_, thunkAPI) => {
-//   const { dispatch } = thunkAPI;
-//   dispatch(appAction.setStatus({ status: "loading" }));
-//   try {
-//     const res = await todolistsApi.getTodolists();
-//     dispatch(todoActions.setTodo({ todolist: res.data }));
-//     dispatch(appAction.setStatus({ status: "succeeded" }));
-//     const todos = await res.data;
-//     todos.forEach((todo) => {
-//       dispatch(tasksThunk.setTasksTC(todo.id));
-//     });
-//   } catch (error: any) {
-//     handleServerNetworkError(error, dispatch);
-//   }
-// });
-
 //extra --------
 const setTodolistsThunkCreator = createAppAsyncThunk<{ todolist: TodolistType[] }>(
   "todo/setTodo",
@@ -263,23 +245,28 @@ const addTodoThunkCreator = createAppAsyncThunk<{ todolist: TodolistType }, stri
   }
 );
 
-export const deleteTodoThunkCreator = createAppAsyncThunk("todo/deletTodo", async (todoId: string, { dispatch }) => {
+export const deleteTodoThunkCreator = createAppAsyncThunk<{ todolistID: string },string>(
+  "todo/deletTodo", async (todoId: string, { dispatch, rejectWithValue }) => {
   dispatch(appAction.setStatus({ status: "loading" }));
   dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "loading" }));
   try {
     const res = await todolistsApi.deleteTodolists(todoId);
     if (res.data.resultCode === ResultCode.Ok) {
-      dispatch(todoActions.deleteTodo({ todolistID: todoId }));
       dispatch(appAction.setStatus({ status: "succeeded" }));
+      return { todolistID: todoId };
     } else {
       handleServerAppError(res.data, dispatch);
     }
     dispatch(appAction.setStatus({ status: "failed" }));
     dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" }));
-  } catch (error: any) {
-    handleServerNetworkError(error.message, dispatch);
+    return rejectWithValue(null)
+
+  } catch (error) {
+    // handleServerNetworkError(error.message, dispatch);
+    handleServerNetworkError(error, dispatch);
     dispatch(appAction.setStatus({ status: "failed" }));
     dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" }));
+    return rejectWithValue(null)
   }
 });
 
@@ -324,13 +311,13 @@ const slice = createSlice({
     //     entityStatus: "idle",
     //   });
     // },
-    deleteTodo: (state, action: PayloadAction<{ todolistID: string }>) => {
-      const index = state.findIndex((todo) => todo.id === action.payload.todolistID);
-      if (index !== -1) {
-        state.splice(index, 1);
-      }
-      // return state.filter(todo => todo.id !== action.payload.todolistID)
-    },
+    // deleteTodo: (state, action: PayloadAction<{ todolistID: string }>) => {
+    //   const index = state.findIndex((todo) => todo.id === action.payload.todolistID);
+    //   if (index !== -1) {
+    //     state.splice(index, 1);
+    //   }
+    //   // return state.filter(todo => todo.id !== action.payload.todolistID)
+    // },
     changeTitleTodo: (state, action: PayloadAction<{ todoId: string; title: string }>) => {
       // const index = state.findIndex((todo) => todo.id === action.payload.todoId);
       // state[index].title = action.payload.title;
@@ -379,12 +366,12 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // addTodo: (state, action: PayloadAction<{ todolist: TodolistType }>) => {
-    //   state.unshift({
-    //     ...action.payload.todolist,
-    //     filter: "All",
-    //     entityStatus: "idle",
-    //   });
+    // deleteTodo: (state, action: PayloadAction<{ todolistID: string }>) => {
+    //   const index = state.findIndex((todo) => todo.id === action.payload.todolistID);
+    //   if (index !== -1) {
+    //     state.splice(index, 1);
+    //   }
+    //   // return state.filter(todo => todo.id !== action.payload.todolistID)
     // },
     builder
       .addCase(setTodolistsThunkCreator.fulfilled, (_, action) => {
@@ -392,7 +379,14 @@ const slice = createSlice({
       })
       .addCase(addTodoThunkCreator.fulfilled, (state, action) => {
         state.unshift({ ...action.payload.todolist, filter: "All", entityStatus: "idle" });
-      });
+      })
+      .addCase(deleteTodoThunkCreator.fulfilled, (state, action) => {
+          const index = state.findIndex((todo) => todo.id === action.payload.todolistID);
+          if (index !== -1) {
+            state.splice(index, 1);
+          }
+          // return state.filter(todo => todo.id !== action.payload.todolistID)
+      })
     // builder.addCase(clearTodoTask, (state, action) => {
     //   return action.payload.todoLists
     // });
@@ -401,4 +395,4 @@ const slice = createSlice({
 
 export const todoListsReducer = slice.reducer;
 export const todoActions = slice.actions;
-export const todoThunk = { setTodolistsThunkCreator, addTodoThunkCreator };
+export const todoThunk = { setTodolistsThunkCreator, addTodoThunkCreator,deleteTodoThunkCreator };

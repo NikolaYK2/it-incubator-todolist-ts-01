@@ -1,9 +1,4 @@
-import {
-  todoActions,
-  TodoAppType,
-  todoListsReducer,
-  todoThunk,
-} from "features/todolistsList/todolist/todoListsReducer";
+import { TodoAppType, todoListsReducer, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
 import { tasksReducer, TaskStateType } from "features/todolistsList/todolist/task/tasksReducer";
 import { TodolistType } from "features/todolistsList/todolist/todolistsApi";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
@@ -150,7 +145,13 @@ test("delete todolist and task", () => {
     ],
   };
 
-  const newTask = tasksReducer(tasks, todoActions.deleteTodo({ todolistID: "todolistID_1" }));
+  const newTask = tasksReducer(tasks, {
+    type: todoThunk.deleteTodoThunkCreator.fulfilled.type,
+    payload: {
+      todolistID: "todolistID_1",
+    },
+  });
+
   const keys = Object.keys(newTask);
 
   expect(keys.length).toBe(1);
