@@ -205,8 +205,9 @@ import { appAction, StatusType } from "app/appReducer";
 import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
 import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { CreateTaskType, todolistsApi, TodolistType } from "features/todolistsList/todolist/todolistsApi";
+import { todolistsApi, TodolistType } from "features/todolistsList/todolist/todolistsApi";
 import { ResultCode } from "common/api/todolistsApi";
+import { CreateTaskType } from "features/todolistsList/todolist/task/tasksApi";
 
 //extra --------
 const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }>(

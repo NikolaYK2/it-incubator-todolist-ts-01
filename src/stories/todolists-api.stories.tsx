@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { todolistsApi } from "features/todolistsList/todolist/todolistsApi";
+import { tasksApi } from "features/todolistsList/todolist/task/tasksApi";
 
 export default {
   title: "API",
@@ -162,7 +163,7 @@ export const GetTasks = () => {
   // }, [todoIdStr])
 
   const clickHandle = (todoIdStr: string) => {
-    todolistsApi.getTasks(todoIdStr).then((res) => {
+    tasksApi.getTasks(todoIdStr).then((res) => {
       setState(res.data /*.items.map(e=>e.title)*/);
       setId(res.data.items.map((e) => e.id));
     });
@@ -194,7 +195,7 @@ export const CreateTask = () => {
   //         })
   // }, [])
   const taskChangeHandle = () => {
-    todolistsApi
+    tasksApi
       .createTask(arg) //был todoId title
       // axios.post('https://social-network.samuraijs.com/api/1.1/todo-lists', {title: 'Dim'}, settings)
       .then((res) => {
@@ -227,7 +228,7 @@ export const DeleteTask = () => {
   // }, [])
 
   const deleteHandle = () => {
-    todolistsApi.deleteTask(todoId, taskId).then((res) => {
+    tasksApi.deleteTask(todoId, taskId).then((res) => {
       setState(res.data);
     });
   };
@@ -290,7 +291,7 @@ export const UpdateTaskTitle = () => {
     },
   };
   const clickHandle = () => {
-    todolistsApi
+    tasksApi
       // .updateTask(todoId, taskId, {
       //   title: title,
       //   description: description,

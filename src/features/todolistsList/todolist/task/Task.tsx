@@ -6,8 +6,8 @@ import s from "../Todolist.module.css";
 import { Button } from "common/components/button/Button";
 import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { useAppDispatch } from "app/store";
-import { TaskType } from "features/todolistsList/todolist/todolistsApi";
 import { TaskStatuses } from "common/api/todolistsApi";
+import { TaskType } from "features/todolistsList/todolist/task/tasksApi";
 
 export type TaskTypeP = {
   task: TaskType;
