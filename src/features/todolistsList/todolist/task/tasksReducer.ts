@@ -395,7 +395,7 @@ import {
   CreateTaskType,
   tasksApi,
   TaskType,
-  UpdTaskType
+  UpdTaskType,
 } from "features/todolistsList/todolist/task/tasksApi";
 // import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 // import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
@@ -453,12 +453,7 @@ export const deleteTasksTC = createAppAsyncThunk(
   ) => {
     const { dispatch } = thunkAPI;
     dispatch(appAction.setStatus({ status: "loading" }));
-    dispatch(
-      taskActions.changeEntStatusTask({
-        todoId: arg.todoId,
-        taskId: arg.taskId,
-        status: "loading",
-      })
+    dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "loading", })
     );
     try {
       const res = await tasksApi.deleteTask(arg.todoId, arg.taskId);
@@ -474,6 +469,7 @@ export const deleteTasksTC = createAppAsyncThunk(
   }
 );
 
+//UPD task ----------------------------------------------------------------
 export type UpdTaskTCType = {
   title?: string;
   description?: string;
@@ -482,23 +478,14 @@ export type UpdTaskTCType = {
   startDate?: string;
   deadline?: string;
 };
-
-//extra ---------------------------
 const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
   "task/updateTas",
   async (arg, { getState, dispatch, rejectWithValue }) => {
     const task = getState().tasks[arg.todoId].find((t) => t.id === arg.taskId); //Будет бежать по массиву только до первого совпадения
     dispatch(appAction.setStatus({ status: "loading" }));
-    dispatch(
-      taskActions.changeEntStatusTask({
-        todoId: arg.todoId,
-        taskId: arg.taskId,
-        status: "loading",
-      })
-    );
+    dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "loading" }));
 
     if (!task) {
-      // throw new Error('task not found')
       console.warn("task not found");
       return rejectWithValue(null);
     }
@@ -514,8 +501,8 @@ const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
       ...arg.model,
     };
 
+    const res = await tasksApi.updateTask(arg, apiModel);
     try {
-      const res = await tasksApi.updateTask(arg, apiModel);
 
       if (res.data.resultCode === ResultCode.Ok) {
         dispatch(appAction.setStatus({ status: "succeeded" }));

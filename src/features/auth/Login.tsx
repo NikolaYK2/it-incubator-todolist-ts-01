@@ -38,18 +38,7 @@ export const Login = () => {
       }
       return errors;
     },
-    // validate: (values) => {
-    //     if (!values.email) {
-    //         return {
-    //             email: 'bad email'
-    //         }
-    //     }
-    //     if (!values.password) {
-    //         return {
-    //             password: 'Password is require'
-    //         }
-    //     }
-    // },
+
     initialValues: {
       email: "",
       password: "",

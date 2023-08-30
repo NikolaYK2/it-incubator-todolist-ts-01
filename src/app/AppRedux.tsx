@@ -6,9 +6,9 @@ import { Login } from "features/auth/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./store";
 import CircularProgress from "@mui/material/CircularProgress";
-import { initializedAppTC } from "app/appReducer";
 import { appSelector } from "app/appSelector";
 import { ButtonAppBar } from "common/components";
+import { appThunk } from "app/appReducer";
 
 type AppReduxType = {
   demo?: boolean;
@@ -20,7 +20,7 @@ function AppRedux({ demo = false }: AppReduxType) {
   const initialized = useAppSelector(appSelector);
 
   useEffect(() => {
-    dispatch(initializedAppTC());
+    dispatch(appThunk.initializedApp());
   }, [dispatch]);
 
   if (!initialized) {

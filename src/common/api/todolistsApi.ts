@@ -1,5 +1,4 @@
 import axios from "axios";
-import { EntStatusType, UpdTaskTCType } from "features/todolistsList/todolist/task/tasksReducer";
 
 export const instance = axios.create({
   withCredentials: true,
@@ -12,6 +11,7 @@ export const instance = axios.create({
 export type ResponsTodolistsType<D = {}> = {
   //D - уточняем наш дженерик D-типо data/ D = {} - если дженерик не передовать, он по умолчанию может являться пустым обьектом
   resultCode: number;
+  // fieldErrors?: Array<{field:string,error:string}>
   messages: string[];
   data: D;
 };

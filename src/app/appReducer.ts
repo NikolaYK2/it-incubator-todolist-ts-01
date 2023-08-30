@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
 import { authActions } from "features/auth/authReducer";
-import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi } from "features/auth/authApi";
 import { ResultCode } from "common/api/todolistsApi";
@@ -104,6 +103,29 @@ import { ResultCode } from "common/api/todolistsApi";
 // }
 
 //RTK ==================================================================
+
+//thunk -------------------------------------------------------------
+export const initializedApp = createAppAsyncThunk(
+  "app/init",
+
+  async (arg, { dispatch, rejectWithValue }) => {
+    dispatch(appAction.setStatus({ status: "loading" }));
+    try {
+      const res = await authApi.me();
+      if (res.data.resultCode === ResultCode.Ok) {
+        dispatch(authActions.setIsLoggedIn({ isLoggedIn: true })); //Говорим что мы залогинены
+      } else {
+        handleServerAppError(res.data, dispatch);
+        return rejectWithValue(null);
+      }
+    } catch (error: any) {
+      handleServerNetworkError(error, dispatch);
+      return rejectWithValue(null);
+    }
+  }
+);
+
+// reducer -----------------------------------------------------
 export type StatusType = "idle" | "loading" | "succeeded" | "failed";
 
 export interface AppStateType {
@@ -118,48 +140,6 @@ const initialState: AppStateType = {
   initialized: false, //Делаем для того что бы небыло маргания на логин
 };
 
-//thunk -------------------------------------------------------------
-export const initializedAppTC = createAppAsyncThunk(
-  "app/init",
-
-  async (_, { dispatch }) => {
-    dispatch(appAction.setStatus({ status: "loading" }));
-    try {
-      const res = await authApi.me();
-      if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(authActions.setIsLoggedIn({ isLoggedIn: true })); //Говорим что мы залогинены
-      } else {
-        handleServerAppError(res.data, dispatch);
-      }
-      dispatch(appAction.initializedApp({ initialized: true }));
-    } catch (error: any) {
-      handleServerNetworkError(error, dispatch);
-    }
-  }
-);
-
-const logoutApp = createAppAsyncThunk("app/logout", async (_, thunkAPI) => {
-  const { dispatch } = thunkAPI;
-  dispatch(appAction.setStatus({ status: "loading" }));
-  try {
-    const res = await authApi.logout();
-    if (res.data.resultCode === ResultCode.Ok) {
-      // dispatch(authThunk.authLogin({ isLoggedIn: false }));
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
-      dispatch(appAction.setStatus({ status: "succeeded" }));
-      dispatch(todoActions.clearData());
-      // dispatch(clearTodoTask({tasks:{}, todoLists:[]}));
-      // dispatch(clearTodoTask({}, []));
-    } else {
-      handleServerAppError(res.data, dispatch);
-    }
-    dispatch(appAction.initializedApp({ initialized: true }));
-  } catch (error: any) {
-    handleServerNetworkError(error, dispatch);
-  }
-});
-
-// reducer -----------------------------------------------------
 const slice = createSlice({
   name: "app",
   initialState,
@@ -170,13 +150,18 @@ const slice = createSlice({
     setError: (state, action: PayloadAction<{ error: string | null }>) => {
       state.error = action.payload.error;
     },
-    initializedApp: (state, action: PayloadAction<{ initialized: boolean }>) => {
-      state.initialized = action.payload.initialized;
-    },
+    // initializedApp: (state, action: PayloadAction<{ initialized: boolean }>) => {
+    //   state.initialized = action.payload.initialized;
+    // },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(initializedApp.fulfilled, (state) => {
+      state.initialized = true;
+    });
   },
 });
 
 export const appReducer = slice.reducer;
 // export const {setStatus, setError, initializedApp,} = slice.actions;
 export const appAction = slice.actions;
-export const appThunk = { logoutApp };
+export const appThunk = { initializedApp };
