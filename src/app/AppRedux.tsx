@@ -21,6 +21,7 @@ function AppRedux({ demo = false }: AppReduxType) {
 
   useEffect(() => {
     dispatch(appThunk.initializedApp());
+    // dispatch(appThunk.initializedApp({ initialized: true }));
   }, [dispatch]);
 
   if (!initialized) {
@@ -35,9 +36,7 @@ function AppRedux({ demo = false }: AppReduxType) {
         }}
       />
     );
-  } //Такая загрузка отдельной компоненте хорошо только при инициализщации, один раз получается
-  // но плохо делать например при каждом запросе, лучше сделать это как в компоненте ButtonAppBar
-  // {status === 'loading' && <LinearProgress/>}
+  }
 
   return (
     <div>

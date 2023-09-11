@@ -2,10 +2,10 @@ import axios from "axios";
 
 export const instance = axios.create({
   withCredentials: true,
+  baseURL: `https://social-network.samuraijs.com/api/1.1/`,
   // headers:{
   //     'API-KEY': '0317dbf2-f26f-44a4-a811-d77a69628a1e'
   // },
-  baseURL: `https://social-network.samuraijs.com/api/1.1/`,
 });
 
 export type ResponsTodolistsType<D = {}> = {

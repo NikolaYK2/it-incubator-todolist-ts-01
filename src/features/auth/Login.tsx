@@ -122,37 +122,7 @@ export const Login = () => {
                 </FormLabel>
                 <FormGroup style={{ color: "brown" }}>
                   <ThemeProvider theme={theme}>
-                    {/*<TextField label="Email"*/}
-                    {/*           margin="normal"*/}
-                    {/*           name={'email'}*/}
-                    {/*           onChange={formik.handleChange}*/}
-                    {/*           value={formik.values.email}*/}
-                    {/*           onBlur={formik.handleBlur}*/}
-                    {/*           sx={{margin: '0'}}*/}
-                    {/*/>*/}
-                    {/*<div style={{height: '30px'}}>{formik.touched.email &&*/}
-                    {/*formik.errors.email ? formik.errors.email : null}</div>*/}
 
-                    {/*<TextField type="password"*/}
-                    {/*           label="Password"*/}
-                    {/*           name={'password'}*/}
-                    {/*           onChange={formik.handleChange}*/}
-                    {/*           value={formik.values.password}*/}
-                    {/*           onBlur={formik.handleBlur}*/}
-                    {/*           autoComplete='off'*/}
-                    {/*/>*/}
-                    {/*<div*/}
-                    {/*    style={{height: '20px'}}>{formik.touched.password &&*/}
-                    {/*formik.errors.password ? formik.errors.password : null}</div>*/}
-
-                    {/*<FormControlLabel sx={{'svg': {color: '#1976D2'}, color: 'grey'}}*/}
-                    {/*                  label={'Remember me'}*/}
-                    {/*                  control={<Checkbox name={'rememberMe'}*/}
-                    {/*                                     onChange={formik.handleChange}*/}
-                    {/*                                     value={formik.values.rememberMe}*/}
-                    {/*                                     checked={formik.values.rememberMe}*/}
-                    {/*                  />}/>*/}
-                    {/*Сокращенный вариант props*/}
                     <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
                     <div style={{ height: "30px" }}>
                       {formik.touched.email && formik.errors.email ? formik.errors.email : null}

@@ -82,57 +82,53 @@ import { ResultCode } from "common/api/todolistsApi";
 import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
 
 //extra ------------------------------
-const authLogin = createAppAsyncThunk<unknown, AuthLoginType>(
-  "auth/login",
-  async (data, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    dispatch(appAction.setStatus({ status: "loading" }));
-    try {
-      const res = await authApi.authLogin(data);
-      if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(appAction.setStatus({ status: "succeeded" }));
+const authLogin = createAppAsyncThunk<unknown, AuthLoginType>("auth/login", async (data, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
+  dispatch(appAction.setStatus({ status: "loading" }));
+  try {
+    const res = await authApi.authLogin(data);
+    if (res.data.resultCode === ResultCode.Ok) {
+      dispatch(appAction.setStatus({ status: "succeeded" }));
+      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
 
-        return;
-        // return { isLoggedIn: true };
-      } else {
-        handleServerAppError(res.data, dispatch);
-        return rejectWithValue(null);
-      }
-    } catch (error) {
-      handleServerNetworkError(error, dispatch);
-      return { isLoggedIn: false };
+      return;
+      // return { isLoggedIn: true };
+    } else {
+      handleServerAppError(res.data, dispatch);
+      return rejectWithValue(null);
     }
+  } catch (error) {
+    handleServerNetworkError(error, dispatch);
+    return rejectWithValue(null);
+    // return { isLoggedIn: false };
   }
-);
+});
 
-const authLogout = createAppAsyncThunk(
-  "auth/logout", async (arg, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    dispatch(appAction.setStatus({ status: "loading" }));
-    try {
-      const res = await authApi.logout();
-      if (res.data.resultCode === ResultCode.Ok) {
-        // dispatch(authThunk.authLogin({ isLoggedIn: false }));
-        dispatch(appAction.setStatus({ status: "succeeded" }));
-        dispatch(todoActions.clearData());
+const authLogout = createAppAsyncThunk("auth/logout", async (arg, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
+  dispatch(appAction.setStatus({ status: "loading" }));
+  try {
+    const res = await authApi.logout();
+    if (res.data.resultCode === ResultCode.Ok) {
+      // dispatch(authThunk.authLogin({ isLoggedIn: false }));
+      dispatch(appAction.setStatus({ status: "succeeded" }));
+      dispatch(todoActions.clearData());
 
-        return;
-        // dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
+      return;
+      // dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
 
-        // dispatch(clearTodoTask({tasks:{}, todoLists:[]}));
-        // dispatch(clearTodoTask({}, []));
-      } else {
-        handleServerAppError(res.data, dispatch);
-      }
-      dispatch(appThunk.initializedApp());
-      return rejectWithValue(null)
-
-    } catch (error) {
-      handleServerNetworkError(error, dispatch);
-      return rejectWithValue(null)
+      // dispatch(clearTodoTask({tasks:{}, todoLists:[]}));
+      // dispatch(clearTodoTask({}, []));
+    } else {
+      handleServerAppError(res.data, dispatch);
     }
-  });
-
+    dispatch(appThunk.initializedApp());
+    return rejectWithValue(null);
+  } catch (error) {
+    handleServerNetworkError(error, dispatch);
+    return rejectWithValue(null);
+  }
+});
 
 // slice - редьюсеры создаем с помощью функции createSlice
 export type AuthInitType = {
@@ -153,11 +149,11 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(authLogin.fulfilled, (state) => {
-      state.isLoggedIn = true;
-    })
+        state.isLoggedIn = true;
+      })
       .addCase(authLogout.fulfilled, (state) => {
-      state.isLoggedIn = false;
-    })
+        state.isLoggedIn = false;
+      });
   },
 });
 
