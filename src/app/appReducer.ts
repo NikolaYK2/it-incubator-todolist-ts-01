@@ -105,23 +105,29 @@ import { ResultCode } from "common/api/todolistsApi";
 //RTK ==================================================================
 
 //thunk -------------------------------------------------------------
-export const initializedApp = createAppAsyncThunk("app/init", async (arg, { dispatch, rejectWithValue }) => {
-  dispatch(appAction.setStatus({ status: "loading" }));
-  try {
-    const res = await authApi.me();
-    if (res.data.resultCode === ResultCode.Ok) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true })); //Говорим что мы залогинены
-    } else {
-      handleServerAppError(res.data, dispatch);
+export const initializedApp = createAppAsyncThunk<undefined, undefined>(
+  "app/init",
+  async (_, { dispatch, rejectWithValue }) => {
+    dispatch(appAction.setStatus({ status: "loading" }));
+    try {
+      const res = await authApi.me();
+      if (res.data.resultCode === ResultCode.Ok) {
+        dispatch(authActions.setIsLoggedIn({ isLoggedIn: true })); //Говорим что мы залогинены
+        return;
+      } else {
+        handleServerAppError(res.data, dispatch);
+        return rejectWithValue(null);
+      }
+      // return { initialized: true }
+      // return;
+    } catch (error: any) {
+      handleServerNetworkError(error, dispatch);
       return rejectWithValue(null);
+    } finally {
+      dispatch(appAction.initializedApp({ initialized: true }));
     }
-    // return { initialized: true }
-    return;
-  } catch (error: any) {
-    handleServerNetworkError(error, dispatch);
-    return rejectWithValue(null);
   }
-});
+);
 
 // reducer -----------------------------------------------------
 export type StatusType = "idle" | "loading" | "succeeded" | "failed";
@@ -152,15 +158,15 @@ const slice = createSlice({
       state.initialized = action.payload.initialized;
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(initializedApp.fulfilled, (state, action) => {
-        state.initialized = true;
-      })
-      .addCase(initializedApp.rejected, (state, action) => {
-        state.initialized = true;
-      });
-  },
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(initializedApp.fulfilled, (state, action) => {
+  //       state.initialized = true;
+  //     })
+  //     .addCase(initializedApp.rejected, (state, action) => {
+  //       state.initialized = true;
+  //     });
+  // },
 });
 
 export const appReducer = slice.reducer;

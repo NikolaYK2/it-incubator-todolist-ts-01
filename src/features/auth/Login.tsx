@@ -7,12 +7,14 @@ import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useFormik } from "formik";
+import { FormikHelpers, useFormik } from "formik";
 import { useAppDispatch, useAppSelector } from "app/store";
 import { Navigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { authThunk } from "features/auth/authReducer";
+import { AuthLoginType } from "features/auth/authApi";
+import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 
 type FormikErrorType = {
   email?: string;
@@ -44,8 +46,16 @@ export const Login = () => {
       password: "",
       rememberMe: false,
     },
-    onSubmit: (values) => {
-      dispatch(authThunk.authLogin(values));
+    onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
+      //formikHelpers типизируем нашим респонсом
+      dispatch(authThunk.authLogin(values))
+        .unwrap() //нужно для того что б попасть в catch так как createAsyncThunk всегда возвращает res() promise
+        .then((res) => {
+        })
+        .catch((e:BaseResponsTodolistsType) => {
+          formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
+          // setFieldError - означает что ошибка будет обрабатываться для конкретного поля
+        });
       formik.resetForm({
         //зачищаем все поля
         values: { email: values.email, password: "", rememberMe: false }, //А можно указать какое конткретное поле зачищаем
@@ -122,9 +132,8 @@ export const Login = () => {
                 </FormLabel>
                 <FormGroup style={{ color: "brown" }}>
                   <ThemeProvider theme={theme}>
-
                     <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
-                    <div style={{ height: "30px" }}>
+                    <div style={{ height: "30px"}}>
                       {formik.touched.email && formik.errors.email ? formik.errors.email : null}
                     </div>
 

@@ -3,17 +3,28 @@ import axios from "axios";
 export const instance = axios.create({
   withCredentials: true,
   baseURL: `https://social-network.samuraijs.com/api/1.1/`,
-  // headers:{
-  //     'API-KEY': '0317dbf2-f26f-44a4-a811-d77a69628a1e'
-  // },
+  headers: {
+    "API-KEY": 'f6bda301-132d-49df-8c79-f6fa4c3fd15d',
+  },
 });
+//ERRORS ==============================================
+// export type ResponsTodolistsType<D = {}> = {
+//   //D - уточняем наш дженерик D-типо data/ D = {} - если дженерик не передовать, он по умолчанию может являться пустым обьектом
+//   resultCode: number;
+//   // fieldErrors?: Array<{field:string,error:string}>
+//   messages: string[];
+//   data: D;
+// };
 
-export type ResponsTodolistsType<D = {}> = {
-  //D - уточняем наш дженерик D-типо data/ D = {} - если дженерик не передовать, он по умолчанию может являться пустым обьектом
+type FieldsErrorsType = {
+  error: string;
+  field: string;
+};
+export type BaseResponsTodolistsType<D = {}> = {
   resultCode: number;
-  // fieldErrors?: Array<{field:string,error:string}>
   messages: string[];
   data: D;
+  fieldsErrors: FieldsErrorsType[];
 };
 
 //RESULT CODE ===================================
@@ -46,5 +57,3 @@ export enum TodoTaskPriorities { //Тип данных. Перечисление
   Urgently = 3,
   Later = 4,
 }
-
-

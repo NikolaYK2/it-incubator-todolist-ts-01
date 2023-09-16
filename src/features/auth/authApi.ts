@@ -1,5 +1,5 @@
 //AUTH =======================================================================
-import { instance, ResponsTodolistsType } from "common/api/todolistsApi";
+import { instance, BaseResponsTodolistsType } from "common/api/todolistsApi";
 
 export type AuthLoginType = {
   email: string;
@@ -14,12 +14,12 @@ type AuthMeType = {
 };
 export const authApi = {
   authLogin(/*email: string, password: string, rememberMe: boolean*/ data: AuthLoginType) {
-    return instance.post<ResponsTodolistsType<{ userId?: number }>>("auth/login", data);
+    return instance.post<BaseResponsTodolistsType<{ userId?: number }>>("auth/login", data);
   },
   me() {
-    return instance.get<ResponsTodolistsType<AuthMeType>>("auth/me");
+    return instance.get<BaseResponsTodolistsType<AuthMeType>>("auth/me");
   },
   logout() {
-    return instance.delete<ResponsTodolistsType>("auth/login");
+    return instance.delete<BaseResponsTodolistsType>("auth/login");
   },
 };

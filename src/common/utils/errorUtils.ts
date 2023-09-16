@@ -1,9 +1,9 @@
 import { appAction } from "app/appReducer";
 import { AppDispatch } from "app/store";
 import axios from "axios";
-import { ResponsTodolistsType } from "common/api/todolistsApi";
+import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 
-export const handleServerAppError = <D>(data: ResponsTodolistsType<D>, dispatch: AppDispatch) => {
+export const handleServerAppError = <D>(data: BaseResponsTodolistsType<D>, dispatch: AppDispatch) => {
   // export const handleServerAppError = <D>(data: ResponsTodolistsType<D>, dispatch: Dispatch<SetAppErrorACType | SetAppStatusACType>) => {
   if (data.messages.length) {
     dispatch(appAction.setError({ error: data.messages[0] }));

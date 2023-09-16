@@ -18,8 +18,7 @@ export const store = configureStore({
 
 export type AppDispatch = typeof store.dispatch;
 export type AppRootStateType = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, Action<string>>;
+// export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, Action<string>>;//больше не нужна
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector;
-
