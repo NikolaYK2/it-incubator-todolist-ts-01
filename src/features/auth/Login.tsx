@@ -27,24 +27,24 @@ export const Login = () => {
 
   const formik = useFormik({
     validate: (values) => {
-      const errors: FormikErrorType = {};
-      if (!values.email) {
-        errors.email = "Required";
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = "Invalid email address";
-      }
-      if (!values.password) {
-        errors.password = "Required";
-      } else if (values.password.length < 4) {
-        errors.password = "Should be more three symbols";
-      }
-      return errors;
+      // const errors: FormikErrorType = {};
+      // if (!values.email) {
+      //   errors.email = "Required";
+      // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      //   errors.email = "Invalid email address";
+      // }
+      // if (!values.password) {
+      //   errors.password = "Required";
+      // } else if (values.password.length < 4) {
+      //   errors.password = "Should be more three symbols";
+      // }
+      // return errors;
     },
 
     initialValues: {
       email: "",
       password: "",
-      rememberMe: false,
+      rememberMe: false
     },
     onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
       //formikHelpers типизируем нашим респонсом
@@ -52,15 +52,15 @@ export const Login = () => {
         .unwrap() //нужно для того что б попасть в catch так как createAsyncThunk всегда возвращает res() promise
         .then((res) => {
         })
-        .catch((e:BaseResponsTodolistsType) => {
-          formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
-          // setFieldError - означает что ошибка будет обрабатываться для конкретного поля
+        .catch((e: BaseResponsTodolistsType) => {
+          // formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
+            e.fieldsErrors.map(el=> formikHelpers.setFieldError(el.field, el.error))
         });
       formik.resetForm({
         //зачищаем все поля
-        values: { email: values.email, password: "", rememberMe: false }, //А можно указать какое конткретное поле зачищаем
+        values: { email: values.email, password: "", rememberMe: false } //А можно указать какое конткретное поле зачищаем
       });
-    },
+    }
   });
 
   //MUI CHANGE STYLE===============================================
@@ -70,10 +70,10 @@ export const Login = () => {
         styleOverrides: {
           root: {
             label: {
-              color: "grey",
-            },
-          },
-        },
+              color: "grey"
+            }
+          }
+        }
       },
       MuiOutlinedInput: {
         styleOverrides: {
@@ -81,23 +81,23 @@ export const Login = () => {
             "&:hover": {
               ".MuiOutlinedInput-notchedOutline": {
                 borderColor: "#1976D2",
-                borderWidth: "2px",
-              },
+                borderWidth: "2px"
+              }
             },
             ".MuiFormLabel-notchedOutline": {
-              color: "red",
+              color: "red"
             },
             ".MuiOutlinedInput-notchedOutline": {
               borderColor: "grey",
-              borderWidth: "1px",
-            },
+              borderWidth: "1px"
+            }
           },
           input: {
-            color: "#1976D2",
-          },
-        },
-      },
-    },
+            color: "#1976D2"
+          }
+        }
+      }
+    }
   });
   //==========================================================
   if (isLoggedIn) {
@@ -113,7 +113,7 @@ export const Login = () => {
               backgroundColor: "rgba(0, 0, 0, 0.7)",
               boxShadow: "1px 1px 10px grey",
               padding: "10px",
-              margin: "50% 0 0",
+              margin: "50% 0 0"
             }}
           >
             <form onSubmit={formik.handleSubmit}>
@@ -133,9 +133,10 @@ export const Login = () => {
                 <FormGroup style={{ color: "brown" }}>
                   <ThemeProvider theme={theme}>
                     <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
-                    <div style={{ height: "30px"}}>
-                      {formik.touched.email && formik.errors.email ? formik.errors.email : null}
-                    </div>
+                    <div style={{ height: "30px" }}>{formik.errors.email ? formik.errors.email : null}</div>
+                    {/*<div style={{ height: "30px"}}>*/}
+                    {/*  {formik.touched.email && formik.errors.email ? formik.errors.email : null}*/}
+                    {/*</div>*/}
 
                     <TextField
                       type="password"
@@ -144,9 +145,10 @@ export const Login = () => {
                       margin="normal"
                       {...formik.getFieldProps("password")}
                     />
-                    <div style={{ height: "30px" }}>
-                      {formik.touched.password && formik.errors.password ? formik.errors.password : null}
-                    </div>
+                    <div style={{ height: "30px" }}>{formik.errors.password ? formik.errors.password : null}</div>
+                    {/*<div style={{ height: "30px" }}>*/}
+                    {/*  {formik.touched.password && formik.errors.password ? formik.errors.password : null}*/}
+                    {/*</div>*/}
 
                     <FormControlLabel
                       sx={{ svg: { color: "#1976D2" } }}

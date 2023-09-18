@@ -97,7 +97,7 @@ const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: Bas
         return;
         // return { isLoggedIn: true };
       } else {
-        handleServerAppError(res.data, dispatch);
+        handleServerAppError(res.data, dispatch, false);//глобально не обрабатываемЮ по этому комент
         return rejectWithValue(res.data);
       }
     } catch (error) {
