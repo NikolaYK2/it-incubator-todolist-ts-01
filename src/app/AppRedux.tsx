@@ -9,6 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { appSelector } from "app/appSelector";
 import { ButtonAppBar } from "common/components";
 import { appThunk } from "app/appReducer";
+import { useActions } from "common/hooks/useActions";
 
 type AppReduxType = {
   demo?: boolean;
@@ -16,13 +17,16 @@ type AppReduxType = {
 
 function AppRedux({ demo = false }: AppReduxType) {
   console.log("App");
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const initialized = useAppSelector(appSelector);
 
+  const {initializedApp}=useActions(appThunk)
+
   useEffect(() => {
-    dispatch(appThunk.initializedApp());
+    // dispatch(appThunk.initializedApp());
+    initializedApp()
     // dispatch(appThunk.initializedApp({ initialized: true }));
-  }, [dispatch]);
+  }, [initializedApp]);
 
   if (!initialized) {
     //Убираем моргания перехода на логин при обновлении

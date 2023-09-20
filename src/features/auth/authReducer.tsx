@@ -162,7 +162,10 @@ const slice = createSlice({
       })
       .addCase(authLogout.fulfilled, (state) => {
         state.isLoggedIn = false;
-      });
+      })
+      // .addCase(initializedApp.fulfilled, (state)=>{
+      //   state.isLoggedIn = true
+      // })
   },
 });
 

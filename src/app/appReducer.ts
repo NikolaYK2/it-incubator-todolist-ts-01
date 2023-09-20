@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
 import { authActions } from "features/auth/authReducer";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi } from "features/auth/authApi";
 import { ResultCode } from "common/api/todolistsApi";
+import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 //REDUX --------------------------------------------------------------------
 // export type StatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
@@ -105,29 +105,45 @@ import { ResultCode } from "common/api/todolistsApi";
 //RTK ==================================================================
 
 //thunk -------------------------------------------------------------
-export const initializedApp = createAppAsyncThunk<undefined, undefined>(
-  "app/init",
-  async (_, { dispatch, rejectWithValue }) => {
-    dispatch(appAction.setStatus({ status: "loading" }));
-    try {
-      const res = await authApi.me();
-      if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(authActions.setIsLoggedIn({ isLoggedIn: true })); //Говорим что мы залогинены
-        return;
-      } else {
-        handleServerAppError(res.data, dispatch);
-        return rejectWithValue(null);
-      }
-      // return { initialized: true }
-      // return;
-    } catch (error: any) {
-      handleServerNetworkError(error, dispatch);
+export const initializedApp = createAppAsyncThunk</*{isLoggedIn: boolean}*/undefined, undefined>("app/init", async (_, thunkAPI) => {
+  const { dispatch, rejectWithValue } = thunkAPI;
+  return thunkTryCatch(thunkAPI, async () => {
+    const res = await authApi.me();
+    if (res.data.resultCode === ResultCode.Ok) {
+      // return { isLoggedIn: true }
+      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+      return;
+    } else {
+      // handleServerAppError(res.data, dispatch);
       return rejectWithValue(null);
-    } finally {
-      dispatch(appAction.initializedApp({ initialized: true }));
     }
-  }
-);
+  }).finally(() => {
+    dispatch(appAction.initializedApp({ initialized: true }));
+  });
+});
+// export const initializedApp = createAppAsyncThunk<undefined, undefined>(
+//   "app/init",
+//   async (_, { dispatch, rejectWithValue }) => {
+//     dispatch(appAction.setStatus({ status: "loading" }));
+//     try {
+//       const res = await authApi.me();
+//       if (res.data.resultCode === ResultCode.Ok) {
+//         dispatch(authActions.setIsLoggedIn({ isLoggedIn: true })); //Говорим что мы залогинены
+//         return;
+//       } else {
+//         handleServerAppError(res.data, dispatch);
+//         return rejectWithValue(null);
+//       }
+//       // return { initialized: true }
+//       // return;
+//     } catch (error) {
+//       handleServerNetworkError(error, dispatch);
+//       return rejectWithValue(null);
+//     } finally {
+//       dispatch(appAction.initializedApp({ initialized: true }));
+//     }
+//   }
+// );
 
 // reducer -----------------------------------------------------
 export type StatusType = "idle" | "loading" | "succeeded" | "failed";
@@ -158,15 +174,15 @@ const slice = createSlice({
       state.initialized = action.payload.initialized;
     },
   },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(initializedApp.fulfilled, (state, action) => {
-  //       state.initialized = true;
-  //     })
+  extraReducers: (builder) => {
+    // builder
+    //   .addCase(initializedApp.fulfilled, (state, action) => {
+    //     state.initialized = true;
+    //   })
   //     .addCase(initializedApp.rejected, (state, action) => {
   //       state.initialized = true;
   //     });
-  // },
+  },
 });
 
 export const appReducer = slice.reducer;
