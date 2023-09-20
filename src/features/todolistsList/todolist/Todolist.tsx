@@ -5,11 +5,7 @@ import { FullInput } from "common/components/fullInputButton/FullInput";
 import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import {
-  filterValueType,
-  todoActions,
-  TodoAppType, todoThunk
-} from "features/todolistsList/todolist/todoListsReducer";
+import { filterValueType, todoActions, TodoAppType, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
 import { Task } from "./task/Task";
 import { useAppDispatch, useAppSelector } from "app/store";
 import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";

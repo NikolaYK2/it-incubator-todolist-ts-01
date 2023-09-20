@@ -4,7 +4,7 @@ import { todoListsReducer } from "features/todolistsList/todolist/todoListsReduc
 import { tasksReducer } from "features/todolistsList/todolist/task/tasksReducer";
 import { appReducer } from "app/appReducer";
 import { authReducer } from "features/auth/authReducer";
-import thunkMiddleware from "redux-thunk";
+// import thunkMiddleware from "redux-thunk";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +17,7 @@ export const store = configureStore({
 });
 
 export type AppDispatch = typeof store.dispatch;
+
 export type AppRootStateType = ReturnType<typeof store.getState>;
 // export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, Action<string>>;//больше не нужна
 

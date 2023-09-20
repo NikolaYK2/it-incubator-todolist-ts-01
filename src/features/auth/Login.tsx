@@ -50,11 +50,10 @@ export const Login = () => {
       //formikHelpers типизируем нашим респонсом
       dispatch(authThunk.authLogin(values))
         .unwrap() //нужно для того что б попасть в catch так как createAsyncThunk всегда возвращает res() promise
-        .then((res) => {
-        })
+        .then(() => {})
         .catch((e: BaseResponsTodolistsType) => {
           // formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
-            e.fieldsErrors.map(el=> formikHelpers.setFieldError(el.field, el.error))
+             e.fieldsErrors?.forEach(el=> formikHelpers.setFieldError(el.field, el.error))
         });
       formik.resetForm({
         //зачищаем все поля

@@ -97,7 +97,11 @@ const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: Bas
         return;
         // return { isLoggedIn: true };
       } else {
-        handleServerAppError(res.data, dispatch, false);//глобально не обрабатываемЮ по этому комент
+        // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
+        // в конкретном поле в компоненте (пункт 7)
+        // ❗ Если у нас fieldsErrors нету значит отобразим ошибку глобально
+        const isShowAppError = !res.data.fieldsErrors.length
+        handleServerAppError(res.data, dispatch, isShowAppError);//глобально не обрабатываемЮ по этому комент
         return rejectWithValue(res.data);
       }
     } catch (error) {

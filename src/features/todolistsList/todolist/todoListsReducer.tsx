@@ -208,6 +208,7 @@ import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { todolistsApi, TodolistType } from "features/todolistsList/todolist/todolistsApi";
 import { ResultCode } from "common/api/todolistsApi";
 import { CreateTaskType } from "features/todolistsList/todolist/task/tasksApi";
+import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 //extra --------
 const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }>(
@@ -233,18 +234,29 @@ const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }>(
 
 const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>(
   "todo/addTodo",
-  async (title, { dispatch, rejectWithValue }) => {
-    dispatch(appAction.setStatus({ status: "loading" }));
-    try {
+  async (title, thunkAPI) => {
+    const {dispatch} = thunkAPI
+    return thunkTryCatch(thunkAPI, async ()=>{
       const res = await todolistsApi.createTodolists(title);
       dispatch(appAction.setStatus({ status: "succeeded" }));
       return { todolist: res.data.data.item };
-    } catch (error) {
-      handleServerNetworkError(error, dispatch);
-      return rejectWithValue(null);
-    }
+    })
   }
 );
+// const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>(
+//   "todo/addTodo",
+//   async (title, { dispatch, rejectWithValue }) => {
+//     dispatch(appAction.setStatus({ status: "loading" }));
+//     try {
+//       const res = await todolistsApi.createTodolists(title);
+//       dispatch(appAction.setStatus({ status: "succeeded" }));
+//       return { todolist: res.data.data.item };
+//     } catch (error) {
+//       handleServerNetworkError(error, dispatch);
+//       return rejectWithValue(null);
+//     }
+//   }
+// );
 
 export const deleteTodo = createAppAsyncThunk<{ todolistID: string },string>(
   "todo/deletTodo", async (todoId, { dispatch, rejectWithValue }) => {

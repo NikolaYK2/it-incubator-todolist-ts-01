@@ -397,6 +397,7 @@ import {
   TaskType,
   UpdTaskType,
 } from "features/todolistsList/todolist/task/tasksApi";
+import { thunkTryCatch } from "common/utils/thunkTryCatch";
 // import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 // import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
@@ -420,26 +421,39 @@ const setTasksTC = createAppAsyncThunk<{ todoId: string; tasks: TaskType[] }, st
 //extra -----------------------------
 const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("task/addTasks", async (arg, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-
-  dispatch(appAction.setStatus({ status: "loading" }));
-  dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "loading" }));
-  try {
-    // const res = await todolistsApi.createTask(arg.todoId, arg.title);
+  return thunkTryCatch(thunkAPI, async ()=>{
     const res = await tasksApi.createTask(arg);
     if (res.data.resultCode === ResultCode.Ok) {
-      dispatch(appAction.setStatus({ status: "succeeded" }));
       return { task: res.data.data.item };
     } else {
       handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
+      return rejectWithValue(null);
     }
-    dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
-    return rejectWithValue(null);
-  } catch (error: any) {
-    handleServerNetworkError(error, dispatch);
-    dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
-    return rejectWithValue(null);
-  }
+  })
 });
+// const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("task/addTasks", async (arg, thunkAPI) => {
+//   const { dispatch, rejectWithValue } = thunkAPI;
+//
+//   dispatch(appAction.setStatus({ status: "loading" }));
+//   dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "loading" }));
+//   try {
+//     // const res = await todolistsApi.createTask(arg.todoId, arg.title);
+//     const res = await tasksApi.createTask(arg);
+//     if (res.data.resultCode === ResultCode.Ok) {
+//       dispatch(appAction.setStatus({ status: "succeeded" }));
+//       return { task: res.data.data.item };
+//     } else {
+//       handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
+//     }
+//     dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
+//     return rejectWithValue(null);
+//   } catch (error: any) {
+//     handleServerNetworkError(error, dispatch);
+//     dispatch(todoActions.changeEntStatusTodo({ todoId: arg.todoId, status: "idle" }));
+//     return rejectWithValue(null);
+//   }
+// });
+
 
 //extra --------
 export const deleteTasksTC = createAppAsyncThunk(
