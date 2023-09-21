@@ -7,10 +7,11 @@ import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { filterValueType, todoActions, TodoAppType, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
 import { Task } from "./task/Task";
-import { useAppDispatch, useAppSelector } from "app/store";
+import { useAppSelector } from "app/store";
 import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
 import { TaskStatuses } from "common/api/todolistsApi";
 import { statusSelector } from "features/todolistsList/todolist/todolistSelector";
+import { useActions } from "common/hooks/useActions";
 
 export type TodolistPropsType = {
   todolist: TodoAppType;
@@ -25,24 +26,34 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
 
   const { id, title, filter } = props.todolist;
 
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();//no use
   const tasks = useAppSelector((state) => state.tasks[id]);
-  const status = useAppSelector(statusSelector)
 
+  const status = useAppSelector(statusSelector);
 
+  const { addTasksTC, deleteTodo, taskFilterTodo, changeTitleTodo } = useActions({
+    ...tasksThunk,
+    ...todoThunk,
+    ...todoActions,
+  });
 
   //================addTask===================================================
-  const addTask = useCallback((title: string) => {
-      dispatch(tasksThunk.addTasksTC({ todoId: id, title: title }));
-    }, [dispatch, id]);
+  const addTask = useCallback(
+    (title: string) => {
+      addTasksTC({ todoId: id, title: title });
+      // dispatch(tasksThunk.addTasksTC({ todoId: id, title: title }));
+    },
+    [addTasksTC, id]
+  );
 
   // delete todolist=======================================
   const onClickHandlerDeleteTodolist = useCallback(
     (todolistID: string) => {
       // dispatch(deleteTodolistAC(todolistID));
-      dispatch(todoThunk.deleteTodo(todolistID));
+      deleteTodo(todolistID);
+      // dispatch(todoThunk.deleteTodo(todolistID));
     },
-    [dispatch]
+    [deleteTodo]
   );
   //===============================================================
   //=========================ФиЛЬТРАЦИЯ==============================
@@ -53,7 +64,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   if (filter === "Completed") {
     filterTasks = tasks.filter((t) => t.status === TaskStatuses.Completed);
   }
-
 
   // =====================================================================
   //Если лист тасок остался пустой
@@ -73,12 +83,12 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   //Фильтр ==================================================
   const changeTasksFilterHandler = useCallback(
     (filter: filterValueType) => {
-      dispatch(todoActions.taskFilterTodo({ todoListsID: id, filter }));
+      taskFilterTodo({ todoListsID: id, filter });
+      // dispatch(todoActions.taskFilterTodo({ todoListsID: id, filter }));
       // props.changeTasksFilter(props.todoListID, filter,);
     },
-    [dispatch, id]
+    [taskFilterTodo, id]
   );
-
 
   //=================Focus button filter===================================
   //filterValue - добавили фильтр из локального стейка
@@ -89,10 +99,10 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   //Изм. todolist======================================================================================
   const onChangeHandlerTitleTodolist = useCallback(
     (newValue: string) => {
-
-      dispatch(todoThunk.changeTitleTodo({ todoId: id, title: newValue }));
+      changeTitleTodo({ todoId: id, title: newValue });
+      // dispatch(todoThunk.changeTitleTodo({ todoId: id, title: newValue }));
     },
-    [dispatch, id]
+    [changeTitleTodo, id]
   );
   // ========================================================================================================
 
@@ -101,19 +111,13 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
       <h3>
         <EditableSpan title={title} onChange={onChangeHandlerTitleTodolist} />
       </h3>
-      <IconButton
-        onClick={() => onClickHandlerDeleteTodolist(id)}
-        color={"error"}
-        disabled={status === "loading"}
-      >
+      <IconButton onClick={() => onClickHandlerDeleteTodolist(id)} color={"error"} disabled={status === "loading"}>
         <Delete />
       </IconButton>
       <div className={s.block}>
         <FullInput addItem={addTask} disabled={status === "loading"} />
       </div>
-      <ul>
-        {taskListItems}
-      </ul>
+      <ul>{taskListItems}</ul>
       <div>
         <Button
           name="All"

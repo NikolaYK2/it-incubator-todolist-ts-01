@@ -66,18 +66,6 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
           <Todolist
             todolist={tl}
             demo={demo}
-            // todoListID={tl.id}
-            // title={tl.title}//Название проекта
-            // filter={tl.filter}
-            // tasks={filterTasks}
-            //
-            // deleteTodolist={deleteTodolist}
-            // changeTasksFilter={changeTasksFilter}
-            // changeStatus={changeStatus}
-            // deleteTask={deleteTask}
-            // addItem={addTask}
-            // changeTaskTitle={changeTaskTitle}//редактирование таски title
-            // onChangeTitleTodolist={onChangeHandlerTitleTodolist}
           />
         </Paper>
       </Grid>
