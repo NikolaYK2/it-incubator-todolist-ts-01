@@ -27,18 +27,18 @@ export const Login = () => {
 
   const formik = useFormik({
     validate: (values) => {
-      // const errors: FormikErrorType = {};
-      // if (!values.email) {
-      //   errors.email = "Required";
-      // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      //   errors.email = "Invalid email address";
-      // }
-      // if (!values.password) {
-      //   errors.password = "Required";
-      // } else if (values.password.length < 4) {
-      //   errors.password = "Should be more three symbols";
-      // }
-      // return errors;
+      const errors: FormikErrorType = {};
+      if (!values.email) {
+        errors.email = "Required";
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        errors.email = "Invalid email address";
+      }
+      if (!values.password) {
+        errors.password = "Required";
+      } else if (values.password.length < 4) {
+        errors.password = "Should be more three symbols";
+      }
+      return errors;
     },
 
     initialValues: {
@@ -53,12 +53,14 @@ export const Login = () => {
         .then(() => {})
         .catch((e: BaseResponsTodolistsType) => {
           // formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
-             e.fieldsErrors?.forEach(el=> formikHelpers.setFieldError(el.field, el.error))
+
+          e.fieldsErrors?.forEach(el=> formikHelpers.setFieldError(el.field, el.error))
         });
-      formik.resetForm({
-        //зачищаем все поля
-        values: { email: values.email, password: "", rememberMe: false } //А можно указать какое конткретное поле зачищаем
-      });
+      // formik.resetForm({//not use
+      //   //зачищаем все поля
+      //   values: { email: values.email, password: "", rememberMe: false },
+      //   errors:{}//А можно указать какое конткретное поле зачищаем
+      // });
     }
   });
 
@@ -132,10 +134,10 @@ export const Login = () => {
                 <FormGroup style={{ color: "brown" }}>
                   <ThemeProvider theme={theme}>
                     <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
-                    <div style={{ height: "30px" }}>{formik.errors.email ? formik.errors.email : null}</div>
-                    {/*<div style={{ height: "30px"}}>*/}
-                    {/*  {formik.touched.email && formik.errors.email ? formik.errors.email : null}*/}
-                    {/*</div>*/}
+                    {/*<div style={{ height: "30px" }}>{formik.errors.email ? formik.errors.email : null}</div>*/}
+                    <div style={{ height: "30px"}}>
+                      {formik.touched.email && formik.errors.email ? formik.errors.email : null}
+                    </div>
 
                     <TextField
                       type="password"
@@ -144,10 +146,10 @@ export const Login = () => {
                       margin="normal"
                       {...formik.getFieldProps("password")}
                     />
-                    <div style={{ height: "30px" }}>{formik.errors.password ? formik.errors.password : null}</div>
-                    {/*<div style={{ height: "30px" }}>*/}
-                    {/*  {formik.touched.password && formik.errors.password ? formik.errors.password : null}*/}
-                    {/*</div>*/}
+                    {/*<div style={{ height: "30px" }}>{formik.errors.password ? formik.errors.password : null}</div>*/}
+                    <div style={{ height: "30px" }}>
+                      {formik.touched.password && formik.errors.password ? formik.errors.password : null}
+                    </div>
 
                     <FormControlLabel
                       sx={{ svg: { color: "#1976D2" } }}
