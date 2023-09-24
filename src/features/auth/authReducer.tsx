@@ -75,68 +75,101 @@
 //RTK --------------------------------------------------
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, appThunk } from "app/appReducer";
-import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
+import { handleServerAppError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi, AuthLoginType } from "features/auth/authApi";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
+import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 //extra ------------------------------
 const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: BaseResponsTodolistsType | null }>(
   "auth/login",
   async (data, thunkAPI) => {
-    // const authLogin = createAppAsyncThunk<{ isLoggedIn: boolean }, AuthLoginType>("auth/login", async (data, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
     dispatch(appAction.setStatus({ status: "loading" }));
-    try {
+    return thunkTryCatch(thunkAPI, async () => {
       const res = await authApi.authLogin(data);
       if (res.data.resultCode === ResultCode.Ok) {
         dispatch(appAction.setStatus({ status: "succeeded" }));
-        // dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-
         return;
-        // return { isLoggedIn: true };
       } else {
-        // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
-        // в конкретном поле в компоненте (пункт 7)
-        // ❗ Если у нас fieldsErrors нету значит отобразим ошибку глобально
-        const isShowAppError = !res.data.fieldsErrors.length
-        handleServerAppError(res.data, dispatch, isShowAppError);//глобально не обрабатываемЮ по этому комент
+        const isShowAppError = !res.data.fieldsErrors.length;
+        handleServerAppError(res.data, dispatch, isShowAppError); //глобально не обрабатываемЮ по этому комент
         return rejectWithValue(res.data);
       }
-    } catch (error) {
-      handleServerNetworkError(error, dispatch);
-      return rejectWithValue(null);
-      // return { isLoggedIn: false };
-    }
+    });
   }
 );
+// );const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: BaseResponsTodolistsType | null }>(
+//   "auth/login",
+//   async (data, thunkAPI) => {
+//     // const authLogin = createAppAsyncThunk<{ isLoggedIn: boolean }, AuthLoginType>("auth/login", async (data, thunkAPI) => {
+//     const { dispatch, rejectWithValue } = thunkAPI;
+//     dispatch(appAction.setStatus({ status: "loading" }));
+//     try {
+//       const res = await authApi.authLogin(data);
+//       if (res.data.resultCode === ResultCode.Ok) {
+//         dispatch(appAction.setStatus({ status: "succeeded" }));
+//         // dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+//
+//         return;
+//         // return { isLoggedIn: true };
+//       } else {
+//         // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
+//         // в конкретном поле в компоненте (пункт 7)
+//         // ❗ Если у нас fieldsErrors нету значит отобразим ошибку глобально
+//         const isShowAppError = !res.data.fieldsErrors.length
+//         handleServerAppError(res.data, dispatch, isShowAppError);//глобально не обрабатываемЮ по этому комент
+//         return rejectWithValue(res.data);
+//       }
+//     } catch (error) {
+//       handleServerNetworkError(error, dispatch);
+//       return rejectWithValue(null);
+//       // return { isLoggedIn: false };
+//     }
+//   }
+// );
 
 const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  dispatch(appAction.setStatus({ status: "loading" }));
-  try {
+  return thunkTryCatch(thunkAPI, async () => {
     const res = await authApi.logout();
     if (res.data.resultCode === ResultCode.Ok) {
-      // dispatch(authThunk.authLogin({ isLoggedIn: false }));
-      dispatch(appAction.setStatus({ status: "succeeded" }));
       dispatch(todoActions.clearData());
-
       return;
-      // dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
-
-      // dispatch(clearTodoTask({tasks:{}, todoLists:[]}));
-      // dispatch(clearTodoTask({}, []));
     } else {
       handleServerAppError(res.data, dispatch);
     }
     dispatch(appThunk.initializedApp());
     return rejectWithValue(null);
-  } catch (error) {
-    handleServerNetworkError(error, dispatch);
-    return rejectWithValue(null);
-  }
+  });
 });
+// const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", async (_, thunkAPI) => {
+//   const { dispatch, rejectWithValue } = thunkAPI;
+//   dispatch(appAction.setStatus({ status: "loading" }));
+//   try {
+//     const res = await authApi.logout();
+//     if (res.data.resultCode === ResultCode.Ok) {
+//       // dispatch(authThunk.authLogin({ isLoggedIn: false }));
+//       dispatch(appAction.setStatus({ status: "succeeded" }));
+//       dispatch(todoActions.clearData());
+//
+//       return;
+//       // dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
+//
+//       // dispatch(clearTodoTask({tasks:{}, todoLists:[]}));
+//       // dispatch(clearTodoTask({}, []));
+//     } else {
+//       handleServerAppError(res.data, dispatch);
+//     }
+//     dispatch(appThunk.initializedApp());
+//     return rejectWithValue(null);
+//   } catch (error) {
+//     handleServerNetworkError(error, dispatch);
+//     return rejectWithValue(null);
+//   }
+// });
 
 // slice - редьюсеры создаем с помощью функции createSlice
 export type AuthInitType = {
@@ -162,10 +195,10 @@ const slice = createSlice({
       })
       .addCase(authLogout.fulfilled, (state) => {
         state.isLoggedIn = false;
-      })
-      // .addCase(initializedApp.fulfilled, (state)=>{
-      //   state.isLoggedIn = true
-      // })
+      });
+    // .addCase(initializedApp.fulfilled, (state)=>{
+    //   state.isLoggedIn = true
+    // })
   },
 });
 
