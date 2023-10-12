@@ -77,7 +77,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, appThunk } from "app/appReducer";
 import { handleServerAppError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { authApi, AuthLoginType } from "features/auth/authApi";
+import { authApi, AuthLoginType } from "features/auth/api/authApi";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";

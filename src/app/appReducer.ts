@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { authActions } from "features/auth/authReducer";
+import { authActions } from "features/auth/model/authReducer";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { authApi } from "features/auth/authApi";
+import { authApi } from "features/auth/api/authApi";
 import { ResultCode } from "common/api/todolistsApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
@@ -174,7 +174,7 @@ const slice = createSlice({
       state.initialized = action.payload.initialized;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers: () => {
     // builder
     //   .addCase(initializedApp.fulfilled, (state, action) => {
     //     state.initialized = true;

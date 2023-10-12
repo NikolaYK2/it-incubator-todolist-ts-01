@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import "./App.css";
-// import { ButtonAppBar } from "components/buttonAppBar/ButtonAppBar";
 import { TodolistsList } from "features/todolistsList/TodolistsList";
-import { Login } from "features/auth/Login";
+import { Login } from "features/auth/ui/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./store";
+import { useAppSelector } from "./store";
 import CircularProgress from "@mui/material/CircularProgress";
 import { appSelector } from "app/appSelector";
 import { ButtonAppBar } from "common/components";

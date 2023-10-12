@@ -7,63 +7,55 @@ import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { FormikHelpers, useFormik } from "formik";
-import { useAppDispatch, useAppSelector } from "app/store";
 import { Navigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { authThunk } from "features/auth/authReducer";
-import { AuthLoginType } from "features/auth/authApi";
-import { BaseResponsTodolistsType } from "common/api/todolistsApi";
+import { useLogin } from "features/auth/lib/useLogin";
 
-type FormikErrorType = Partial<Omit<AuthLoginType, 'captcha'>>
-//   email?: string;
-//   password?: string;
-//   rememberMe?: boolean;
-// };
 
 export const Login = () => {
-  const dispatch = useAppDispatch();
-  const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
+  const { formik, isLoggedIn } = useLogin();
 
-  const formik = useFormik({
-    validate: (values) => {
-      const errors: FormikErrorType = {};
-      if (!values.email) {
-        errors.email = "Required";
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = "Invalid email address";
-      }
-      if (!values.password) {
-        errors.password = "Required";
-      } else if (values.password.length < 4) {
-        errors.password = "Should be more three symbols";
-      }
-      return errors;
-    },
-
-    initialValues: {
-      email: "",
-      password: "",
-      rememberMe: false
-    },
-    onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
-      //formikHelpers типизируем нашим респонсом
-      dispatch(authThunk.authLogin(values))
-        .unwrap() //нужно для того что б попасть в catch так как createAsyncThunk всегда возвращает res() promise
-        .then(() => {})
-        .catch((e: BaseResponsTodolistsType) => {
-          // formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
-
-          e.fieldsErrors?.forEach(el=> formikHelpers.setFieldError(el.field, el.error))
-        });
-      // formik.resetForm({//not use
-      //   //зачищаем все поля
-      //   values: { email: values.email, password: "", rememberMe: false },
-      //   errors:{}//А можно указать какое конткретное поле зачищаем
-      // });
-    }
-  });
+  // const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
+  // const dispatch = useAppDispatch();
+  // const formik = useFormik({
+  //   validate: (values) => {
+  //     const errors: FormikErrorType = {};
+  //     if (!values.email) {
+  //       errors.email = "Required";
+  //     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+  //       errors.email = "Invalid email address";
+  //     }
+  //     if (!values.password) {
+  //       errors.password = "Required";
+  //     } else if (values.password.length < 4) {
+  //       errors.password = "Should be more three symbols";
+  //     }
+  //     return errors;
+  //   },
+  //
+  //   initialValues: {
+  //     email: "",
+  //     password: "",
+  //     rememberMe: false
+  //   },
+  //   onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
+  //     //formikHelpers типизируем нашим респонсом
+  //     dispatch(authThunk.authLogin(values))
+  //       .unwrap() //нужно для того что б попасть в catch так как createAsyncThunk всегда возвращает res() promise
+  //       .then(() => {})
+  //       .catch((e: BaseResponsTodolistsType) => {
+  //         // formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
+  //
+  //         e.fieldsErrors?.forEach(el=> formikHelpers.setFieldError(el.field, el.error))
+  //       });
+  //     // formik.resetForm({//not use
+  //     //   //зачищаем все поля
+  //     //   values: { email: values.email, password: "", rememberMe: false },
+  //     //   errors:{}//А можно указать какое конткретное поле зачищаем
+  //     // });
+  //   }
+  // });
 
   //MUI CHANGE STYLE===============================================
   const theme = createTheme({
@@ -72,10 +64,10 @@ export const Login = () => {
         styleOverrides: {
           root: {
             label: {
-              color: "grey"
-            }
-          }
-        }
+              color: "grey",
+            },
+          },
+        },
       },
       MuiOutlinedInput: {
         styleOverrides: {
@@ -83,23 +75,23 @@ export const Login = () => {
             "&:hover": {
               ".MuiOutlinedInput-notchedOutline": {
                 borderColor: "#1976D2",
-                borderWidth: "2px"
-              }
+                borderWidth: "2px",
+              },
             },
             ".MuiFormLabel-notchedOutline": {
-              color: "red"
+              color: "red",
             },
             ".MuiOutlinedInput-notchedOutline": {
               borderColor: "grey",
-              borderWidth: "1px"
-            }
+              borderWidth: "1px",
+            },
           },
           input: {
-            color: "#1976D2"
-          }
-        }
-      }
-    }
+            color: "#1976D2",
+          },
+        },
+      },
+    },
   });
   //==========================================================
   if (isLoggedIn) {
@@ -115,7 +107,7 @@ export const Login = () => {
               backgroundColor: "rgba(0, 0, 0, 0.7)",
               boxShadow: "1px 1px 10px grey",
               padding: "10px",
-              margin: "50% 0 0"
+              margin: "50% 0 0",
             }}
           >
             <form onSubmit={formik.handleSubmit}>
@@ -136,7 +128,7 @@ export const Login = () => {
                   <ThemeProvider theme={theme}>
                     <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
                     {/*<div style={{ height: "30px" }}>{formik.errors.email ? formik.errors.email : null}</div>*/}
-                    <div style={{ height: "30px"}}>
+                    <div style={{ height: "30px" }}>
                       {formik.touched.email && formik.errors.email ? formik.errors.email : null}
                     </div>
 

@@ -10,7 +10,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import LinearProgress from "@mui/material/LinearProgress";
 import { ErrorSnackbar } from "common/components/errorSnackbar/ErrorSnackbar";
 import { StatusType } from "app/appReducer";
-import { authThunk } from "features/auth/authReducer";
+import { authThunk } from "features/auth/model/authReducer";
 import { useAppDispatch, useAppSelector } from "app/store";
 
 export function ButtonAppBar() {
@@ -20,7 +20,7 @@ export function ButtonAppBar() {
 
   const logoutHandle = useCallback(() => {
     dispatch(authThunk.authLogout());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>

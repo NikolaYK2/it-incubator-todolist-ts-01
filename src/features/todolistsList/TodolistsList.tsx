@@ -8,7 +8,7 @@ import { FullInput } from "common/components/fullInputButton/FullInput";
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "app/store";
 import { todolistSelector } from "features/todolistsList/todolist/todolistSelector";
-import { authSelect } from "features/auth/authSelector";
+import { authSelect } from "features/auth/model/authSelector";
 import { useActions } from "common/hooks/useActions";
 
 type TodolistsListType = {

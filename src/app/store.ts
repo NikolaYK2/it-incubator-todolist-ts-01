@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { todoListsReducer } from "features/todolistsList/todolist/todoListsReducer";
 import { tasksReducer } from "features/todolistsList/todolist/task/tasksReducer";
 import { appReducer } from "app/appReducer";
-import { authReducer } from "features/auth/authReducer";
+import { authReducer } from "features/auth/model/authReducer";
 // import thunkMiddleware from "redux-thunk";
 
 export const store = configureStore({
