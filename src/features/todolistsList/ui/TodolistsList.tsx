@@ -7,7 +7,7 @@ import { Todolist } from "features/todolistsList/ui/todolist/Todolist";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "app/store";
-import { todolistSelector } from "features/todolistsList/model/todos/todolistSelector";
+import { optimizedTodolistSelector } from "features/todolistsList/model/todos/todolistSelector";
 import { authSelect } from "features/auth/model/authSelector";
 import { useActions } from "common/hooks/useActions";
 
@@ -15,8 +15,7 @@ type TodolistsListType = {
   demo?: boolean;
 };
 export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => {
-  // const dispatch = useAppDispatch();
-  const todoLists = useAppSelector(todolistSelector);
+  const todoLists = useAppSelector(optimizedTodolistSelector);
   const isLoggedIn = useAppSelector(authSelect);
 
   const {setTodolists, addTodo}= useActions(todoThunk)
@@ -26,17 +25,11 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
     if (demo || !isLoggedIn) {
       return;
     }
-   setTodolists(); //С функцией TC
-    // dispatch(todoThunk.setTodolists()); //С функцией TC
-
+   setTodolists();
   }, [setTodolists, demo, isLoggedIn]);
 
-
-
-  // ========Добавление Todolist=============================================================
   const addTodolist = useCallback((title: string) => {
       addTodo(title);
-      // dispatch(todoThunk.addTodo(title));
     }, [addTodo]);
 
   const todoListsComponents = todoLists.map((tl) => {
@@ -62,6 +55,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   if (!isLoggedIn) {
     return <Navigate to={"/auth"} />;
   }
+
   return (
     <Container fixed>
       <Grid container style={{ padding: "10px", height: "70px" }}>

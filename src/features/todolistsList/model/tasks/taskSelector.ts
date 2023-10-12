@@ -1,3 +1,7 @@
 import { AppRootStateType } from "app/store";
+import { createSelector } from "@reduxjs/toolkit";
 
-export const taskSelect = (state: AppRootStateType) => state.tasks;
+const taskSelect = (state: AppRootStateType, todoId: string) => state.tasks[todoId];
+export const optimizedTaskSelect = createSelector([taskSelect], (task) => {
+  return task;
+});

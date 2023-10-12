@@ -333,9 +333,9 @@ export const changeTitleTodo = createAppAsyncThunk<CreateTaskType, CreateTaskTyp
 // );
 
 //REDUCER ----------------------------------------------------------
-export type filterValueType = "All" | "Active" | "Completed";
+export type FilterValueType = "All" | "Active" | "Completed";
 export type TodoAppType = TodolistType & {
-  filter: filterValueType;
+  filter: FilterValueType;
   entityStatus: StatusType;
 };
 const initialState: TodoAppType[] = [
@@ -352,7 +352,7 @@ const slice = createSlice({
       const todo = state.find((todo) => todo.id === action.payload.todoId);
       if (todo) todo.entityStatus = action.payload.status;
     },
-    taskFilterTodo: (state, action: PayloadAction<{ todoListsID: string; filter: filterValueType }>) => {
+    taskFilterTodo: (state, action: PayloadAction<{ todoListsID: string; filter: FilterValueType }>) => {
       const todo = state.find((todo) => todo.id === action.payload.todoListsID);
       if (todo) todo.filter = action.payload.filter;
     },

@@ -27,16 +27,7 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
   //=====State Ошибка в случаи попытка отправки пустого поля========================
   let [error, setError] = useState<string | null>(null);
   const errorStop = error ? s.error : "";
-  //===================================================================================================
 
-  //=======Добавление таски======================================================
-  // Кнопка ввода ENter==================================================
-  // const onKeyDownHandler =(event: KeyboardEvent<HTMLInputElement>)=>{
-  //     if(event.key === "Enter"){
-  //         onClickHandlerAddTask()
-  //     }
-  // }
-  //=================================================================
   return (
     <>
       {/*<input*/}
@@ -56,7 +47,6 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
         />
         <Button callBack={onClickHandlerAddTask} style={s.addTask} disabled={disabled} />
       </div>
-      {/*{error && <div className={`${errorStop} ${s.block}`}>{error}</div>}*/}
     </>
   );
 });

@@ -9,57 +9,47 @@ import { TaskStatuses } from "common/api/todolistsApi";
 import { TaskType } from "features/todolistsList/api/tasksApi";
 import { useActions } from "common/hooks/useActions";
 
-export type TaskTypeP = {
+type Props = {
   task: TaskType;
   idTodolist: string;
   disabled?: boolean;
 };
-export const Task = React.memo((props: TaskTypeP) => {
-  const { id, status, title } = props.task;
+export const Task = React.memo((props: Props) => {
   const { deleteTasksTC, updateTaskTC } = useActions(tasksThunk);
 
-  //============CHecked===============================
-  const changeTaskStatusHandler = useCallback((taskId: string, status: TaskStatuses) => {
-      updateTaskTC({
-        todoId: props.idTodolist,
-        taskId: taskId,
-        model: {
-          status: status ? TaskStatuses.New : TaskStatuses.Completed,
-        },
-      });
-    },
-    [updateTaskTC, props.idTodolist]
-  );
+  const changeTaskStatusHandler = useCallback(() => {
+    updateTaskTC({
+      todoId: props.idTodolist,
+      taskId: props.task.id,
+      model: {
+        status: props.task.status ? TaskStatuses.New : TaskStatuses.Completed,
+      },
+    });
+  }, [updateTaskTC, props.idTodolist, props.task.id, props.task.status]);
 
-  const deleteTaskHandler = useCallback((todoId: string, taskId: string) => {
-      deleteTasksTC({ todoId: todoId, taskId: taskId });
-    },
-    [deleteTasksTC]
-  );
+  const deleteTaskHandler = useCallback(() => {
+    deleteTasksTC({ todoId: props.idTodolist, taskId: props.task.id });
+  }, [deleteTasksTC, props.idTodolist, props.task.id]);
 
-  //====Редактирование в task title===============================================
-  const onChangeTitleHandler = useCallback((taskId: string, newValue: string) => {
-      updateTaskTC({ todoId: props.idTodolist, taskId: taskId, model: { title: newValue } });
+  const onChangeTitleHandler = useCallback(
+    (newValue: string) => {
+      updateTaskTC({ todoId: props.idTodolist, taskId: props.task.id, model: { title: newValue } });
     },
-    [updateTaskTC, props.idTodolist]
+    [updateTaskTC, props.idTodolist, props.task.id]
   );
 
   return (
     <>
-      <Button
-        callBack={() => deleteTaskHandler(props.idTodolist, id)}
-        style={s.dellTask}
-        disabled={props.task.entityStatus === "loading"}
-      />
+      <Button callBack={deleteTaskHandler} style={s.dellTask} disabled={props.task.entityStatus === "loading"} />
       <Checkbox
-        checked={status === TaskStatuses.Completed}
-        onChange={() => changeTaskStatusHandler(id, status)}
+        checked={props.task.status === TaskStatuses.Completed}
+        onChange={changeTaskStatusHandler}
         icon={<BookmarkBorder />}
         checkedIcon={<Bookmark />}
         style={{ color: "darkred" }}
         disabled={props.task.entityStatus === "loading"}
       />
-      <EditableSpan title={title} onChange={(newValue) => onChangeTitleHandler(id, newValue)} />
+      <EditableSpan title={props.task.title} onChange={onChangeTitleHandler} />
     </>
   );
 });

@@ -1,41 +1,39 @@
 import React, { useCallback } from "react";
-import { Button } from "common/components/button/Button";
 import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { filterValueType, todoActions, TodoAppType, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
+import { todoActions, TodoAppType, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
 import { Task } from "features/todolistsList/ui/task/Task";
 import { useAppSelector } from "app/store";
 import { tasksThunk } from "features/todolistsList/model/tasks/tasksReducer";
 import { TaskStatuses } from "common/api/todolistsApi";
 import { statusSelector } from "features/todolistsList/model/todos/todolistSelector";
 import { useActions } from "common/hooks/useActions";
+import { optimizedTaskSelect } from "features/todolistsList/model/tasks/taskSelector";
+import { FilterTasksBut } from "features/todolistsList/ui/todolist/filterTasksBut/FilterTasksBut";
 
-export type TodolistPropsType = {
+type TodolistProps = {
   todolist: TodoAppType;
   demo?: boolean;
 };
 
-export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsType) => {
-  //demo если не передали по умолчанию будет false
+export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) => {
   console.log("Todolist");
-
 
   const { id, title, filter } = props.todolist;
 
-  const tasks = useAppSelector((state) => state.tasks[id]);
-
+  // const tasks = useAppSelector((state) => state.tasks[id]);
+  const tasks = useAppSelector((state) => optimizedTaskSelect(state, props.todolist.id));
   const status = useAppSelector(statusSelector);
 
-  const { addTasksTC, deleteTodo, taskFilterTodo, changeTitleTodo } = useActions({
+  const { addTasksTC, deleteTodo, changeTitleTodo } = useActions({
     ...tasksThunk,
     ...todoThunk,
     ...todoActions,
   });
 
-  //================addTask===================================================
   const addTask = useCallback(
     (title: string) => {
       addTasksTC({ todoId: id, title: title });
@@ -44,24 +42,20 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
     [addTasksTC, id]
   );
 
-  // delete todolist=======================================
   const onClickHandlerDeleteTodolist = useCallback(
-    (todolistID: string) => {
-      deleteTodo(todolistID);
-      // dispatch(todoThunk.deleteTodo(todolistID));
+    () => {
+      deleteTodo(props.todolist.id);
     },
-    [deleteTodo]
+    [deleteTodo, props.todolist.id]
   );
   //===============================================================
-  //=========================ФиЛЬТРАЦИЯ==============================
-  let filterTasks = tasks; //Создаем переменную тасок,и если фильтровать не нужно,
+  let filterTasks = tasks;
   if (filter === "Active") {
     filterTasks = tasks.filter((t) => t.status === TaskStatuses.New);
   }
   if (filter === "Completed") {
     filterTasks = tasks.filter((t) => t.status === TaskStatuses.Completed);
   }
-
   // =====================================================================
   //Если лист тасок остался пустой
   const taskListItems = tasks.length ? (
@@ -76,28 +70,9 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
     <div className={s.tasksNull}>Task list is empty</div>
   );
 
-  //===============================================================================
-  //Фильтр ==================================================
-  const changeTasksFilterHandler = useCallback(
-    (filter: filterValueType) => {
-      taskFilterTodo({ todoListsID: id, filter });
-      // dispatch(todoActions.taskFilterTodo({ todoListsID: id, filter }));
-      // props.changeTasksFilter(props.todoListID, filter,);
-    },
-    [taskFilterTodo, id]
-  );
-
-  //=================Focus button filter===================================
-  //filterValue - добавили фильтр из локального стейка
-  const buttonAll = filter === "All" ? s.active : s.default;
-  const buttonActive = filter === "Active" ? s.active : s.default;
-  const buttonCompleted = filter === "Completed" ? s.active : s.default;
-  // =============================================================================
-  //Изм. todolist======================================================================================
   const onChangeHandlerTitleTodolist = useCallback(
     (newValue: string) => {
       changeTitleTodo({ todoId: id, title: newValue });
-      // dispatch(todoThunk.changeTitleTodo({ todoId: id, title: newValue }));
     },
     [changeTitleTodo, id]
   );
@@ -108,30 +83,14 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
       <h3>
         <EditableSpan title={title} onChange={onChangeHandlerTitleTodolist} />
       </h3>
-      <IconButton onClick={() => onClickHandlerDeleteTodolist(id)} color={"error"} disabled={status === "loading"}>
+      <IconButton onClick={onClickHandlerDeleteTodolist} color={"error"} disabled={status === "loading"}>
         <Delete />
       </IconButton>
       <div className={s.block}>
         <FullInput addItem={addTask} disabled={status === "loading"} />
       </div>
       <ul>{taskListItems}</ul>
-      <div>
-        <Button
-          name="All"
-          callBack={useCallback(() => changeTasksFilterHandler("All"), [changeTasksFilterHandler])}
-          style={buttonAll}
-        />
-        <Button
-          name="Active"
-          callBack={useCallback(() => changeTasksFilterHandler("Active"), [changeTasksFilterHandler])}
-          style={buttonActive}
-        />
-        <Button
-          name="Completed"
-          callBack={useCallback(() => changeTasksFilterHandler("Completed"), [changeTasksFilterHandler])}
-          style={buttonCompleted}
-        />
-      </div>
+      <FilterTasksBut todo={props.todolist}/>
     </div>
   );
 });

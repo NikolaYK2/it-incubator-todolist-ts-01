@@ -17,23 +17,13 @@ export const EditableSpan = /*React.*/ memo((props: EditableSpanType) => {
   //=====CONTROL VALUE=====================================================================
   let [title, setTitle] = useState(props.title); //props.title cо старта будет то значение котрое приходит в пропсах
 
-  // const activateEditMode = () => {
-  //     setEditMode(true);
-  //     setTitle(props.title);
-  // }
-  // const activateViewMode = () => {
-  //     setEditMode(false);
-  //     props.onChange(title);
-  // }
-  //Сокращенный вариант=============
   const switching = useCallback(() => {
     if (title !== "") {
       setEditMode(!editMode);
     }
     props.onChange(title);
   }, [props, title, editMode]);
-  //=============================================================================
-  //=====CONTROL VALUE=====================================================================
+
   const onChangeHandlerValue = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
   }, []);
@@ -48,12 +38,6 @@ export const EditableSpan = /*React.*/ memo((props: EditableSpanType) => {
 
   // ============================================================================
   return editMode ? (
-    /*<input className={s.text__input}
-                     value={title}
-                     onChange={onChangeHandlerValue}
-                     onBlur={switching}
-                     onKeyDown={onKeyDownHandlerValue}
-                     autoFocus/>*/
     <TextField
       label={title === "" ? "add & dell" : ""}
       error={!title}
