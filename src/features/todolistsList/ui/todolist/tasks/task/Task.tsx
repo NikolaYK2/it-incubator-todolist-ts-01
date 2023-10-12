@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { Checkbox } from "@mui/material";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 import { tasksThunk } from "features/todolistsList/model/tasks/tasksReducer";
@@ -14,7 +14,7 @@ type Props = {
   idTodolist: string;
   disabled?: boolean;
 };
-export const Task = React.memo((props: Props) => {
+export const Task = memo((props: Props) => {
   const { deleteTasksTC, updateTaskTC } = useActions(tasksThunk);
 
   const changeTaskStatusHandler = useCallback(() => {

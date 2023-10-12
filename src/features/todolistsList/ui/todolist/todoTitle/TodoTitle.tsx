@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import { EditableSpan } from "common/components";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
@@ -11,7 +11,7 @@ import { statusSelector } from "features/todolistsList/model/todos/todolistSelec
 type Props = {
   todolist: TodolistType;
 };
-export const TodoTitle = (props:Props) => {
+export const TodoTitle = memo((props:Props) => {
   const {id, title} = props.todolist;
 
   const status = useAppSelector(statusSelector);
@@ -39,4 +39,4 @@ export const TodoTitle = (props:Props) => {
       </IconButton>
     </>
   );
-};
+});

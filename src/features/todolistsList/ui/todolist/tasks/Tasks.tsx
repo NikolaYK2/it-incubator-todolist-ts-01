@@ -9,7 +9,7 @@ import s from "./Tasks.module.css";
 type Props={
   todolist:TodoAppType;
 }
-export const Tasks = (props:Props) => {
+export const Tasks = React.memo((props:Props) => {
   const { id, filter } = props.todolist;
 
   // const tasks = useAppSelector((state) => state.tasks[id]);
@@ -38,4 +38,4 @@ export const Tasks = (props:Props) => {
       )}
     </>
   );
-};
+});
