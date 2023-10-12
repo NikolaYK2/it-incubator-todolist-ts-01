@@ -55,7 +55,6 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   if (!isLoggedIn) {
     return <Navigate to={"/auth"} />;
   }
-
   return (
     <Container fixed>
       <Grid container style={{ padding: "10px", height: "70px" }}>

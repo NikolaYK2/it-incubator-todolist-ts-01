@@ -389,7 +389,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
 import { todoActions, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
 import { createAppAsyncThunk, handleServerAppError } from "common/utils";
-import { ResultCode, TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
+import { ResultCode } from "common/api/todolistsApi";
 import {
   ArgUpdateTaskType,
   CreateTaskType,
@@ -398,8 +398,6 @@ import {
   UpdTaskType
 } from "features/todolistsList/api/tasksApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
-// import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
-// import { createAppAsyncThunk } from "utils/createAppAsyncThunk";
 
 //extra --------------
 const setTasksTC = createAppAsyncThunk<{ todoId: string; tasks: TaskType[] }, string>(
@@ -506,14 +504,7 @@ export const deleteTasksTC = createAppAsyncThunk(
 // );
 
 //UPD task ----------------------------------------------------------------
-export type UpdTaskTCType = {
-  title?: string;
-  description?: string;
-  status?: TaskStatuses;
-  priority?: TodoTaskPriorities;
-  startDate?: string;
-  deadline?: string;
-};
+export type UpdTaskTCType = Partial<UpdTaskType>
 const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
   "task/updateTas",
   async (arg, thunkAPI) => {
