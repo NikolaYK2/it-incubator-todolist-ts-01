@@ -16,11 +16,12 @@ import { authThunk } from "features/auth/authReducer";
 import { AuthLoginType } from "features/auth/authApi";
 import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 
-type FormikErrorType = {
-  email?: string;
-  password?: string;
-  rememberMe?: boolean;
-};
+type FormikErrorType = Partial<Omit<AuthLoginType, 'captcha'>>
+//   email?: string;
+//   password?: string;
+//   rememberMe?: boolean;
+// };
+
 export const Login = () => {
   const dispatch = useAppDispatch();
   const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
@@ -122,7 +123,7 @@ export const Login = () => {
                 <FormLabel sx={{ color: "#1976D2" }}>
                   <p>
                     To log in get registered
-                    <a href={"https://social-network.samuraijs.com/"} target={"_blank"}>
+                    <a href={"https://social-network.samuraijs.com/"} target={"_blank"} rel="noreferrer">
                       {" "}
                       here
                     </a>

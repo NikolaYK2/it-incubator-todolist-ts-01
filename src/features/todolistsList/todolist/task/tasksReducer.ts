@@ -606,9 +606,10 @@ const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
 export type EntStatusType = {
   entityStatus?: StatusType;
 };
-export type TaskStateType = {
-  [todolistID: string]: TaskType[];
-};
+export type TaskStateType = Record<string, TaskType[]>
+//   [todolistID: string]: TaskType[];
+// };
+
 export const initialState: TaskStateType = {
   // [todolistID_1]: [
   //     {id: v1(), title: "HTML&CSS", isDone: true},
