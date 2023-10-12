@@ -1,16 +1,16 @@
 import React, { useCallback } from "react";
 import { Button } from "common/components/button/Button";
-import s from "./Todolist.module.css";
+import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { filterValueType, todoActions, TodoAppType, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
-import { Task } from "./task/Task";
+import { filterValueType, todoActions, TodoAppType, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
+import { Task } from "features/todolistsList/ui/task/Task";
 import { useAppSelector } from "app/store";
-import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
+import { tasksThunk } from "features/todolistsList/model/tasks/tasksReducer";
 import { TaskStatuses } from "common/api/todolistsApi";
-import { statusSelector } from "features/todolistsList/todolist/todolistSelector";
+import { statusSelector } from "features/todolistsList/model/todos/todolistSelector";
 import { useActions } from "common/hooks/useActions";
 
 export type TodolistPropsType = {
@@ -22,11 +22,9 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   //demo если не передали по умолчанию будет false
   console.log("Todolist");
 
-  // if (typeof props.demo === 'undefined') props.demo = false;//что бы не делать тут проверки,  делаем ее в пропсах
 
   const { id, title, filter } = props.todolist;
 
-  // const dispatch = useAppDispatch();//no use
   const tasks = useAppSelector((state) => state.tasks[id]);
 
   const status = useAppSelector(statusSelector);
@@ -49,7 +47,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistPropsTyp
   // delete todolist=======================================
   const onClickHandlerDeleteTodolist = useCallback(
     (todolistID: string) => {
-      // dispatch(deleteTodolistAC(todolistID));
       deleteTodo(todolistID);
       // dispatch(todoThunk.deleteTodo(todolistID));
     },

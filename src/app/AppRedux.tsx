@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./App.css";
-import { TodolistsList } from "features/todolistsList/TodolistsList";
+import { TodolistsList } from "features/todolistsList/ui/TodolistsList";
 import { Login } from "features/auth/ui/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAppSelector } from "./store";

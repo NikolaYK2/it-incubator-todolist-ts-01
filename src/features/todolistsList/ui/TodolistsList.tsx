@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect } from "react";
-import { todoThunk } from "features/todolistsList/todolist/todoListsReducer";
+import { todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Todolist } from "./todolist/Todolist";
+import { Todolist } from "features/todolistsList/ui/todolist/Todolist";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "app/store";
-import { todolistSelector } from "features/todolistsList/todolist/todolistSelector";
+import { todolistSelector } from "features/todolistsList/model/todos/todolistSelector";
 import { authSelect } from "features/auth/model/authSelector";
 import { useActions } from "common/hooks/useActions";
 
@@ -40,20 +40,6 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
     }, [addTodo]);
 
   const todoListsComponents = todoLists.map((tl) => {
-    // //=========================ФиЛЬТРАЦИЯ==============================
-    // let filterTasks = tasks[tl.id];//[tl.id] - обращение к конкретному тудулисту, то есть его id
-    // if (tl.filter === "Active") {
-    //     // filterTasks = tasks.filter((el) => el.isDone);
-    //     //Ассоциативный ===================================================
-    //     filterTasks = tasks[tl.id].filter(t => t.isDone);
-    // }
-    // if (tl.filter === "Completed") {
-    //     // filterTasks = tasks.filter(el => !el.isDone);
-    //     //Ассоциативный ===================================================
-    //     filterTasks = tasks[tl.id].filter(t => !t.isDone);
-    // }
-    // //==================================================================
-
     return (
       <Grid item key={tl.id}>
         <Paper

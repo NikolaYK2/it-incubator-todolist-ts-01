@@ -35,17 +35,17 @@
 //     } else if (action.type === 'DELETE-TODO') {
 //         // setTodoLists(todoLists.filter(tl => tl.id !== todolistID))
 //         // delete tasks[todolistID];// И нужно еще удалить объект с тасками, что бы мусора не было
-//         return state.filter(todo => todo.id !== action.payload.todolistID)
+//         return state.filter(todos => todos.id !== action.payload.todolistID)
 //
 //     } else if (action.type === 'CHANGE-TITLE-TODO') {
 //         // setTodoLists(todoLists.map(tl => tl.id === todoId ? {...tl, title: newValue} : tl));
 //
 //     } else if (action.type === 'CHANGE-ENT-STATUS-TODO') {
 //         // setTodoLists(todoLists.map(tl => tl.id === todoId ? {...tl, title: newValue} : tl));
-//         return state.map(todo => todo.id === action.payload.todoId ? {
-//             ...todo,
+//         return state.map(todos => todos.id === action.payload.todoId ? {
+//             ...todos,
 //             entityStatus: action.payload.status
-//         } : todo);
+//         } : todos);
 //
 //     } else if (action.type === 'TASK-FILTER-TODO') {
 //         //     setFilterValue(filterValue);
@@ -138,8 +138,8 @@
 //             return res.data//Делаем для того, что б сетать таски только после того, как загрузятся тудулисты
 //         })
 //         .then((todos) => {//а вот только теперь достаем наши таски
-//             todos.forEach((todo) => {
-//                 dispatch(setTasksTC(todo.id))
+//             todos.forEach((todos) => {
+//                 dispatch(setTasksTC(todos.id))
 //             })
 //         })
 //         .catch(error => {
@@ -202,16 +202,16 @@
 //RTK ====================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
-import { tasksThunk } from "features/todolistsList/todolist/task/tasksReducer";
+import { tasksThunk } from "features/todolistsList/model/tasks/tasksReducer";
 import { handleServerAppError, handleServerNetworkError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
-import { todolistsApi, TodolistType } from "features/todolistsList/todolist/todolistsApi";
+import { todolistsApi, TodolistType } from "features/todolistsList/api/todolistsApi";
 import { ResultCode } from "common/api/todolistsApi";
-import { CreateTaskType } from "features/todolistsList/todolist/task/tasksApi";
+import { CreateTaskType } from "features/todolistsList/api/tasksApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 //extra --------
-const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }>("todo/setTodo", async (_, thunkAPI) => {
+const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }>("todos/setTodo", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
 
   dispatch(appAction.setStatus({ status: "loading" }));
@@ -229,7 +229,7 @@ const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }>("todo/set
   }
 });
 
-const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>("todo/addTodo", async (title, thunkAPI) => {
+const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>("todos/addTodo", async (title, thunkAPI) => {
   const { dispatch } = thunkAPI;
   return thunkTryCatch(thunkAPI, async () => {
     const res = await todolistsApi.createTodolists(title);
@@ -238,7 +238,7 @@ const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>("todo/ad
   });
 });
 // const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>(
-//   "todo/addTodo",
+//   "todos/addTodo",
 //   async (title, { dispatch, rejectWithValue }) => {
 //     dispatch(appAction.setStatus({ status: "loading" }));
 //     try {
@@ -253,7 +253,7 @@ const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>("todo/ad
 // );
 
 export const deleteTodo = createAppAsyncThunk<{ todolistID: string }, string>(
-  "todo/deletTodo",
+  "todos/deletTodo",
   async (todoId, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
@@ -271,7 +271,7 @@ export const deleteTodo = createAppAsyncThunk<{ todolistID: string }, string>(
   }
 );
 // export const deleteTodo = createAppAsyncThunk<{ todolistID: string },string>(
-//   "todo/deletTodo", async (todoId, { dispatch, rejectWithValue }) => {
+//   "todos/deletTodo", async (todoId, { dispatch, rejectWithValue }) => {
 //   dispatch(appAction.setStatus({ status: "loading" }));
 //   dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "loading" }));
 //   try {
@@ -296,7 +296,7 @@ export const deleteTodo = createAppAsyncThunk<{ todolistID: string }, string>(
 // });
 
 export const changeTitleTodo = createAppAsyncThunk<CreateTaskType, CreateTaskType>(
-  "todo/changeTitleTodo",
+  "todos/changeTitleTodo",
   async (arg, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
     return thunkTryCatch(thunkAPI, async () => {
@@ -312,7 +312,7 @@ export const changeTitleTodo = createAppAsyncThunk<CreateTaskType, CreateTaskTyp
   }
 );
 // export const changeTitleTodo = createAppAsyncThunk<CreateTaskType, CreateTaskType>(
-//   "todo/changeTitleTodo",
+//   "todos/changeTitleTodo",
 //   async (arg, { dispatch, rejectWithValue }) => {
 //     dispatch(appAction.setStatus({ status: "loading" }));
 //     try {
@@ -373,7 +373,7 @@ const slice = createSlice({
         if (index !== -1) {
           state.splice(index, 1);
         }
-        // return state.filter(todo => todo.id !== action.payload.todolistID)
+        // return state.filter(todos => todos.id !== action.payload.todolistID)
       })
       .addCase(changeTitleTodo.fulfilled, (state, action) => {
         const todo = state.find((todo) => todo.id === action.payload.todoId);

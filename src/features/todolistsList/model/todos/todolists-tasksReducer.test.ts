@@ -1,6 +1,6 @@
-import { TodoAppType, todoListsReducer, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
-import { tasksReducer, TaskStateType } from "features/todolistsList/todolist/task/tasksReducer";
-import { TodolistType } from "features/todolistsList/todolist/todolistsApi";
+import { TodoAppType, todoListsReducer, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
+import { tasksReducer, TaskStateType } from "features/todolistsList/model/tasks/tasksReducer";
+import { TodolistType } from "features/todolistsList/api/todolistsApi";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 
 test("ids should be equals", () => {
@@ -43,7 +43,7 @@ test("ids should be equals", () => {
 test("delete todolist and task", () => {
   const tasks: TaskStateType = {
     //tasks переменная в которой лежат данные, в данном случаи обьекты
-    ["todolistID_1"]: [
+    "todolistID_1": [
       {
         id: "1",
         title: "HTML&CSS",
@@ -93,7 +93,7 @@ test("delete todolist and task", () => {
         description: "",
       },
     ],
-    ["todolistID_2"]: [
+    "todolistID_2": [
       {
         id: "1",
         title: "Beer",

@@ -79,7 +79,7 @@ import { handleServerAppError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi, AuthLoginType } from "features/auth/api/authApi";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
-import { todoActions } from "features/todolistsList/todolist/todoListsReducer";
+import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 //extra ------------------------------

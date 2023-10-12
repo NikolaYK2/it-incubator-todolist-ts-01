@@ -3,7 +3,7 @@ import {
   TodoAppType,
   todoListsReducer,
   todoThunk,
-} from "features/todolistsList/todolist/todoListsReducer";
+} from "features/todolistsList/model/todos/todoListsReducer";
 
 let todoLists: TodoAppType[];
 beforeEach(() => {

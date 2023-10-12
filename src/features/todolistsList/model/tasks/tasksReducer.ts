@@ -387,7 +387,7 @@
 //RTK ====================================================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/appReducer";
-import { todoActions, todoThunk } from "features/todolistsList/todolist/todoListsReducer";
+import { todoActions, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
 import { createAppAsyncThunk, handleServerAppError } from "common/utils";
 import { ResultCode, TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 import {
@@ -396,7 +396,7 @@ import {
   tasksApi,
   TaskType,
   UpdTaskType
-} from "features/todolistsList/todolist/task/tasksApi";
+} from "features/todolistsList/api/tasksApi";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 // import { handleServerAppError, handleServerNetworkError } from "utils/errorUtils";
 // import { createAppAsyncThunk } from "utils/createAppAsyncThunk";

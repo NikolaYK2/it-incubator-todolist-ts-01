@@ -1,5 +1,5 @@
 import { instance, BaseResponsTodolistsType, TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
-import { EntStatusType, UpdTaskTCType } from "features/todolistsList/todolist/task/tasksReducer";
+import { EntStatusType, UpdTaskTCType } from "features/todolistsList/model/tasks/tasksReducer";
 
 export type UpdTaskType = {
   title: string;
@@ -40,7 +40,6 @@ export type ArgUpdateTaskType = {
 };
 
 export const tasksApi={
-  //TASK================================================
   getTasks(todoId: string) {
     return instance.get<GetTaskType>(`todo-lists/${todoId}/tasks`);
   },
@@ -58,5 +57,4 @@ export const tasksApi={
       model
     );
   },
-
 }
