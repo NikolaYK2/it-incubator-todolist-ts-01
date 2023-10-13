@@ -22,8 +22,7 @@ export default {
 const Template: ComponentStory<typeof FullInput> = (args) => <FullInput {...args} />;
 export const FullInputExample = Template.bind({});
 FullInputExample.args = {
-  // addItem:callback,
-  addItem: action("button clicked inside from"),
+  addItem: async () => action("button clicked inside from"),
 };
 const Template1: ComponentStory<typeof FullInput> = (args) => <FullInput {...args} disabled={true} />;
 export const FullInputDisabled = Template1.bind({});
@@ -71,5 +70,5 @@ const Template2: ComponentStory<typeof FullInput> = (args) => {
 
 export const FullInputError = Template2.bind({});
 FullInputError.args = {
-  addItem: action("button clicked inside from"),
+  addItem: async ()=>action("button clicked inside from"),
 };

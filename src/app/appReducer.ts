@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authActions } from "features/auth/model/authReducer";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi } from "features/auth/api/authApi";
@@ -105,22 +105,25 @@ import { thunkTryCatch } from "common/utils/thunkTryCatch";
 //RTK ==================================================================
 
 //thunk -------------------------------------------------------------
-export const initializedApp = createAppAsyncThunk</*{isLoggedIn: boolean}*/undefined, undefined>("app/init", async (_, thunkAPI) => {
-  const { dispatch, rejectWithValue } = thunkAPI;
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await authApi.me();
-    if (res.data.resultCode === ResultCode.Ok) {
-      // return { isLoggedIn: true }
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-      return;
-    } else {
-      // handleServerAppError(res.data, dispatch);
-      return rejectWithValue(null);
-    }
-  }).finally(() => {
-    dispatch(appAction.initializedApp({ initialized: true }));
-  });
-});
+export const initializedApp = createAppAsyncThunk</*{isLoggedIn: boolean}*/ undefined, undefined>(
+  "app/init",
+  async (_, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI;
+    return thunkTryCatch(thunkAPI, async () => {
+      const res = await authApi.me();
+      if (res.data.resultCode === ResultCode.Ok) {
+        // return { isLoggedIn: true }
+        dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+        return;
+      } else {
+        // handleServerAppError(res.data, dispatch);
+        return rejectWithValue(null);
+      }
+    }).finally(() => {
+      dispatch(appAction.initializedApp({ initialized: true }));
+    });
+  }
+);
 // export const initializedApp = createAppAsyncThunk<undefined, undefined>(
 //   "app/init",
 //   async (_, { dispatch, rejectWithValue }) => {
@@ -174,14 +177,32 @@ const slice = createSlice({
       state.initialized = action.payload.initialized;
     },
   },
-  extraReducers: () => {
-    // builder
-    //   .addCase(initializedApp.fulfilled, (state, action) => {
-    //     state.initialized = true;
-    //   })
-  //     .addCase(initializedApp.rejected, (state, action) => {
-  //       state.initialized = true;
-  //     });
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(
+        (action: AnyAction) => {
+          return action.type.endsWith("/pending");
+        },
+        (state) => {
+          state.status = "loading";
+        }
+      )
+      .addMatcher(
+        (action: AnyAction) => {
+          return action.type.endsWith("/rejected");
+        },
+        (state) => {
+          state.status = "failed";
+        }
+      )
+      .addMatcher(
+        (action: AnyAction) => {
+          return action.type.endsWith("/fulfilled");
+        },
+        (state) => {
+          state.status = "succeeded";
+        }
+      );
   },
 });
 

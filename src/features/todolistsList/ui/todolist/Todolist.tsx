@@ -22,11 +22,11 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) =
 
   const status = useAppSelector(statusSelector);
 
-  const { addTasksTC} = useActions(tasksThunk);
+  const { addTasksTC } = useActions(tasksThunk);
 
   const addTask = useCallback(
     (title: string) => {
-      addTasksTC({ todoId: id, title: title });
+      return addTasksTC({ todoId: id, title: title });
     },
     [addTasksTC, id]
   );

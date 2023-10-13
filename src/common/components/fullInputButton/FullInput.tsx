@@ -2,50 +2,49 @@ import React, { useCallback, useState } from "react";
 import { UniversalInput } from "common/components/input/UniversalInput";
 import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { Button } from "common/components/button/Button";
+import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 
 type FullInputType = {
-  addItem: (addTitle: string) => void;
+  addItem: (addTitle: string) => Promise<unknown>;
   disabled?: boolean;
 };
 
 export const FullInput = React.memo(({ disabled = false, ...props }: FullInputType) => {
   //=======State Добавление таски======================================================
   const [addTitle, setAddTitle] = useState<string>("");
+  //=====State Ошибка в случаи попытка отправки пустого поля========================
+  let [error, setError] = useState<string | null>(null);
+  const errorStop = error ? s.error : "";
 
   console.log("add input");
-  const onClickHandlerAddTask = useCallback(() => {
+  const handlerAddTask = useCallback(() => {
     if (addTitle.trim() !== "") {
-      //что-б и пробелы не считались за символы, убираем
-      props.addItem(addTitle.trim()); //trim()- убираем пробелы вначале и конце
-      setAddTitle("");
+      props.addItem(addTitle.trim())
+        .then(()=>{
+        setAddTitle("");
+      }).catch((e:BaseResponsTodolistsType)=>{
+        setError(e.messages[0])
+      })
     } else {
       setError("Заполни полe Чувак!");
     }
   }, [addTitle, props]);
   //=====================================================================================
 
-  //=====State Ошибка в случаи попытка отправки пустого поля========================
-  let [error, setError] = useState<string | null>(null);
-  const errorStop = error ? s.error : "";
 
   return (
     <>
-      {/*<input*/}
-      {/*    value={addTitle}*/}
-      {/*    onChange={onChangeHandlerAddTask}*/}
-      {/*    onKeyDown={onKeyDownHandler}*/}
-      {/*/>*/}
       <div className={s.input__block}>
         <UniversalInput
           setAddTitle={setAddTitle}
           addTitle={addTitle}
-          callback={onClickHandlerAddTask}
+          callback={handlerAddTask}
           setError={setError}
           style={errorStop}
           error={error}
           disabled={disabled}
         />
-        <Button callBack={onClickHandlerAddTask} style={s.addTask} disabled={disabled} />
+        <Button callBack={handlerAddTask} style={s.addTask} disabled={disabled} />
       </div>
     </>
   );

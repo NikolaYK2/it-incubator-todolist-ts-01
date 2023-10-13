@@ -29,7 +29,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   }, [setTodolists, demo, isLoggedIn]);
 
   const addTodolist = useCallback((title: string) => {
-      addTodo(title);
+      return addTodo(title).unwrap();
     }, [addTodo]);
 
   const todoListsComponents = todoLists.map((tl) => {

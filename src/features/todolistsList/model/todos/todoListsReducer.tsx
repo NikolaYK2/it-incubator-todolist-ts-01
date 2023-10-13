@@ -230,11 +230,15 @@ const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }>("todos/se
 });
 
 const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>("todos/addTodo", async (title, thunkAPI) => {
-  const { dispatch } = thunkAPI;
+  const { dispatch, rejectWithValue } = thunkAPI;
   return thunkTryCatch(thunkAPI, async () => {
     const res = await todolistsApi.createTodolists(title);
-    dispatch(appAction.setStatus({ status: "succeeded" }));
-    return { todolist: res.data.data.item };
+    if (res.data.resultCode === ResultCode.Ok) {
+      return { todolist: res.data.data.item };
+    } else {
+      handleServerAppError(res.data, dispatch);
+      return rejectWithValue(res.data);
+    }
   });
 });
 // const addTodo = createAppAsyncThunk<{ todolist: TodolistType }, string>(

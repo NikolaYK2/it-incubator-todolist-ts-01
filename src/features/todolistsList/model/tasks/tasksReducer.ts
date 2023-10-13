@@ -436,7 +436,7 @@ const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("task
       return { task: res.data.data.item };
     } else {
       handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
-      return rejectWithValue(null);
+      return rejectWithValue(res.data);
     }
   });
 });

@@ -35,8 +35,6 @@ export const handleServerNetworkError = (error: unknown, dispatch: AppDispatch):
 
   // ❗Проверка на наличие axios ошибки
   if (axios.isAxiosError(error)) {
-    // ⏺️ err.response?.data?.message - например получение тасок с невалидной todolistId
-    // ⏺️ err?.message - например при создании таски в offline режиме
     errorMessage = error.response?.data?.message || error?.message || errorMessage;
     // ❗ Проверка на наличие нативной ошибки
   } else if (error instanceof Error) {

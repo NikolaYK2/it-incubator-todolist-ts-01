@@ -12,8 +12,9 @@
 }
 
 .universalInput {
-  display: inline-block;
+  display: block;
   margin: 0 10px 0 0;
+  max-width: 400px;
 }
 .sss {
   background-color: #000;
@@ -26,10 +27,3 @@
   background-color: transparent;
   color: white;
 }
-/*.modified:hover{*/
-/*    border-bottom: #fff 2px solid;*/
-/*    transition: all 0.2s ease;*/
-/*}    .modified:focus{*/
-/*        animation: inputBorder .3s ease forwards;*/
-
-/*}*/
