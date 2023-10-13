@@ -1,4 +1,4 @@
-import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isFulfilled, isPending, isRejected, PayloadAction } from "@reduxjs/toolkit";
 import { authActions } from "features/auth/model/authReducer";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi } from "features/auth/api/authApi";
@@ -179,30 +179,15 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addMatcher(
-        (action: AnyAction) => {
-          return action.type.endsWith("/pending");
-        },
-        (state) => {
-          state.status = "loading";
-        }
-      )
-      .addMatcher(
-        (action: AnyAction) => {
-          return action.type.endsWith("/rejected");
-        },
-        (state) => {
-          state.status = "failed";
-        }
-      )
-      .addMatcher(
-        (action: AnyAction) => {
-          return action.type.endsWith("/fulfilled");
-        },
-        (state) => {
-          state.status = "succeeded";
-        }
-      );
+      .addMatcher(isPending, (state) => {
+        state.status = "loading";
+      })
+      .addMatcher(isRejected, (state) => {
+        state.status = "failed";
+      })
+      .addMatcher(isFulfilled, (state) => {
+        state.status = "succeeded";
+      });
   },
 });
 
