@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { TodoAppType } from "features/todolistsList/model/todos/todoListsReducer";
@@ -22,7 +22,11 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) =
 
   const status = useAppSelector(statusSelector);
 
-  const { addTasksTC } = useActions(tasksThunk);
+  const { addTasksTC, setTasksTC } = useActions(tasksThunk);
+
+  useEffect(() => {
+    setTasksTC(id)
+  }, []);
 
   const addTask = useCallback(
     (title: string) => {

@@ -10,7 +10,7 @@ export type TodolistType = {
 export const todolistsApi = {
   //TODolis =====================================================================
   getTodolists() {
-    return instance.get<Array<TodolistType>>(`todo-lists/`);
+    return instance.get<TodolistType[]>(`todo-lists/`);
   },
   createTodolists(title: string) {
     return instance.post<BaseResponsTodolistsType<{ item: TodolistType }>>("todo-lists/", { title: title });

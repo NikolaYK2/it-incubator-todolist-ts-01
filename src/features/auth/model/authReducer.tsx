@@ -74,7 +74,7 @@
 
 //RTK --------------------------------------------------
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { appAction, appThunk } from "app/appReducer";
+import { appThunk } from "app/appReducer";
 import { handleServerAppError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi, AuthLoginType } from "features/auth/api/authApi";
@@ -85,51 +85,15 @@ import { thunkTryCatch } from "common/utils/thunkTryCatch";
 //extra ------------------------------
 const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: BaseResponsTodolistsType | null }>(
   "auth/login",
-  async (data, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    dispatch(appAction.setStatus({ status: "loading" }));
-    return thunkTryCatch(thunkAPI, async () => {
+  async (data, {rejectWithValue}) => {
       const res = await authApi.authLogin(data);
       if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(appAction.setStatus({ status: "succeeded" }));
         return;
       } else {
-        const isShowAppError = !res.data.fieldsErrors.length;
-        handleServerAppError(res.data, dispatch, isShowAppError); //глобально не обрабатываемЮ по этому комент
         return rejectWithValue(res.data);
       }
-    });
   }
 );
-// );const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: BaseResponsTodolistsType | null }>(
-//   "auth/login",
-//   async (data, thunkAPI) => {
-//     // const authLogin = createAppAsyncThunk<{ isLoggedIn: boolean }, AuthLoginType>("auth/login", async (data, thunkAPI) => {
-//     const { dispatch, rejectWithValue } = thunkAPI;
-//     dispatch(appAction.setStatus({ status: "loading" }));
-//     try {
-//       const res = await authApi.authLogin(data);
-//       if (res.data.resultCode === ResultCode.Ok) {
-//         dispatch(appAction.setStatus({ status: "succeeded" }));
-//         // dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-//
-//         return;
-//         // return { isLoggedIn: true };
-//       } else {
-//         // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
-//         // в конкретном поле в компоненте (пункт 7)
-//         // ❗ Если у нас fieldsErrors нету значит отобразим ошибку глобально
-//         const isShowAppError = !res.data.fieldsErrors.length
-//         handleServerAppError(res.data, dispatch, isShowAppError);//глобально не обрабатываемЮ по этому комент
-//         return rejectWithValue(res.data);
-//       }
-//     } catch (error) {
-//       handleServerNetworkError(error, dispatch);
-//       return rejectWithValue(null);
-//       // return { isLoggedIn: false };
-//     }
-//   }
-// );
 
 const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
@@ -137,6 +101,7 @@ const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", asyn
     const res = await authApi.logout();
     if (res.data.resultCode === ResultCode.Ok) {
       dispatch(todoActions.clearData());
+      // dispatch(clearTodoTask());
       return;
     } else {
       handleServerAppError(res.data, dispatch);
@@ -145,31 +110,6 @@ const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", asyn
     return rejectWithValue(null);
   });
 });
-// const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", async (_, thunkAPI) => {
-//   const { dispatch, rejectWithValue } = thunkAPI;
-//   dispatch(appAction.setStatus({ status: "loading" }));
-//   try {
-//     const res = await authApi.logout();
-//     if (res.data.resultCode === ResultCode.Ok) {
-//       // dispatch(authThunk.authLogin({ isLoggedIn: false }));
-//       dispatch(appAction.setStatus({ status: "succeeded" }));
-//       dispatch(todoActions.clearData());
-//
-//       return;
-//       // dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
-//
-//       // dispatch(clearTodoTask({tasks:{}, todoLists:[]}));
-//       // dispatch(clearTodoTask({}, []));
-//     } else {
-//       handleServerAppError(res.data, dispatch);
-//     }
-//     dispatch(appThunk.initializedApp());
-//     return rejectWithValue(null);
-//   } catch (error) {
-//     handleServerNetworkError(error, dispatch);
-//     return rejectWithValue(null);
-//   }
-// });
 
 // slice - редьюсеры создаем с помощью функции createSlice
 export type AuthInitType = {

@@ -23,7 +23,9 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
         .then(()=>{
         setAddTitle("");
       }).catch((e:BaseResponsTodolistsType)=>{
-        setError(e.messages[0])
+        if (e?.resultCode) {
+          setError(e.messages[0])
+        }
       })
     } else {
       setError("Заполни полe Чувак!");
