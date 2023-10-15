@@ -438,13 +438,12 @@ export const deleteTasksTC = createAppAsyncThunk(
   "tasks/deleteTask",
   async (arg: { todoId: string; taskId: string }, thunkAPI) => {
     const { dispatch } = thunkAPI;
-    return thunkTryCatch(thunkAPI, async () => {
-      const res = await tasksApi.deleteTask(arg.todoId, arg.taskId);
-      if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(appAction.setStatus({ status: "succeeded" }));
+    dispatch(taskActions.changeEntStatusTask({taskId:arg.taskId, todoId:arg.todoId, status: 'loading'}))
+    const res = await tasksApi.deleteTask(arg.todoId, arg.taskId);
+    if (res.data.resultCode === ResultCode.Ok) {
+        dispatch(taskActions.changeEntStatusTask({taskId:arg.taskId, todoId:arg.todoId, status: 'idle'}))
         return { todoId: arg.todoId, taskId: arg.taskId };
       }
-    });
   }
 );
 
@@ -499,7 +498,8 @@ export type TaskStateType = Record<string, TaskType[]>
 //   [todolistID: string]: TaskType[];
 // };
 
-export const initialState: TaskStateType & EntStatusType= {
+export const initialState: TaskStateType = {
+
   // [todolistID_1]: [
   //     {id: v1(), title: "HTML&CSS", isDone: true},
   //     {id: v1(), title: "JS", isDone: true},
@@ -569,7 +569,8 @@ const slice = createSlice({
       })
       .addCase(todoActions.clearData, () => {
         return {};
-      });
+      })
+
     //Или используем commonAction --------
     //   .addCase(clearTodoTask, ()=>{
     //     return {}
