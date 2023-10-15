@@ -37,7 +37,7 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) =
 
 
   return (
-    <div>
+    <>
       <TodoTitle todolist={props.todolist}/>
       <div className={s.block}>
         <FullInput addItem={addTask} disabled={status === "loading"} />
@@ -46,6 +46,6 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) =
         <Tasks todolist={props.todolist}/>
       </ul>
       <FilterTasksBut todo={props.todolist} />
-    </div>
+    </>
   );
 });

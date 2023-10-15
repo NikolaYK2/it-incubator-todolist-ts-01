@@ -395,7 +395,7 @@ import {
   CreateTaskType,
   tasksApi,
   TaskType,
-  UpdTaskType
+  UpdTaskType,
 } from "features/todolistsList/api/tasksApi";
 
 //extra --------------
@@ -410,7 +410,7 @@ const setTasksTC = createAppAsyncThunk<{ tasks: TaskType[]; todoId: string }, st
 //extra -----------------------------
 const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("tasks/addTasks", async (arg, thunkAPI) => {
   const { rejectWithValue } = thunkAPI;
-  const res = await tasksApi.createTask(arg)
+  const res = await tasksApi.createTask(arg);
   if (res.data.resultCode === ResultCode.Ok) {
     return { task: res.data.data.item };
   } else {
