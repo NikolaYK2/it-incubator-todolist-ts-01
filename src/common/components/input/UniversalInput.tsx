@@ -41,7 +41,7 @@ export const UniversalInput = React.memo((props: UniversalInputType) => {
         size="small"
         variant="filled"
         color="success"
-        label={props.error ? "удали или заполни" : "add title"}
+        label={props.error ? "Delete or fill" : "add title"}
         error={!!props.error}
         value={props.addTitle}
         onChange={onChangeHandlerAddTask}

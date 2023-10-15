@@ -7,7 +7,7 @@ import { Todolist } from "features/todolistsList/ui/todolist/Todolist";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "app/store";
-import { optimizedTodolistSelector } from "features/todolistsList/model/todos/todolistSelector";
+import { optimizedTodolistSelector, statusSelector } from "features/todolistsList/model/todos/todolistSelector";
 import { authSelect } from "features/auth/model/authSelector";
 import { useActions } from "common/hooks/useActions";
 
@@ -17,6 +17,7 @@ type TodolistsListType = {
 export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => {
   const todoLists = useAppSelector(optimizedTodolistSelector);
   const isLoggedIn = useAppSelector(authSelect);
+  const status = useAppSelector(statusSelector);
 
   const {setTodolists, addTodo}= useActions(todoThunk)
 
@@ -58,7 +59,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   return (
     <Container fixed>
       <Grid container style={{ padding: "10px", height: "70px" }}>
-        <FullInput addItem={addTodolist} />
+        <FullInput addItem={addTodolist} disabled={status === 'loading'}/>
       </Grid>
       <Grid container spacing={4}>
         {todoListsComponents}
