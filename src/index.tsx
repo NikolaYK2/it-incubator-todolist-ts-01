@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import AppRedux from "./app/AppRedux";
+import AppRedux from "app/ui/AppRedux";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { store } from "app/store";
+import { store } from "app/model/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(

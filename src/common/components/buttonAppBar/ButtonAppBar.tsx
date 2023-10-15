@@ -9,9 +9,9 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import LinearProgress from "@mui/material/LinearProgress";
 import { ErrorSnackbar } from "common/components/errorSnackbar/ErrorSnackbar";
-import { StatusType } from "app/appReducer";
+import { StatusType } from "app/model/appReducer";
 import { authThunk } from "features/auth/model/authReducer";
-import { useAppDispatch, useAppSelector } from "app/store";
+import { useAppDispatch, useAppSelector } from "app/model/store";
 
 export function ButtonAppBar() {
   const status = useAppSelector<StatusType>((state) => state.app.status);

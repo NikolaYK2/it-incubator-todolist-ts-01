@@ -44,6 +44,7 @@ export const EditableSpan = /*React.*/ memo((props: EditableSpanType) => {
       value={title}
       size="small"
       variant="filled"
+      disabled={props.disabled}
       onChange={onChangeHandlerValue}
       onBlur={switching}
       onKeyDown={onKeyDownHandlerValue}

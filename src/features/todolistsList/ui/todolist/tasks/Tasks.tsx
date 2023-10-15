@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppSelector } from "app/store";
+import { useAppSelector } from "app/model/store";
 import { optimizedTaskSelect } from "features/todolistsList/model/tasks/taskSelector";
 import { TaskStatuses } from "common/api/todolistsApi";
 import { Task } from "features/todolistsList/ui/todolist/tasks/task/Task";

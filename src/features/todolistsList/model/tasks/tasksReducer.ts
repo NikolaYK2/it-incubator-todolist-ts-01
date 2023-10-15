@@ -386,7 +386,7 @@
 
 //RTK ====================================================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StatusType } from "app/appReducer";
+import { StatusType } from "app/model/appReducer";
 import { todoActions, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
 import { createAppAsyncThunk } from "common/utils";
 import { ResultCode } from "common/api/todolistsApi";
@@ -399,56 +399,41 @@ import {
 } from "features/todolistsList/api/tasksApi";
 
 //extra --------------
-const setTasksTC = createAppAsyncThunk<{ tasks: TaskType[]; todoId: string; }, string>(
+const setTasksTC = createAppAsyncThunk<{ tasks: TaskType[]; todoId: string }, string>(
   "tasks/setTask",
   async (todoId) => {
-      const res = await tasksApi.getTasks(todoId);
-      return { tasks: res.data.items, todoId };
+    const res = await tasksApi.getTasks(todoId);
+    return { tasks: res.data.items, todoId };
   }
 );
-
 
 //extra -----------------------------
 const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("tasks/addTasks", async (arg, thunkAPI) => {
   const { rejectWithValue } = thunkAPI;
-    const res = await tasksApi.createTask(arg);
-    if (res.data.resultCode === ResultCode.Ok) {
-      return { task: res.data.data.item };
-    } else {
-      return rejectWithValue(res.data);
-    }
+  const res = await tasksApi.createTask(arg)
+  if (res.data.resultCode === ResultCode.Ok) {
+    return { task: res.data.data.item };
+  } else {
+    return rejectWithValue(res.data);
+  }
 });
-// const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("tasks/addTasks", async (arg, thunkAPI) => {
-//   const { dispatch, rejectWithValue } = thunkAPI;
-//   return thunkTryCatch(thunkAPI, async () => {
-//     const res = await tasksApi.createTask(arg);
-//     if (res.data.resultCode === ResultCode.Ok) {
-//       return { task: res.data.data.item };
-//     } else {
-//       handleServerAppError(res.data, dispatch); //Отдельная fn ошибок
-//       return rejectWithValue(res.data);
-//     }
-//   });
-// });
-
 
 //extra --------
 export const deleteTasksTC = createAppAsyncThunk(
   "tasks/deleteTask",
   async (arg: { todoId: string; taskId: string }, thunkAPI) => {
     const { dispatch } = thunkAPI;
-    dispatch(taskActions.changeEntStatusTask({taskId:arg.taskId, todoId:arg.todoId, status: 'loading'}))
+    dispatch(taskActions.changeEntStatusTask({ taskId: arg.taskId, todoId: arg.todoId, status: "loading" }));
     const res = await tasksApi.deleteTask(arg.todoId, arg.taskId);
     if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(taskActions.changeEntStatusTask({taskId:arg.taskId, todoId:arg.todoId, status: 'idle'}))
-        return { todoId: arg.todoId, taskId: arg.taskId };
-      }
+      dispatch(taskActions.changeEntStatusTask({ taskId: arg.taskId, todoId: arg.todoId, status: "idle" }));
+      return { todoId: arg.todoId, taskId: arg.taskId };
+    }
   }
 );
 
-
 //UPD task ----------------------------------------------------------------
-export type UpdTaskTCType = Partial<UpdTaskType>
+export type UpdTaskTCType = Partial<UpdTaskType>;
 const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
   "tasks/updateTas",
   async (arg, thunkAPI) => {
@@ -473,32 +458,29 @@ const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
       ...arg.model,
     };
     // return thunkTryCatch(thunkAPI, async () => {
-      const res = await tasksApi.updateTask(arg, apiModel);
-      if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "succeeded" }));
-        // return { todoId: arg.todoId, taskId: arg.taskId, model: apiModel };
-        return arg;
-      } else {
-        // handleServerAppError(res.data, dispatch);
-        return rejectWithValue(res.data);
-      }
+    const res = await tasksApi.updateTask(arg, apiModel);
+    if (res.data.resultCode === ResultCode.Ok) {
+      dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "succeeded" }));
+      // return { todoId: arg.todoId, taskId: arg.taskId, model: apiModel };
+      return arg;
+    } else {
+      return rejectWithValue(res.data);
+    }
     // }).finally(() => {
     //   dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "idle" }));
     // });
   }
 );
 
-
 //reducer --------------------------------------------------------
 export type EntStatusType = {
   entityStatus?: StatusType;
 };
-export type TaskStateType = Record<string, TaskType[]>
+export type TaskStateType = Record<string, TaskType[]>;
 //   [todolistID: string]: TaskType[];
 // };
 
 export const initialState: TaskStateType = {
-
   // [todolistID_1]: [
   //     {id: v1(), title: "HTML&CSS", isDone: true},
   //     {id: v1(), title: "JS", isDone: true},
@@ -568,7 +550,7 @@ const slice = createSlice({
       })
       .addCase(todoActions.clearData, () => {
         return {};
-      })
+      });
 
     //Или используем commonAction --------
     //   .addCase(clearTodoTask, ()=>{

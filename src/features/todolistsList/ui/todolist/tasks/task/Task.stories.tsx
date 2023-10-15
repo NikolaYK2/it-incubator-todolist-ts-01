@@ -2,7 +2,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
 import { Task } from "features/todolistsList/ui/todolist/tasks/task/Task";
 import { decorators } from "stories/decorators/decorator";
-import { useAppSelector } from "app/store";
+import { useAppSelector } from "app/model/store";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 
 export default {

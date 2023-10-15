@@ -4,10 +4,10 @@ import { combineReducers } from "redux";
 import { v1 } from "uuid";
 import { tasksReducer } from "features/todolistsList/model/tasks/tasksReducer";
 import { todoListsReducer } from "features/todolistsList/model/todos/todoListsReducer";
-import { appReducer } from "app/appReducer";
+import { appReducer } from "app/model/appReducer";
 import thunkMiddleware from "redux-thunk";
 import { authReducer } from "features/auth/model/authReducer";
-import { AppRootStateType } from "app/store";
+import { AppRootStateType } from "app/model/store";
 import { configureStore } from "@reduxjs/toolkit";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 

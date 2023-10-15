@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import "./App.css";
+import "app/ui/App.css";
 import { TodolistsList } from "features/todolistsList/ui/TodolistsList";
 import { Login } from "features/auth/ui/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useAppSelector } from "./store";
+import { useAppSelector } from "app/model/store";
 import CircularProgress from "@mui/material/CircularProgress";
-import { appSelector } from "app/appSelector";
+import { appSelector } from "app/model/appSelector";
 import { ButtonAppBar } from "common/components";
-import { appThunk } from "app/appReducer";
+import { appThunk } from "app/model/appReducer";
 import { useActions } from "common/hooks/useActions";
 
 type AppReduxType = {

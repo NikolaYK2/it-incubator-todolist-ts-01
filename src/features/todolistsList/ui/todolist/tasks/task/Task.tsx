@@ -17,7 +17,6 @@ type Props = {
 export const Task = memo((props: Props) => {
   const { deleteTasksTC, updateTaskTC } = useActions(tasksThunk);
 
-
   const changeTaskStatusHandler = useCallback(() => {
     updateTaskTC({
       todoId: props.idTodolist,

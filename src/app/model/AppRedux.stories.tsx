@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import React from "react";
-import AppRedux from "./AppRedux";
+import AppRedux from "app/ui/AppRedux";
 import { decorators } from "stories/decorators/decorator";
 import { HashRouter } from "react-router-dom";
 

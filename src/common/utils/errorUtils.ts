@@ -1,5 +1,5 @@
-import { appAction } from "app/appReducer";
-import { AppDispatch } from "app/store";
+import { appAction } from "app/model/appReducer";
+import { AppDispatch } from "app/model/store";
 import axios from "axios";
 import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 

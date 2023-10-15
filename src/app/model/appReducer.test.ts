@@ -1,4 +1,4 @@
-import { appAction, appReducer, AppStateType } from "./appReducer";
+import { appAction, appReducer, AppStateType } from "app/model/appReducer";
 
 let app: AppStateType;
 beforeEach(() => {

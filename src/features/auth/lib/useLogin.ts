@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "app/store";
+import { useAppDispatch, useAppSelector } from "app/model/store";
 import { FormikHelpers, useFormik } from "formik";
 import { AuthLoginType } from "features/auth/api/authApi";
 import { authThunk } from "features/auth/model/authReducer";

@@ -1,4 +1,4 @@
-import { AppRootStateType } from "app/store";
+import { AppRootStateType } from "app/model/store";
 import { createSelector } from "@reduxjs/toolkit";
 
 // const tasksSelect = (state: AppRootStateType) => state.tasks;

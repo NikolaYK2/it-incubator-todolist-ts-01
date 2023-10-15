@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { TodoAppType } from "features/todolistsList/model/todos/todoListsReducer";
-import { useAppSelector } from "app/store";
+import { useAppSelector } from "app/model/store";
 import { tasksThunk } from "features/todolistsList/model/tasks/tasksReducer";
 import { statusSelector } from "features/todolistsList/model/todos/todolistSelector";
 import { useActions } from "common/hooks/useActions";

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { ActionCreatorsMapObject, bindActionCreators } from "redux";
-import { useAppDispatch } from "app/store";
+import { useAppDispatch } from "app/model/store";
 
 // Types
 type IsValidArg<T> = T extends object ? (keyof T extends never ? false : true) : true;

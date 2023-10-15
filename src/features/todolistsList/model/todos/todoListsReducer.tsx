@@ -201,7 +201,7 @@
 
 //RTK ====================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StatusType } from "app/appReducer";
+import { StatusType } from "app/model/appReducer";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { todolistsApi, TodolistType } from "features/todolistsList/api/todolistsApi";
 import { ResultCode } from "common/api/todolistsApi";

@@ -74,7 +74,7 @@
 
 //RTK --------------------------------------------------
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { appThunk } from "app/appReducer";
+import { appThunk } from "app/model/appReducer";
 import { handleServerAppError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi, AuthLoginType } from "features/auth/api/authApi";
