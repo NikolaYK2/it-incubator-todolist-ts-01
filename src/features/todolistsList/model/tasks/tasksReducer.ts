@@ -499,7 +499,7 @@ export type TaskStateType = Record<string, TaskType[]>
 //   [todolistID: string]: TaskType[];
 // };
 
-export const initialState: TaskStateType = {
+export const initialState: TaskStateType & EntStatusType= {
   // [todolistID_1]: [
   //     {id: v1(), title: "HTML&CSS", isDone: true},
   //     {id: v1(), title: "JS", isDone: true},

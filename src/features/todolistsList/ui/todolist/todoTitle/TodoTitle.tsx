@@ -3,18 +3,13 @@ import { EditableSpan } from "common/components";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { useActions } from "common/hooks/useActions";
-import { todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
-import { TodolistType } from "features/todolistsList/api/todolistsApi";
-import { useAppSelector } from "app/store";
-import { statusSelector } from "features/todolistsList/model/todos/todolistSelector";
+import { TodoAppType, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
 
 type Props = {
-  todolist: TodolistType;
+  todolist: TodoAppType;
 };
 export const TodoTitle = memo((props:Props) => {
   const {id, title} = props.todolist;
-
-  const status = useAppSelector(statusSelector);
 
   const { deleteTodo, changeTitleTodo } = useActions(todoThunk);
 
@@ -34,7 +29,7 @@ export const TodoTitle = memo((props:Props) => {
       <h3>
         <EditableSpan title={title} onChange={onChangeHandlerTitleTodolist} />
       </h3>
-      <IconButton onClick={onClickHandlerDeleteTodolist} color={"error"} disabled={status === "loading"}>
+      <IconButton onClick={onClickHandlerDeleteTodolist} color={"error"} disabled={props.todolist.entityStatus === "loading"}>
         <Delete />
       </IconButton>
     </>
