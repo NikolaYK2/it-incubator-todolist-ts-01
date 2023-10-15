@@ -8,6 +8,8 @@ import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import { TaskStatuses } from "common/api/todolistsApi";
 import { TaskType } from "features/todolistsList/api/tasksApi";
 import { useActions } from "common/hooks/useActions";
+import { useAppSelector } from "app/store";
+import { statusSelector } from "features/todolistsList/model/todos/todolistSelector";
 
 type Props = {
   task: TaskType;
@@ -16,6 +18,8 @@ type Props = {
 };
 export const Task = memo((props: Props) => {
   const { deleteTasksTC, updateTaskTC } = useActions(tasksThunk);
+  const status = useAppSelector(statusSelector);
+
 
   const changeTaskStatusHandler = useCallback(() => {
     updateTaskTC({
@@ -40,7 +44,7 @@ export const Task = memo((props: Props) => {
 
   return (
     <>
-      <Button callBack={deleteTaskHandler} style={s.dellTask} disabled={props.task.entityStatus === "loading"} />
+      <Button callBack={deleteTaskHandler} style={s.dellTask} disabled={status === "loading"} />
       <Checkbox
         checked={props.task.status === TaskStatuses.Completed}
         onChange={changeTaskStatusHandler}
