@@ -386,9 +386,9 @@
 
 //RTK ====================================================================================
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { appAction, StatusType } from "app/appReducer";
+import { StatusType } from "app/appReducer";
 import { todoActions, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
-import { createAppAsyncThunk, handleServerAppError } from "common/utils";
+import { createAppAsyncThunk } from "common/utils";
 import { ResultCode } from "common/api/todolistsApi";
 import {
   ArgUpdateTaskType,
@@ -397,7 +397,6 @@ import {
   TaskType,
   UpdTaskType
 } from "features/todolistsList/api/tasksApi";
-import { thunkTryCatch } from "common/utils/thunkTryCatch";
 
 //extra --------------
 const setTasksTC = createAppAsyncThunk<{ tasks: TaskType[]; todoId: string; }, string>(
@@ -473,19 +472,19 @@ const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
       // ...task - нельзя, отправим много чего лишнего
       ...arg.model,
     };
-    return thunkTryCatch(thunkAPI, async () => {
+    // return thunkTryCatch(thunkAPI, async () => {
       const res = await tasksApi.updateTask(arg, apiModel);
       if (res.data.resultCode === ResultCode.Ok) {
-        dispatch(appAction.setStatus({ status: "succeeded" }));
+        dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "succeeded" }));
         // return { todoId: arg.todoId, taskId: arg.taskId, model: apiModel };
         return arg;
       } else {
-        handleServerAppError(res.data, dispatch);
-        return rejectWithValue(null);
+        // handleServerAppError(res.data, dispatch);
+        return rejectWithValue(res.data);
       }
-    }).finally(() => {
-      dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "idle" }));
-    });
+    // }).finally(() => {
+    //   dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "idle" }));
+    // });
   }
 );
 

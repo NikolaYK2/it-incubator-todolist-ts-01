@@ -38,7 +38,6 @@ export const Task = memo((props: Props) => {
     },
     [updateTaskTC, props.idTodolist, props.task.id]
   );
-  console.log(props.task.entityStatus === "loading");
 
   return (
     <>
