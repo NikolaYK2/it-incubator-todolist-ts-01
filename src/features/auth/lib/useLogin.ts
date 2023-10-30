@@ -3,11 +3,14 @@ import { FormikHelpers, useFormik } from "formik";
 import { AuthLoginType } from "features/auth/api/authApi";
 import { authThunk } from "features/auth/model/authReducer";
 import { BaseResponsTodolistsType } from "common/api/todolistsApi";
+import { captchaImgSelect } from "features/auth/model/authSelector";
 
-type FormikErrorType = Partial<Omit<AuthLoginType, "captcha">>;
+type FormikErrorType = Partial<AuthLoginType>
 
 export const useLogin = () => {
   const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
+  const captchaSelect = useAppSelector(captchaImgSelect);
+
   const dispatch = useAppDispatch();
 
   const formik = useFormik({
@@ -30,6 +33,7 @@ export const useLogin = () => {
       email: "",
       password: "",
       rememberMe: false,
+      captcha:false,
     },
     onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
       //formikHelpers типизируем нашим респонсом
@@ -49,5 +53,5 @@ export const useLogin = () => {
     },
   });
 
-  return { formik, isLoggedIn };
+  return { formik, isLoggedIn,captchaSelect };
 };

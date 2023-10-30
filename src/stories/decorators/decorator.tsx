@@ -147,6 +147,7 @@ const initialState = {
   },
   auth: {
     isLoggedIn: false,
+    captcha:''
     // email: '',
     // password: '',
     // rememberMe:false

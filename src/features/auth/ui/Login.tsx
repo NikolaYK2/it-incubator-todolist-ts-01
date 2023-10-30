@@ -11,12 +11,10 @@ import { Navigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useLogin } from "features/auth/lib/useLogin";
-
+import s from "./Login.module.css";
 
 export const Login = () => {
-  const { formik, isLoggedIn } = useLogin();
-
-
+  const { formik, isLoggedIn, captchaSelect } = useLogin();
 
   //MUI CHANGE STYLE===============================================
   const theme = createTheme({
@@ -110,6 +108,19 @@ export const Login = () => {
                       label={"Remember me"}
                       control={<Checkbox {...formik.getFieldProps("rememberMe")} checked={formik.values.rememberMe} />}
                     />
+                    {captchaSelect && (
+                      <>
+                        <div className={s.captchaImg}>
+                          <img src={`${captchaSelect}`} alt="" />
+                        </div>
+                        <TextField
+                          type="text"
+                          label="Captcha"
+                          style={{ margin: "0 0 10px" }}
+                          {...formik.getFieldProps("captcha")}
+                        />
+                      </>
+                    )}
                   </ThemeProvider>
 
                   <Button type={"submit"} variant={"contained"} color={"primary"}>

@@ -4,6 +4,7 @@ let auth: AuthInitType;
 beforeEach(() => {
   auth = {
     isLoggedIn: false,
+    captcha:'',
   };
 });
 
@@ -15,7 +16,7 @@ test("is logged", () => {
       email: "",
       password: "",
       rememberMe: true,
-      captcha: "",
+      captcha: false,
     })
   );
 

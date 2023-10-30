@@ -85,13 +85,15 @@ import { thunkTryCatch } from "common/utils/thunkTryCatch";
 //extra ------------------------------
 const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: BaseResponsTodolistsType | null }>(
   "auth/login",
-  async (data, {rejectWithValue}) => {
-      const res = await authApi.authLogin(data);
-      if (res.data.resultCode === ResultCode.Ok) {
-        return;
-      } else {
-        return rejectWithValue(res.data);
-      }
+  async (data, { rejectWithValue, dispatch }) => {
+    const res = await authApi.authLogin(data);
+    if (res.data.resultCode === ResultCode.Ok) {
+      return;
+    } else if (res.data.resultCode === 10) {
+      const res = await authApi.captcha();
+      dispatch(authActions.captchaImgUrl({ captcha: res.data.url }));
+    }
+    return rejectWithValue(res.data);
   }
 );
 
@@ -114,9 +116,11 @@ const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", asyn
 // slice - редьюсеры создаем с помощью функции createSlice
 export type AuthInitType = {
   isLoggedIn: boolean;
+  captcha: string;
 };
 const initialState: AuthInitType = {
   isLoggedIn: false,
+  captcha: "",
 };
 
 const slice = createSlice({
@@ -126,16 +130,18 @@ const slice = createSlice({
     setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
       state.isLoggedIn = action.payload.isLoggedIn;
     },
+    captchaImgUrl: (state, action: PayloadAction<{ captcha: string }>) => {
+      state.captcha = action.payload.captcha;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(authLogin.fulfilled, (state) => {
-        // state.isLoggedIn = action.payload.isLoggedIn;
         state.isLoggedIn = true;
       })
       .addCase(authLogout.fulfilled, (state) => {
         state.isLoggedIn = false;
-      })
+      });
     // .addCase(initializedApp.fulfilled, (state)=>{
     //   state.isLoggedIn = true
     // })
