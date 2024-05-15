@@ -8,7 +8,7 @@ export type AuthLoginType = {
   captcha: boolean;
 };
 
-type AuthMeType = {
+export type AuthMeType = {
   id: number;
   email: string;
   login: string;
