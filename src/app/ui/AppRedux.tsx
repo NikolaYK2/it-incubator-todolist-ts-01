@@ -7,28 +7,25 @@ import { useAppSelector } from "app/model/store";
 import CircularProgress from "@mui/material/CircularProgress";
 import { appSelector } from "app/model/appSelector";
 import { ButtonAppBar } from "common/components";
-import { appThunk } from "app/model/appReducer";
 import { useActions } from "common/hooks/useActions";
+import { appThunk } from "app/model/appReducer";
 
 type AppReduxType = {
   demo?: boolean;
 };
 
 function AppRedux({ demo = false }: AppReduxType) {
-  console.log("App");
-  // const dispatch = useAppDispatch();
   const initialized = useAppSelector(appSelector);
 
   const {initializedApp}=useActions(appThunk)
 
   useEffect(() => {
-    // dispatch(appThunk.initializedApp());
-    initializedApp()
-    // dispatch(appThunk.initializedApp({ initialized: true }));
-  }, [initializedApp]);
+    if (!initialized) {
+      initializedApp()
+    }
+  }, [])
 
   if (!initialized) {
-    //Убираем моргания перехода на логин при обновлении
     return (
       <CircularProgress
         style={{

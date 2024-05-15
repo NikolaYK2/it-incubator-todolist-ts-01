@@ -1,41 +1,48 @@
-import { AnyAction, createSlice, isFulfilled, isPending, isRejected, PayloadAction } from "@reduxjs/toolkit";
+import {
+  AnyAction,
+  createAction,
+  createSlice,
+  isFulfilled,
+  isPending,
+  isRejected,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { authActions } from "features/auth/model/authReducer";
-import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi } from "features/auth/api/authApi";
-import { ResultCode } from "common/api/todolistsApi";
+import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
+import { call, put } from "redux-saga/effects";
+import { AxiosResponse } from "axios";
 
-export const initializedApp = createAppAsyncThunk</*{isLoggedIn: boolean}*/ undefined, undefined>(
-  "app/init",
-  async (_, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    const res = await authApi.me().finally(() => {
-      dispatch(appAction.initializedApp({ initialized: true }));
-    });
-    if (res.data.resultCode === ResultCode.Ok) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-      return;
-    } else {
-      return rejectWithValue(res.data);
-    }
+export function* initAppSaga() {
+  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.me);
+  //   .finally(() => {
+  //   put(appAction.initializedApp({ initialized: true }));
+  // });
+  if (res.data.resultCode === ResultCode.Ok) {
+    yield put(authActions.setIsLoggedIn({ isLoggedIn: true }));
+  } else {
+    // error
+    //   yield put(res.data);
   }
-);
-// export const initializedApp = createAppAsyncThunk</*{isLoggedIn: boolean}*/ undefined, undefined>(
+  yield put(appAction.initializedApp({ initialized: true }));
+}
+
+// export const initializedApp = () => ({ type: "app/init" });
+export const INITIALIZED_APP = "app/init";
+export const initializedApp = createAction(INITIALIZED_APP);
+// export const initializedApp = createAppAsyncThunk<undefined, undefined>(
 //   "app/init",
 //   async (_, thunkAPI) => {
 //     const { dispatch, rejectWithValue } = thunkAPI;
-//     return thunkTryCatch(thunkAPI, async () => {
-//       const res = await authApi.me();
-//       if (res.data.resultCode === ResultCode.Ok) {
-//         // return { isLoggedIn: true }
-//         dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-//         return;
-//       } else {
-//         // handleServerAppError(res.data, dispatch);
-//         return rejectWithValue(null);
-//       }
-//     }).finally(() => {
+//     const res = await authApi.me().finally(() => {
 //       dispatch(appAction.initializedApp({ initialized: true }));
 //     });
+//     if (res.data.resultCode === ResultCode.Ok) {
+//       dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
+//       return;
+//     } else {
+//       return rejectWithValue(res.data);
+//     }
 //   }
 // );
 
@@ -51,7 +58,7 @@ export interface AppStateType {
 const initialState: AppStateType = {
   status: "idle",
   error: null,
-  initialized: false, //Делаем для того что бы небыло маргания на логин
+  initialized: false,
 };
 
 const slice = createSlice({
@@ -76,7 +83,6 @@ const slice = createSlice({
       .addMatcher(isRejected, (state, action: AnyAction) => {
         state.status = "failed";
         if (action.payload) {
-          // if(action.type.includes('addTodo')) return
           state.error = action.payload.messages[0];
         } else {
           state.error = action.error.message ? action.error.message : "Some error occurred";
@@ -84,14 +90,10 @@ const slice = createSlice({
       })
       .addMatcher(isFulfilled, (state) => {
         state.status = "succeeded";
-      })
-      // .addMatcher(isAnyOf(appThunk.initializedApp.fulfilled), (state) => {
-      //   state.initialized = true
-      // });
+      });
   },
 });
 
 export const appReducer = slice.reducer;
-// export const {setStatus, setError, initializedApp,} = slice.actions;
 export const appAction = slice.actions;
 export const appThunk = { initializedApp };
