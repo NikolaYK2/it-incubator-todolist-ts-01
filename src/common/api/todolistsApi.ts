@@ -4,7 +4,7 @@ export const instance = axios.create({
   withCredentials: true,
   baseURL: `https://social-network.samuraijs.com/api/1.1/`,
   headers: {
-    "API-KEY": 'f6bda301-132d-49df-8c79-f6fa4c3fd15d',
+    "API-KEY": "f6bda301-132d-49df-8c79-f6fa4c3fd15d",
   },
 });
 //ERRORS ==============================================
@@ -57,3 +57,4 @@ export enum TodoTaskPriorities { //Тип данных. Перечисление
   Urgently = 3,
   Later = 4,
 }
+

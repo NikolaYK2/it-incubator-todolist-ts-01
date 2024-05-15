@@ -8,18 +8,17 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "app/model/store";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-root.render(
-  // <React.StrictMode>
-  //     <App/>
-  <BrowserRouter>
-    <Provider store={store}>
-      <AppRedux />
-    </Provider>
-  </BrowserRouter>
-  // </React.StrictMode>
-);
+  root.render(
+    <BrowserRouter>
+      <Provider store={store}>
+        <AppRedux />
+      </Provider>
+    </BrowserRouter>
+  );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+

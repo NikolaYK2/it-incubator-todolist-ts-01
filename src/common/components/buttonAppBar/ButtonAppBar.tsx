@@ -23,7 +23,7 @@ export function ButtonAppBar() {
   }, [dispatch]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1}}>
       <ErrorSnackbar />
       <AppBar position="static" style={{ backgroundColor: "brown", position: 'relative'}}>
         <Toolbar>

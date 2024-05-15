@@ -36,20 +36,13 @@ export const useLogin = () => {
       captcha:false,
     },
     onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
-      //formikHelpers типизируем нашим респонсом
       dispatch(authThunk.authLogin(values))
-        .unwrap() //нужно для того что б попасть в catch так как createAsyncThunk всегда возвращает res() promise
+        .unwrap()
         .then(() => {})
         .catch((e: BaseResponsTodolistsType) => {
-          // formikHelpers.setFieldError('email', e.messages[0]);//пишем ошибку под конкретным полем 'email'
 
           e.fieldsErrors?.forEach((el) => formikHelpers.setFieldError(el.field, el.error));
         });
-      // formik.resetForm({//not use
-      //   //зачищаем все поля
-      //   values: { email: values.email, password: "", rememberMe: false },
-      //   errors:{}//А можно указать какое конткретное поле зачищаем
-      // });
     },
   });
 
