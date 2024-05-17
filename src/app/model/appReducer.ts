@@ -10,8 +10,16 @@ import {
 import { authActions } from "features/auth/model/authReducer";
 import { authApi } from "features/auth/api/authApi";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
-import { call, put } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
+
+//SAGAS WATCHER ------------------------------
+export function* sagasApp() {
+  yield takeEvery(INITIALIZED_APP, initAppSaga);
+}
+
+export const INITIALIZED_APP = "app/init";
+const initializedApp = createAction(INITIALIZED_APP);
 
 export function* initAppSaga() {
   const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.me);
@@ -20,6 +28,7 @@ export function* initAppSaga() {
   // });
   if (res.data.resultCode === ResultCode.Ok) {
     yield put(authActions.setIsLoggedIn({ isLoggedIn: true }));
+    yield put(appAction.setStatus({ status: "succeeded" }));
   } else {
     // error
     //   yield put(res.data);
@@ -27,9 +36,6 @@ export function* initAppSaga() {
   yield put(appAction.initializedApp({ initialized: true }));
 }
 
-// export const initializedApp = () => ({ type: "app/init" });
-export const INITIALIZED_APP = "app/init";
-export const initializedApp = createAction(INITIALIZED_APP);
 // export const initializedApp = createAppAsyncThunk<undefined, undefined>(
 //   "app/init",
 //   async (_, thunkAPI) => {
@@ -96,4 +102,5 @@ const slice = createSlice({
 
 export const appReducer = slice.reducer;
 export const appAction = slice.actions;
-export const appThunk = { initializedApp };
+export const appSaga = { initializedApp };
+// export const appThunk = { initializedApp };

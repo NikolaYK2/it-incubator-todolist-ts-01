@@ -8,7 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { appSelector } from "app/model/appSelector";
 import { ButtonAppBar } from "common/components";
 import { useActions } from "common/hooks/useActions";
-import { appThunk } from "app/model/appReducer";
+import { appSaga } from "app/model/appReducer";
 
 type AppReduxType = {
   demo?: boolean;
@@ -17,7 +17,7 @@ type AppReduxType = {
 function AppRedux({ demo = false }: AppReduxType) {
   const initialized = useAppSelector(appSelector);
 
-  const {initializedApp}=useActions(appThunk)
+  const {initializedApp}=useActions(appSaga)
 
   useEffect(() => {
     if (!initialized) {

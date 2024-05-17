@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initializedApp } from "app/model/appReducer";
 import { handleServerAppError } from "common/utils/errorUtils";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi, AuthLoginType } from "features/auth/api/authApi";
@@ -7,6 +6,7 @@ import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
 import { thunkTryCatch } from "common/utils/thunkTryCatch";
 import { AxiosResponse } from "axios";
+import { appAction } from "app/model/appReducer";
 
 //extra ------------------------------
 const authLogin = createAppAsyncThunk<unknown, AuthLoginType, { rejectValue: BaseResponsTodolistsType | null }>(
@@ -34,7 +34,7 @@ const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", asyn
     } else {
       handleServerAppError(res.data, dispatch);
     }
-    dispatch(initializedApp);
+    dispatch(appAction.initializedApp);
     return rejectWithValue(null);
   });
 });
