@@ -2,10 +2,9 @@ import React, { useCallback, useState } from "react";
 import { UniversalInput } from "common/components/input/UniversalInput";
 import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { Button } from "common/components/button/Button";
-import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 
 type FullInputType = {
-  addItem: (addTitle: string) => Promise<unknown>;
+  addItem: (addTitle: string) => any;
   disabled?: boolean;
 };
 
@@ -16,23 +15,24 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
   let [error, setError] = useState<string | null>(null);
   const errorStop = error ? s.error : "";
 
-  console.log("add input");
-  const handlerAddTask = useCallback(() => {
+  const handlerAddTask = useCallback(async () => {
     if (addTitle.trim() !== "") {
-      props.addItem(addTitle.trim())
-        .then(()=>{
-        setAddTitle("");
-      }).catch((e:BaseResponsTodolistsType)=>{
-        if (e?.resultCode) {
-          setError(e.messages[0])
-        }
-      })
+      props.addItem(addTitle.trim());
+      setAddTitle("");
+
+      // .then(() => {
+      //   setAddTitle("");
+      // })
+      // .catch((e: BaseResponsTodolistsType) => {
+      //   if (e?.resultCode) {
+      //     setError(e.messages[0]);
+      //   }
+      // });
     } else {
       setError("Заполни полe Чувак!");
     }
   }, [addTitle, props]);
   //=====================================================================================
-
 
   return (
     <>
