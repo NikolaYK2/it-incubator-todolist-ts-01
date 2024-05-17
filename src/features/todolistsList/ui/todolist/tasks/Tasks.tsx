@@ -12,7 +12,6 @@ type Props={
 export const Tasks = React.memo((props:Props) => {
   const { id, filter } = props.todolist;
 
-  // const tasks = useAppSelector((state) => state.tasks[id]);
   const tasks = useAppSelector((state) => optimizedTaskSelect(state, id));
 
   let filterTasks = tasks;
@@ -25,7 +24,7 @@ export const Tasks = React.memo((props:Props) => {
 
   return (
     <>
-      {tasks.length ? (
+      {tasks && tasks.length ? (
         filterTasks.map((task) => {
           return (
             <li key={task.id} className={task.status ? s.activeTask : ""}>
