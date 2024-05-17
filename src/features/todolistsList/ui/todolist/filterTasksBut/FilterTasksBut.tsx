@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
 import { Button } from "common/components";
 import { FilterValueType, todoActions, TodoAppType } from "features/todolistsList/model/todos/todoListsReducer";
-import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { useActions } from "common/hooks/useActions";
+import s from './FilterTasksBut.module.css'
 
 type Props = {
   todo: TodoAppType;
@@ -24,7 +24,7 @@ export const FilterTasksBut = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className={s.container}>
       <Button
         name="All"
         callBack={useCallback(() => changeTasksFilterHandler("All"), [changeTasksFilterHandler])}

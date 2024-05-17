@@ -1,0 +1,29 @@
+.container{
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0 0;
+}
+.active {
+  background: url("https://phonoteka.org/uploads/posts/2022-01/1642990537_71-phonoteka-org-p-krasnii-fon-abstraktsiya-71.jpg")
+  center center/cover no-repeat;
+  border-radius: 0 5px 0 5px;
+  border: none;
+  transform: scale(0.95);
+  list-style-type: none;
+  transition: transform  0.3s ease, background 0.3s ease;
+  will-change: transform;
+
+}
+.default{
+  transform: scale(1);
+  transition: transform  0.3s ease;
+  will-change: transform;
+}
+.default:hover {
+  box-shadow: 2px 2px 5px brown;
+  transform: scale(1.08);
+  transition: all 0.3s ease;
+  will-change: transform;
+  overflow: hidden;
+}
+
