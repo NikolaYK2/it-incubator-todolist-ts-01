@@ -1,5 +1,6 @@
 import { instance, BaseResponsTodolistsType, TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 import { EntStatusType, UpdTaskTCType } from "features/todolistsList/model/tasks/tasksReducer";
+import { AxiosResponse } from "axios";
 
 export type UpdTaskType = {
   title: string;
@@ -39,11 +40,11 @@ export type ArgUpdateTaskType = {
   model: UpdTaskTCType;
 };
 
-export const tasksApi={
-  getTasks(todoId: string) {
+export const tasksApi = {
+  getTasks(todoId: string): Promise<AxiosResponse<GetTaskType>> {
     return instance.get<GetTaskType>(`todo-lists/${todoId}/tasks`);
   },
-  createTask(arg: CreateTaskType) {
+  createTask(arg: CreateTaskType):Promise<AxiosResponse<BaseResponsTodolistsType<{ item: TaskType }>>> {
     return instance.post<BaseResponsTodolistsType<{ item: TaskType }>>(`todo-lists/${arg.todoId}/tasks`, {
       title: arg.title,
     });
@@ -57,4 +58,4 @@ export const tasksApi={
       model
     );
   },
-}
+};
