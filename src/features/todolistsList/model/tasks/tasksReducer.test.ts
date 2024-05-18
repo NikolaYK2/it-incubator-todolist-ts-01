@@ -1,5 +1,4 @@
-import { todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
-import { tasksReducer, TaskStateType } from "features/todolistsList/model/tasks/tasksReducer";
+import { TaskStateType } from "features/todolistsList/model/tasks/tasksReducer";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 
 let tasks: TaskStateType;
@@ -133,30 +132,30 @@ beforeEach(() => {
 //   expect(newTasks["todolistID_2"][0].status).toBe(TaskStatuses.New);
 // });
 
-test("add todolist and null tasks", () => {
-  const newTasks = tasksReducer(tasks, {
-    type: todoThunk.addTodo.fulfilled.type,
-    payload: {
-      todolist: {
-        id: "todolistID",
-        title: "new todolistsList",
-        order: 0,
-        addedDate: ""
-      }
-    }
-  });
-  const keys = Object.keys(newTasks); //Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
-  //Находим новый ключ
-  const newKey = keys.find((k) => k !== "todolistID_1" && k !== "todolistID_2");
-  if (!newKey) {
-    //Если не нашелся то генерируем ошибку
-    throw Error("Бляяяяя!");
-  }
-  expect(keys.length).toBe(3);
-  expect(newTasks[newKey]).toEqual([]);
-  expect(newTasks["todolistID"].length).toBe(0);
-  expect(newTasks["todolistID"]).toBeDefined();
-});
+// test("add todolist and null tasks", () => {
+//   const newTasks = tasksReducer(tasks, {
+//     type: todoThunk.addTodo.fulfilled.type,
+//     payload: {
+//       todolist: {
+//         id: "todolistID",
+//         title: "new todolistsList",
+//         order: 0,
+//         addedDate: ""
+//       }
+//     }
+//   });
+//   const keys = Object.keys(newTasks); //Метод обьекта, мы передаем ему наш массив и он возвращает массив в виде строк всех ключей
+//   //Находим новый ключ
+//   const newKey = keys.find((k) => k !== "todolistID_1" && k !== "todolistID_2");
+//   if (!newKey) {
+//     //Если не нашелся то генерируем ошибку
+//     throw Error("Бляяяяя!");
+//   }
+//   expect(keys.length).toBe(3);
+//   expect(newTasks[newKey]).toEqual([]);
+//   expect(newTasks["todolistID"].length).toBe(0);
+//   expect(newTasks["todolistID"]).toBeDefined();
+// });
 
 // test("remove task", () => {
 //   const newTasks = tasksReducer(

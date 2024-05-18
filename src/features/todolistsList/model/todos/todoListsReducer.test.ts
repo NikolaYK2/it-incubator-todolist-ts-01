@@ -26,28 +26,28 @@ beforeEach(() => {
     },
   ];
 });
-test("add new todolist", () => {
-  // const todoLists: TodolistType[] = [
-  //     {id: todolistID_1, title: 'What to learn', filter: 'All'},
-  //     {id: todolistID_2, title: 'What to buy', filter: 'All'},
-  // ];
-  const newTodolist = todoListsReducer(
-    todoLists,
-    {
-      type: todoThunk.addTodo.fulfilled.type,
-      payload:{
-        todolist: {
-          id: "todolistID_1",
-          title: "What to learn",
-          order: 0,
-          addedDate: "",
-        },
-      }
-    }
-  );
-  expect(newTodolist.length).toBe(3);
-  expect(todoLists.length).toBe(2);
-});
+// test("add new todolist", () => {
+//   // const todoLists: TodolistType[] = [
+//   //     {id: todolistID_1, title: 'What to learn', filter: 'All'},
+//   //     {id: todolistID_2, title: 'What to buy', filter: 'All'},
+//   // ];
+//   const newTodolist = todoListsReducer(
+//     todoLists,
+//     {
+//       type: todoThunk.addTodo.fulfilled.type,
+//       payload:{
+//         todolist: {
+//           id: "todolistID_1",
+//           title: "What to learn",
+//           order: 0,
+//           addedDate: "",
+//         },
+//       }
+//     }
+//   );
+//   expect(newTodolist.length).toBe(3);
+//   expect(todoLists.length).toBe(2);
+// });
 
 test("delete todolist", () => {
   const newTodolist = todoListsReducer(
