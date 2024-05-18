@@ -14,7 +14,7 @@ import { call, put, select, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
 
 //SAGAS WATCHER -------------------------------
-export function* sagasTasks() {
+export function* tasksSagas() {
   yield takeEvery(SET_TASKS_ID, getTasksSaga);
   yield takeEvery(ADD_TASKS, addTasksSaga);
   yield takeEvery(REMOVE_TASKS, deleteTasksSaga);
@@ -55,7 +55,6 @@ export function* addTasksSaga(action: ReturnType<typeof createTasksAction>) {
     // return rejectWithValue(res.data);
   }
 }
-
 //extra -----------------------------
 // const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("tasks/addTasks", async (arg, thunkAPI) => {
 //   const { rejectWithValue } = thunkAPI;
@@ -99,7 +98,6 @@ export function* deleteTasksSaga(action: ReturnType<typeof deleteTasksAction>) {
     yield put(deleteTasksSuccess({ todoId: action.payload.todoId, taskId: action.payload.taskId }));
   }
 }
-
 //extra --------
 // export const deleteTasksTC = createAppAsyncThunk(
 //   "tasks/deleteTask",
@@ -172,7 +170,6 @@ function* updateTaskSaga(action: ReturnType<typeof updateTaskAction>) {
     }
   } catch (e: any) {}
 }
-
 // export type UpdTaskTCType = Partial<UpdTaskType>;
 // const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
 //   "tasks/updateTas",
@@ -283,7 +280,7 @@ const slice = createSlice({
       .addCase(todoThunk.deleteTodo.fulfilled, (state, action) => {
         delete state[action.payload.todolistID];
       })
-      .addCase(todoThunk.setTodolists.fulfilled, (state, action) => {
+      .addCase(todoThunk.setTodolistAction, (state, action) => {
         action.payload.todolist.forEach((tl) => {
           state[tl.id] = [];
         });
@@ -291,16 +288,6 @@ const slice = createSlice({
       .addCase(todoActions.clearData, () => {
         return {};
       });
-
-    //Или используем commonAction --------
-    //   .addCase(clearTodoTask, ()=>{
-    //     return {}
-    //   })
-
-    // [todoActions.addTodo.type]: (state, action: PayloadAction<{}>) => {},
-    // [todoActions.deleteTodo.type]: (state, action: PayloadAction<{}>) => {},
-    // [todoActions.setTodo.type]: (state, action: PayloadAction<{}>) => {},
-    // [todoActions.clearData.type]: (state, action: PayloadAction<{}>) => {},
   },
 });
 // Создаем reducer с помощью slice
@@ -312,4 +299,3 @@ export const taskActions = {
   createTasksAction,
   updateTaskAction,
 };
-// export const tasksThunk = { requestTasks, deleteTasksTC, createTasksTC, updateTaskTC };
