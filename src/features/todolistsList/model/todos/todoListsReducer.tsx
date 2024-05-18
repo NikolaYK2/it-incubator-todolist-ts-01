@@ -2,13 +2,14 @@ import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StatusType } from "app/model/appReducer";
 import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { todolistsApi, TodolistType } from "features/todolistsList/api/todolistsApi";
-import { ResultCode } from "common/api/todolistsApi";
+import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { CreateTaskType } from "features/todolistsList/api/tasksApi";
 import { call, put, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
 
 export function* todoListsSagas() {
   yield takeEvery(GET_TODO, setTodolistSaga);
+  yield takeEvery(CREATE_TODO, addTodoSaga);
 }
 
 const SET_TODO_lIST = "todoLists/setTodo";
@@ -20,26 +21,40 @@ function* setTodolistSaga() {
   const res: AxiosResponse<TodolistType[]> = yield call(todolistsApi.getTodolists);
   yield put(setTodolistAction({ todolist: res.data }));
 }
-//extra --------
-// const setTodolists = createAppAsyncThunk<{ todolist: TodolistType[] }, void>("todoLists/setTodo", async () => {
-//   const res = await todolistsApi.getTodolists();
-//   return { todolist: res.data };
-// });
 
-const addTodo = createAppAsyncThunk<
-  {
-    todolist: TodolistType;
-  },
-  string
->("todoLists/addTodo", async (title, thunkAPI) => {
-  const { rejectWithValue } = thunkAPI;
-  const res = await todolistsApi.createTodolists(title);
+// -------------------------
+const ADD_TODO = "todoLists/addTodo";
+const CREATE_TODO = "todoLists/createTodo";
+const createTodoAction = createAction<{ todolist: TodolistType }>(ADD_TODO);
+const addTodoTitleAction = createAction<string>(CREATE_TODO);
+
+function* addTodoSaga(action: ReturnType<typeof addTodoTitleAction>) {
+  const res: AxiosResponse<
+    BaseResponsTodolistsType<{
+      item: TodolistType;
+    }>
+  > = yield call(todolistsApi.createTodolists, action.payload);
   if (res.data.resultCode === ResultCode.Ok) {
-    return { todolist: res.data.data.item };
+    yield put(createTodoAction({ todolist: res.data.data.item }));
   } else {
-    return rejectWithValue(res.data);
+    // return rejectWithValue(res.data);
   }
-});
+}
+
+// const addTodo = createAppAsyncThunk<
+//   {
+//     todolist: TodolistType;
+//   },
+//   string
+// >("todoLists/addTodo", async (title, thunkAPI) => {
+//   const { rejectWithValue } = thunkAPI;
+//   const res = await todolistsApi.createTodolists(title);
+//   if (res.data.resultCode === ResultCode.Ok) {
+//     return { todolist: res.data.data.item };
+//   } else {
+//     return rejectWithValue(res.data);
+//   }
+// });
 
 export const deleteTodo = createAppAsyncThunk<{ todolistID: string }, string>(
   "todoLists/deletTodo",
@@ -119,7 +134,7 @@ const slice = createSlice({
       .addCase(setTodolistAction, (_, action) => {
         return action.payload.todolist.map((tl) => ({ ...tl, filter: "All", entityStatus: "idle" }));
       })
-      .addCase(addTodo.fulfilled, (state, action) => {
+      .addCase(createTodoAction, (state, action) => {
         state.unshift({ ...action.payload.todolist, filter: "All", entityStatus: "idle" });
       })
       .addCase(deleteTodo.fulfilled, (state, action) => {
@@ -147,4 +162,11 @@ const slice = createSlice({
 
 export const todoListsReducer = slice.reducer;
 export const todoActions = slice.actions;
-export const todoThunk = { setTodolistAction, getTodolistAction, addTodo, deleteTodo, changeTitleTodo };
+export const todoThunk = {
+  setTodolistAction,
+  getTodolistAction,
+  addTodoTitleAction,
+  createTodoAction,
+  deleteTodo,
+  changeTitleTodo,
+};

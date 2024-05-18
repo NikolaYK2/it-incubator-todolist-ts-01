@@ -19,7 +19,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   const isLoggedIn = useAppSelector(authSelect);
   const status = useAppSelector(statusSelector);
 
-  const {getTodolistAction, addTodo} = useActions(todoThunk)
+  const { getTodolistAction, addTodoTitleAction} = useActions(todoThunk);
 
   //Достаем тудулисты ========================================
   useEffect(() => {
@@ -30,9 +30,8 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   }, [getTodolistAction, demo, isLoggedIn]);
 
   const addTodolist = useCallback((title: string) => {
-      return addTodo(title).unwrap();
-    }, [addTodo]);
-
+      return addTodoTitleAction(title);
+  }, [addTodoTitleAction]);
 
   if (!isLoggedIn) {
     return <Navigate to={"/auth"} />;
@@ -41,7 +40,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   return (
     <Container fixed>
       <Grid container style={{ padding: "10px", height: "70px" }}>
-        <FullInput addItem={addTodolist} disabled={status === 'loading'}/>
+        <FullInput addItem={addTodolist} disabled={status === "loading"} />
       </Grid>
       <Grid container spacing={4}>
         {todoLists.map((tl) => {
@@ -54,16 +53,12 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
                   padding: "10px",
                 }}
               >
-                <Todolist
-                  todolist={tl}
-                  demo={demo}
-                />
+                <Todolist todolist={tl} demo={demo} />
               </Paper>
             </Grid>
-          )
+          );
         })}
       </Grid>
-
     </Container>
   );
 };

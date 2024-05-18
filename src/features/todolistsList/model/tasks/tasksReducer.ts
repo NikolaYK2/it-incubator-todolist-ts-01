@@ -274,7 +274,7 @@ const slice = createSlice({
         const index = tasks.findIndex((t) => t.id === action.payload.taskId);
         if (index !== -1) tasks[index] = { ...tasks[index], ...action.payload.model };
       })
-      .addCase(todoThunk.addTodo.fulfilled, (state, action) => {
+      .addCase(todoThunk.createTodoAction, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
       .addCase(todoThunk.deleteTodo.fulfilled, (state, action) => {
