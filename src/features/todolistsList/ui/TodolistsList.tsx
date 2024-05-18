@@ -19,15 +19,15 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   const isLoggedIn = useAppSelector(authSelect);
   const status = useAppSelector(statusSelector);
 
-  const {setTodolists, addTodo} = useActions(todoThunk)
+  const {getTodolistAction, addTodo} = useActions(todoThunk)
 
   //Достаем тудулисты ========================================
   useEffect(() => {
     if (demo || !isLoggedIn) {
       return;
     }
-   setTodolists();
-  }, [setTodolists, demo, isLoggedIn]);
+    getTodolistAction();
+  }, [getTodolistAction, demo, isLoggedIn]);
 
   const addTodolist = useCallback((title: string) => {
       return addTodo(title).unwrap();
