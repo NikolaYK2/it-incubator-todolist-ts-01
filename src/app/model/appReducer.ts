@@ -14,7 +14,7 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
 
 //SAGAS WATCHER ------------------------------
-export function* sagasApp() {
+export function* appSagas() {
   yield takeEvery(INITIALIZED_APP, initAppSaga);
 }
 
