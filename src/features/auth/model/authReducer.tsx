@@ -1,16 +1,13 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { handleServerAppError } from "common/utils/errorUtils";
-import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { authApi, AuthLoginType, CaptchaUrl } from "features/auth/api/authApi";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
-import { thunkTryCatch } from "common/utils/thunkTryCatch";
 import { AxiosResponse } from "axios";
-import { appAction } from "app/model/appReducer";
 import { call, put, takeEvery } from "redux-saga/effects";
 
 export function* authSagas() {
   yield takeEvery(AUTH_LOGIN, authLoginSaga);
+  yield takeEvery(AUTH_LOGOUT, authLogoutSaga);
 }
 
 const AUTH_LOGIN = "auth/login";
@@ -29,21 +26,19 @@ function* authLoginSaga(action: ReturnType<typeof authLoginAction>) {
   // return rejectWithValue(res.data);
 }
 
-const authLogout = createAppAsyncThunk<undefined, undefined>("auth/logout", async (_, thunkAPI) => {
-  const { dispatch, rejectWithValue } = thunkAPI;
-  return thunkTryCatch(thunkAPI, async () => {
-    const res = await authApi.logout();
-    if (res.data.resultCode === ResultCode.Ok) {
-      dispatch(todoActions.clearData());
-      // dispatch(clearTodoTask());
-      return;
-    } else {
-      handleServerAppError(res.data, dispatch);
-    }
-    dispatch(appAction.initializedApp);
-    return rejectWithValue(null);
-  });
-});
+// --------------------------------------
+const AUTH_LOGOUT = "auth/logout";
+const authLogoutAction = createAction<undefined>(AUTH_LOGOUT);
+
+function* authLogoutSaga() {
+  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.logout);
+  if (res.data.resultCode === ResultCode.Ok) {
+    yield put(todoActions.clearData());
+    // yield put(authLogoutAction());
+  } else {
+    // handleServerAppError(res.data, dispatch);
+  }
+}
 
 // slice - редьюсеры создаем с помощью функции createSlice
 export type AuthInitType = {
@@ -71,7 +66,7 @@ const slice = createSlice({
       .addCase(authLoginSuccessAction, (state) => {
         state.isLoggedIn = true;
       })
-      .addCase(authLogout.fulfilled, (state) => {
+      .addCase(authLogoutAction, (state) => {
         state.isLoggedIn = false;
       });
     // .addCase(initializedApp.fulfilled, (state)=>{
@@ -81,5 +76,4 @@ const slice = createSlice({
 });
 
 export const authReducer = slice.reducer;
-export const authActions = slice.actions;
-export const authThunk = { authLoginAction, authLogout };
+export const authActions = { ...slice.actions, authLoginAction, authLogoutAction };

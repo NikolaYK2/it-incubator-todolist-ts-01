@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "app/model/store";
 import { FormikHelpers, useFormik } from "formik";
 import { AuthLoginType } from "features/auth/api/authApi";
-import { authThunk } from "features/auth/model/authReducer";
+import { authActions } from "features/auth/model/authReducer";
 import { FieldsErrorsType } from "common/api/todolistsApi";
 import { captchaImgSelect } from "features/auth/model/authSelector";
 
@@ -37,7 +37,7 @@ export const useLogin = () => {
     },
     onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
       try {
-        dispatch(authThunk.authLoginAction(values))
+        dispatch(authActions.authLoginAction(values))
       }catch (e:any){
         e.fieldsErrors?.forEach((el:FieldsErrorsType) => formikHelpers.setFieldError(el.field, el.error));
 
