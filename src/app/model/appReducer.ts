@@ -19,10 +19,11 @@ export function* appSagas() {
 }
 
 export const INITIALIZED_APP = "app/init";
-const initializedApp = createAction(INITIALIZED_APP);
+const initAppAction = createAction(INITIALIZED_APP);
 
 export function* initAppSaga() {
   const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.me);
+  yield put(appAction.initializedApp({ initialized: true }));
   //   .finally(() => {
   //   put(appAction.initializedApp({ initialized: true }));
   // });
@@ -35,22 +36,6 @@ export function* initAppSaga() {
   }
   yield put(appAction.initializedApp({ initialized: true }));
 }
-
-// export const initializedApp = createAppAsyncThunk<undefined, undefined>(
-//   "app/init",
-//   async (_, thunkAPI) => {
-//     const { dispatch, rejectWithValue } = thunkAPI;
-//     const res = await authApi.me().finally(() => {
-//       dispatch(appAction.initializedApp({ initialized: true }));
-//     });
-//     if (res.data.resultCode === ResultCode.Ok) {
-//       dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }));
-//       return;
-//     } else {
-//       return rejectWithValue(res.data);
-//     }
-//   }
-// );
 
 // reducer -----------------------------------------------------
 export type StatusType = "idle" | "loading" | "succeeded" | "failed";
@@ -101,6 +86,4 @@ const slice = createSlice({
 });
 
 export const appReducer = slice.reducer;
-export const appAction = slice.actions;
-export const appSaga = { initializedApp };
-// export const appThunk = { initializedApp };
+export const appAction = { ...slice.actions, initAppAction };
