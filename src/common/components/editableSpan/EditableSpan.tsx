@@ -9,8 +9,6 @@ type EditableSpanType = {
 };
 //Делаем спан инпутом когданужно=========================================================
 export const EditableSpan = /*React.*/ memo((props: EditableSpanType) => {
-  //можно писать теперь просто memo
-  console.log("editblSpan");
   //==Делаем управление не из вне, а state управление самой компонентой
   //=====CONTROL EDITSPAN TASK=====================================================================
   let [editMode, setEditMode] = useState(false);
