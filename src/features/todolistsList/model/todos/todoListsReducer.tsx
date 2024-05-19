@@ -1,6 +1,5 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StatusType } from "app/model/appReducer";
-import { createAppAsyncThunk } from "common/utils/createAppAsyncThunk";
 import { todolistsApi, TodolistType } from "features/todolistsList/api/todolistsApi";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { CreateTaskType } from "features/todolistsList/api/tasksApi";
@@ -11,6 +10,7 @@ export function* todoListsSagas() {
   yield takeEvery(GET_TODO, setTodolistSaga);
   yield takeEvery(CREATE_TODO, addTodoSaga);
   yield takeEvery(DELETE_TODO_ID, deleteTodoSaga);
+  yield takeEvery(CREATE_TITLE_TODO, changeTitleTodoSaga);
 }
 
 const SET_TODO_lIST = "todoLists/setTodo";
@@ -59,17 +59,24 @@ function* deleteTodoSaga(action: ReturnType<typeof deleteTodoIdAction>) {
   }
 }
 
-export const changeTitleTodo = createAppAsyncThunk<CreateTaskType, CreateTaskType>(
-  "todoLists/changeTitleTodo",
-  async (arg, { rejectWithValue }) => {
-    const res = await todolistsApi.updateTodolists(arg.todoId, arg.title);
-    if (res.data.resultCode === ResultCode.Ok) {
-      return { todoId: arg.todoId, title: arg.title };
-    } else {
-      return rejectWithValue(res.data);
-    }
+// -----------------------------------------
+const CHANGE_TITLE_TODO = "todoLists/changeTitleTodo";
+const CREATE_TITLE_TODO = "todoLists/createTitleTodo";
+const changeTitleTodoAction = createAction<CreateTaskType>(CHANGE_TITLE_TODO);
+const createTitleTodoAction = createAction<CreateTaskType>(CREATE_TITLE_TODO);
+
+function* changeTitleTodoSaga(action: ReturnType<typeof createTitleTodoAction>) {
+  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(
+    todolistsApi.updateTodolists,
+    action.payload.todoId,
+    action.payload.title
+  );
+  if (res.data.resultCode === ResultCode.Ok) {
+    yield put(changeTitleTodoAction({ todoId: action.payload.todoId, title: action.payload.title }));
+  } else {
+    // return rejectWithValue(res.data);
   }
-);
+}
 
 //REDUCER ----------------------------------------------------------
 export type FilterValueType = "All" | "Active" | "Completed";
@@ -114,7 +121,7 @@ const slice = createSlice({
         }
         // return state.filter(todos => todos.id !== action.payload.todolistID)
       })
-      .addCase(changeTitleTodo.fulfilled, (state, action) => {
+      .addCase(changeTitleTodoAction, (state, action) => {
         const todo = state.find((todo) => todo.id === action.payload.todoId);
         if (todo) todo.title = action.payload.title;
       });
@@ -139,5 +146,6 @@ export const todoThunk = {
   createTodoAction,
   deleteTodoAction,
   deleteTodoIdAction,
-  changeTitleTodo,
+  changeTitleTodoAction,
+  createTitleTodoAction,
 };

@@ -11,7 +11,7 @@ type Props = {
 export const TodoTitle = memo((props: Props) => {
   const { id, title } = props.todolist;
 
-  const { deleteTodoIdAction, changeTitleTodo } = useActions(todoThunk);
+  const { deleteTodoIdAction, createTitleTodoAction } = useActions(todoThunk);
 
   const onClickHandlerDeleteTodolist = useCallback(() => {
     deleteTodoIdAction(props.todolist.id);
@@ -19,9 +19,9 @@ export const TodoTitle = memo((props: Props) => {
 
   const onChangeHandlerTitleTodolist = useCallback(
     (newValue: string) => {
-      changeTitleTodo({ todoId: id, title: newValue });
+      createTitleTodoAction({ todoId: id, title: newValue });
     },
-    [changeTitleTodo, id]
+    [createTitleTodoAction, id]
   );
 
   return (

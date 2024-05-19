@@ -65,7 +65,7 @@ test("CHANGE TITLE TODO", () => {
   const newTodolist = todoListsReducer(
     todoLists,
     {
-      type: todoThunk.changeTitleTodo.fulfilled.type,
+      type: todoThunk.changeTitleTodoAction.type,
       payload: {
         todoId: "todolistID_1",
         title: "Hi",
