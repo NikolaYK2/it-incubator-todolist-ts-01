@@ -23,7 +23,6 @@ const initAppAction = createAction(INITIALIZED_APP);
 
 export function* initAppSaga() {
   const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.me);
-  yield put(appAction.initializedApp({ initialized: true }));
   //   .finally(() => {
   //   put(appAction.initializedApp({ initialized: true }));
   // });
