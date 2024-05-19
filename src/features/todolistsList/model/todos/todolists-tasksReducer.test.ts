@@ -145,7 +145,7 @@ test("delete todolist and task", () => {
   };
 
   const newTask = tasksReducer(tasks, {
-    type: todoThunk.deleteTodo.fulfilled.type,
+    type: todoThunk.deleteTodoAction.type,
     payload: {
       todolistID: "todolistID_1",
     },

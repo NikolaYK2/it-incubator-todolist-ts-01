@@ -10,6 +10,7 @@ import { AxiosResponse } from "axios";
 export function* todoListsSagas() {
   yield takeEvery(GET_TODO, setTodolistSaga);
   yield takeEvery(CREATE_TODO, addTodoSaga);
+  yield takeEvery(DELETE_TODO_ID, deleteTodoSaga);
 }
 
 const SET_TODO_lIST = "todoLists/setTodo";
@@ -41,53 +42,22 @@ function* addTodoSaga(action: ReturnType<typeof addTodoTitleAction>) {
   }
 }
 
-// const addTodo = createAppAsyncThunk<
-//   {
-//     todolist: TodolistType;
-//   },
-//   string
-// >("todoLists/addTodo", async (title, thunkAPI) => {
-//   const { rejectWithValue } = thunkAPI;
-//   const res = await todolistsApi.createTodolists(title);
-//   if (res.data.resultCode === ResultCode.Ok) {
-//     return { todolist: res.data.data.item };
-//   } else {
-//     return rejectWithValue(res.data);
-//   }
-// });
+//-------------------------------------
+const DELETE_TODO = "todoLists/deleteTodo";
+const DELETE_TODO_ID = "todoLists/deleteTodoId";
+const deleteTodoAction = createAction<{ todolistID: string }>(DELETE_TODO);
+const deleteTodoIdAction = createAction<string>(DELETE_TODO_ID);
 
-export const deleteTodo = createAppAsyncThunk<{ todolistID: string }, string>(
-  "todoLists/deletTodo",
-  async (todoId, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "loading" }));
-    const res = await todolistsApi.deleteTodolists(todoId);
-    if (res.data.resultCode === ResultCode.Ok) {
-      dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" }));
-      return { todolistID: todoId };
-    } else {
-      return rejectWithValue(res.data);
-    }
+function* deleteTodoSaga(action: ReturnType<typeof deleteTodoIdAction>) {
+  yield put(todoActions.changeEntStatusTodo({ todoId: action.payload, status: "loading" }));
+  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(todolistsApi.deleteTodolists, action.payload);
+  if (res.data.resultCode === ResultCode.Ok) {
+    yield put(todoActions.changeEntStatusTodo({ todoId: action.payload, status: "idle" }));
+    yield put(deleteTodoAction({ todolistID: action.payload }));
+  } else {
+    // return rejectWithValue(res.data);
   }
-);
-// export const deleteTodo = createAppAsyncThunk<{ todolistID: string }, string>(
-//   "todoLists/deletTodo",
-//   async (todoId, thunkAPI) => {
-//     const { dispatch, rejectWithValue } = thunkAPI;
-//     return thunkTryCatch(thunkAPI, async () => {
-//       const res = await todolistsApi.deleteTodolists(todoId);
-//       if (res.data.resultCode === ResultCode.Ok) {
-//         dispatch(appAction.setStatus({ status: "succeeded" }));
-//         return { todolistID: todoId };
-//       } else {
-//         handleServerAppError(res.data, dispatch);
-//       }
-//       dispatch(appAction.setStatus({ status: "failed" }));
-//       dispatch(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" }));
-//       return rejectWithValue(null);
-//     });
-//   }
-// );
+}
 
 export const changeTitleTodo = createAppAsyncThunk<CreateTaskType, CreateTaskType>(
   "todoLists/changeTitleTodo",
@@ -137,7 +107,7 @@ const slice = createSlice({
       .addCase(createTodoAction, (state, action) => {
         state.unshift({ ...action.payload.todolist, filter: "All", entityStatus: "idle" });
       })
-      .addCase(deleteTodo.fulfilled, (state, action) => {
+      .addCase(deleteTodoAction, (state, action) => {
         const index = state.findIndex((todo) => todo.id === action.payload.todolistID);
         if (index !== -1) {
           state.splice(index, 1);
@@ -167,6 +137,7 @@ export const todoThunk = {
   getTodolistAction,
   addTodoTitleAction,
   createTodoAction,
-  deleteTodo,
+  deleteTodoAction,
+  deleteTodoIdAction,
   changeTitleTodo,
 };

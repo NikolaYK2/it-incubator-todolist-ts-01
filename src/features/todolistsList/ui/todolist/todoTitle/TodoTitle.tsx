@@ -8,14 +8,14 @@ import { TodoAppType, todoThunk } from "features/todolistsList/model/todos/todoL
 type Props = {
   todolist: TodoAppType;
 };
-export const TodoTitle = memo((props:Props) => {
-  const {id, title} = props.todolist;
+export const TodoTitle = memo((props: Props) => {
+  const { id, title } = props.todolist;
 
-  const { deleteTodo, changeTitleTodo } = useActions(todoThunk);
+  const { deleteTodoIdAction, changeTitleTodo } = useActions(todoThunk);
 
   const onClickHandlerDeleteTodolist = useCallback(() => {
-    deleteTodo(props.todolist.id);
-  }, [deleteTodo, props.todolist.id]);
+    deleteTodoIdAction(props.todolist.id);
+  }, [deleteTodoIdAction, props.todolist.id]);
 
   const onChangeHandlerTitleTodolist = useCallback(
     (newValue: string) => {
@@ -29,7 +29,11 @@ export const TodoTitle = memo((props:Props) => {
       <h3>
         <EditableSpan title={title} onChange={onChangeHandlerTitleTodolist} />
       </h3>
-      <IconButton onClick={onClickHandlerDeleteTodolist} color={"error"} disabled={props.todolist.entityStatus === "loading"}>
+      <IconButton
+        onClick={onClickHandlerDeleteTodolist}
+        color={"error"}
+        disabled={props.todolist.entityStatus === "loading"}
+      >
         <Delete />
       </IconButton>
     </>

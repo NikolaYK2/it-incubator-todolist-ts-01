@@ -53,7 +53,7 @@ test("delete todolist", () => {
   const newTodolist = todoListsReducer(
     todoLists,
     {
-    type: todoThunk.deleteTodo.fulfilled.type,
+    type: todoThunk.deleteTodoAction.type,
     payload: {
         todolistID: "todolistID_1"
     }
