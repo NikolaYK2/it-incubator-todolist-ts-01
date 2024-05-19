@@ -3,18 +3,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { todoListsReducer, todoListsSagas } from "features/todolistsList/model/todos/todoListsReducer";
 import { tasksSagas, tasksReducer } from "features/todolistsList/model/tasks/tasksReducer";
 import { appReducer, appSagas } from "app/model/appReducer";
-import { authReducer } from "features/auth/model/authReducer";
+import { authReducer, authSagas } from "features/auth/model/authReducer";
 import createSagaMiddleware from "redux-saga";
 import { all } from "redux-saga/effects";
 
 const sagaMiddleware = createSagaMiddleware();
 
 function* rootSaga() {
-  yield all([
-    appSagas(),
-    tasksSagas(),
-    todoListsSagas()
-  ]);
+  yield all([appSagas(), tasksSagas(), todoListsSagas(), authSagas()]);
 }
 
 export const rootReducer = combineReducers({

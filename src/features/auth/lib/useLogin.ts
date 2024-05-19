@@ -2,10 +2,10 @@ import { useAppDispatch, useAppSelector } from "app/model/store";
 import { FormikHelpers, useFormik } from "formik";
 import { AuthLoginType } from "features/auth/api/authApi";
 import { authThunk } from "features/auth/model/authReducer";
-import { BaseResponsTodolistsType } from "common/api/todolistsApi";
+import { FieldsErrorsType } from "common/api/todolistsApi";
 import { captchaImgSelect } from "features/auth/model/authSelector";
 
-type FormikErrorType = Partial<AuthLoginType>
+type FormikErrorType = Partial<AuthLoginType>;
 
 export const useLogin = () => {
   const isLoggedIn = useAppSelector<boolean>((state) => state.auth.isLoggedIn);
@@ -36,13 +36,19 @@ export const useLogin = () => {
       captcha:false,
     },
     onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
-      dispatch(authThunk.authLogin(values))
-        .unwrap()
-        .then(() => {})
-        .catch((e: BaseResponsTodolistsType) => {
+      try {
+        dispatch(authThunk.authLoginAction(values))
+      }catch (e:any){
+        e.fieldsErrors?.forEach((el:FieldsErrorsType) => formikHelpers.setFieldError(el.field, el.error));
 
-          e.fieldsErrors?.forEach((el) => formikHelpers.setFieldError(el.field, el.error));
-        });
+      }
+      // dispatch(authThunk.authLoginAction(values))
+      //   .unwrap()
+      //   .then(() => {})
+      //   .catch((e: BaseResponsTodolistsType) => {
+      //
+      //     e.fieldsErrors?.forEach((el) => formikHelpers.setFieldError(el.field, el.error));
+      //   });
     },
   });
 

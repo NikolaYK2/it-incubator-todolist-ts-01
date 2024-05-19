@@ -3,7 +3,7 @@ import { EditableSpan } from "common/components";
 import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { useActions } from "common/hooks/useActions";
-import { TodoAppType, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
+import { TodoAppType, todoActions } from "features/todolistsList/model/todos/todoListsReducer";
 
 type Props = {
   todolist: TodoAppType;
@@ -11,7 +11,7 @@ type Props = {
 export const TodoTitle = memo((props: Props) => {
   const { id, title } = props.todolist;
 
-  const { deleteTodoIdAction, createTitleTodoAction } = useActions(todoThunk);
+  const { deleteTodoIdAction, createTitleTodoAction } = useActions(todoActions);
 
   const onClickHandlerDeleteTodolist = useCallback(() => {
     deleteTodoIdAction(props.todolist.id);

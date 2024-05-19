@@ -1,6 +1,6 @@
 import { createAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appAction, StatusType } from "app/model/appReducer";
-import { todoActions, todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
+import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import {
   ArgUpdateTaskType,
@@ -274,13 +274,13 @@ const slice = createSlice({
         const index = tasks.findIndex((t) => t.id === action.payload.taskId);
         if (index !== -1) tasks[index] = { ...tasks[index], ...action.payload.model };
       })
-      .addCase(todoThunk.createTodoAction, (state, action) => {
+      .addCase(todoActions.createTodoAction, (state, action) => {
         state[action.payload.todolist.id] = [];
       })
-      .addCase(todoThunk.deleteTodoAction, (state, action) => {
+      .addCase(todoActions.deleteTodoAction, (state, action) => {
         delete state[action.payload.todolistID];
       })
-      .addCase(todoThunk.setTodolistAction, (state, action) => {
+      .addCase(todoActions.setTodolistAction, (state, action) => {
         action.payload.todolist.forEach((tl) => {
           state[tl.id] = [];
         });

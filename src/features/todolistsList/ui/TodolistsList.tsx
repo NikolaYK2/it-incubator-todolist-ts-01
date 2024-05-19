@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
+import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
@@ -19,7 +19,7 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   const isLoggedIn = useAppSelector(authSelect);
   const status = useAppSelector(statusSelector);
 
-  const { getTodolistAction, addTodoTitleAction} = useActions(todoThunk);
+  const { getTodolistAction, addTodoTitleAction} = useActions(todoActions);
 
   //Достаем тудулисты ========================================
   useEffect(() => {

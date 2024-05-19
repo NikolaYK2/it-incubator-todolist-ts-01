@@ -1,9 +1,4 @@
-import {
-  todoActions,
-  TodoAppType,
-  todoListsReducer,
-  todoThunk,
-} from "features/todolistsList/model/todos/todoListsReducer";
+import { todoActions, TodoAppType, todoListsReducer } from "features/todolistsList/model/todos/todoListsReducer";
 
 let todoLists: TodoAppType[];
 beforeEach(() => {
@@ -53,7 +48,7 @@ test("delete todolist", () => {
   const newTodolist = todoListsReducer(
     todoLists,
     {
-    type: todoThunk.deleteTodoAction.type,
+    type: todoActions.deleteTodoAction.type,
     payload: {
         todolistID: "todolistID_1"
     }
@@ -65,7 +60,7 @@ test("CHANGE TITLE TODO", () => {
   const newTodolist = todoListsReducer(
     todoLists,
     {
-      type: todoThunk.changeTitleTodoAction.type,
+      type: todoActions.changeTitleTodoAction.type,
       payload: {
         todoId: "todolistID_1",
         title: "Hi",

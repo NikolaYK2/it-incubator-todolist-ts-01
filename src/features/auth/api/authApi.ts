@@ -14,7 +14,7 @@ export type AuthMeType = {
   login: string;
 };
 
-type captchaUrl={
+export type CaptchaUrl ={
   url:string
 }
 export const authApi = {
@@ -28,6 +28,6 @@ export const authApi = {
     return instance.delete<BaseResponsTodolistsType>("auth/login");
   },
   captcha() {
-    return instance.get<captchaUrl>("security/get-captcha-url");
+    return instance.get<CaptchaUrl>("security/get-captcha-url");
   }
 };

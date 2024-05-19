@@ -1,4 +1,4 @@
-import { todoThunk } from "features/todolistsList/model/todos/todoListsReducer";
+import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
 import { tasksReducer, TaskStateType } from "features/todolistsList/model/tasks/tasksReducer";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 
@@ -145,7 +145,7 @@ test("delete todolist and task", () => {
   };
 
   const newTask = tasksReducer(tasks, {
-    type: todoThunk.deleteTodoAction.type,
+    type: todoActions.deleteTodoAction.type,
     payload: {
       todolistID: "todolistID_1",
     },

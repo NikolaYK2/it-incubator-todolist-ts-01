@@ -138,8 +138,8 @@ const slice = createSlice({
 });
 
 export const todoListsReducer = slice.reducer;
-export const todoActions = slice.actions;
-export const todoThunk = {
+export const todoActions = {
+  ...slice.actions,
   setTodolistAction,
   getTodolistAction,
   addTodoTitleAction,

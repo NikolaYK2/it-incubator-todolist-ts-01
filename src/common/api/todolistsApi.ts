@@ -16,7 +16,7 @@ export const instance = axios.create({
 //   data: D;
 // };
 
-type FieldsErrorsType = {
+export type FieldsErrorsType = {
   error: string;
   field: string;
 };
