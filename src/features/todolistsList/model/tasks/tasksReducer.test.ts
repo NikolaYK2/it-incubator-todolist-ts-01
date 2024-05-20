@@ -131,6 +131,8 @@ test("get tasks saga", () => {
   expect(gen.next(res).value).toEqual(put(taskActions.setTasksAction({ tasks: res.data.items, todoId: todoId })));
 
   expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "succeeded" })));
+
+  expect(gen.next().done).toBeTruthy();
 });
 
 // test("add task", () => {

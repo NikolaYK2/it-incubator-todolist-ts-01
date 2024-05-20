@@ -32,7 +32,7 @@ export function* getTasksSaga(action: ReturnType<typeof setTasksAction>) {
   yield put(appAction.setStatus({ status: "loading" }));
   const res: AxiosResponse<GetTaskType> = yield call(tasksApi.getTasks, action.payload.todoId);
   yield put(setTasksAction({ tasks: res.data.items, todoId: action.payload.todoId }));
-  yield put(appAction.setStatus({ status: "succeeded" }));
+  return  put(appAction.setStatus({ status: "succeeded" }));
 }
 
 // --------------------
