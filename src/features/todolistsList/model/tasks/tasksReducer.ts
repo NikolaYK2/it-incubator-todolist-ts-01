@@ -29,8 +29,10 @@ const requestTasksAction = createAction<{ todoId: string }>(SET_TASKS_ID);
 const setTasksAction = createAction<{ tasks: TaskType[]; todoId: string }>(SET_TASKS);
 
 export function* getTasksSaga(action: ReturnType<typeof setTasksAction>) {
+  yield put(appAction.setStatus({ status: "loading" }));
   const res: AxiosResponse<GetTaskType> = yield call(tasksApi.getTasks, action.payload.todoId);
   yield put(setTasksAction({ tasks: res.data.items, todoId: action.payload.todoId }));
+  yield put(appAction.setStatus({ status: "succeeded" }));
 }
 
 // --------------------
@@ -55,6 +57,7 @@ export function* addTasksSaga(action: ReturnType<typeof createTasksAction>) {
     // return rejectWithValue(res.data);
   }
 }
+
 //extra -----------------------------
 // const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("tasks/addTasks", async (arg, thunkAPI) => {
 //   const { rejectWithValue } = thunkAPI;
@@ -98,6 +101,7 @@ export function* deleteTasksSaga(action: ReturnType<typeof deleteTasksAction>) {
     yield put(deleteTasksSuccess({ todoId: action.payload.todoId, taskId: action.payload.taskId }));
   }
 }
+
 //extra --------
 // export const deleteTasksTC = createAppAsyncThunk(
 //   "tasks/deleteTask",
@@ -170,6 +174,7 @@ function* updateTaskSaga(action: ReturnType<typeof updateTaskAction>) {
     }
   } catch (e: any) {}
 }
+
 // export type UpdTaskTCType = Partial<UpdTaskType>;
 // const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
 //   "tasks/updateTas",
@@ -298,4 +303,5 @@ export const taskActions = {
   deleteTasksAction,
   createTasksAction,
   updateTaskAction,
+  setTasksAction,
 };

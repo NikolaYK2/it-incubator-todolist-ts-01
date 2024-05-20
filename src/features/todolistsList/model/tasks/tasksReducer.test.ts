@@ -1,7 +1,12 @@
-import { TaskStateType } from "features/todolistsList/model/tasks/tasksReducer";
+import { getTasksSaga, SET_TASKS, taskActions, TaskStateType } from "features/todolistsList/model/tasks/tasksReducer";
 import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
+import { call, put } from "redux-saga/effects";
+import { appAction } from "app/model/appReducer";
+import { AxiosResponse } from "axios";
+import { GetTaskType, tasksApi } from "features/todolistsList/api/tasksApi";
 
 let tasks: TaskStateType;
+let meResponse: AxiosResponse<GetTaskType>;
 beforeEach(() => {
   tasks = {
     todolistID_1: [
@@ -15,7 +20,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
+        description: "",
       },
       {
         id: "2",
@@ -27,7 +32,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
+        description: "",
       },
       {
         id: "3",
@@ -39,7 +44,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
+        description: "",
       },
       {
         id: "4",
@@ -51,8 +56,8 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_1",
-        description: ""
-      }
+        description: "",
+      },
     ],
     todolistID_2: [
       {
@@ -65,7 +70,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
+        description: "",
       },
       {
         id: "2",
@@ -77,7 +82,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
+        description: "",
       },
       {
         id: "3",
@@ -89,7 +94,7 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
+        description: "",
       },
       {
         id: "4",
@@ -101,10 +106,31 @@ beforeEach(() => {
         order: 0,
         priority: TodoTaskPriorities.Low,
         todoListId: "todolistID_2",
-        description: ""
-      }
-    ]
+        description: "",
+      },
+    ],
   };
+  meResponse = {
+    data: {
+      error: "",
+      totalCount: 1,
+      items: tasks["todolistID_1"],
+    },
+  } as AxiosResponse<GetTaskType>;
+});
+
+test("get tasks saga", () => {
+  const todoId = "1";
+  const gen = getTasksSaga({ type: SET_TASKS, payload: { tasks: tasks["todolistID_1"], todoId: todoId } });
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(tasksApi.getTasks, todoId));
+
+  const res: AxiosResponse<GetTaskType> = meResponse;
+  expect(gen.next(res).value).toEqual(put(taskActions.setTasksAction({ tasks: res.data.items, todoId: todoId })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "succeeded" })));
 });
 
 // test("add task", () => {
