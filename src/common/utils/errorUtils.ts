@@ -1,36 +1,30 @@
 import { appAction } from "app/model/appReducer";
-import { AppDispatch } from "app/model/store";
 import axios from "axios";
 import { BaseResponsTodolistsType } from "common/api/todolistsApi";
+import { put } from "redux-saga/effects";
 
 /**
  * handleServerAppError - global обработка errors Обрабатывает ошибки сервера приложения
  * @template D - Тип данных, возвращаемых сервером.
  * @param data - принимаемые значения res
- * @param dispatch - statuses, loading, в случаи если нет ошибки на BC пишем свою
  * @param showError - change global errors off/on
  */
-export const handleServerAppError = <D>(
+export function* handleServerAppErrorSaga<D>(
   data: BaseResponsTodolistsType<D>,
-  dispatch: AppDispatch,
   showError: boolean = true //Делаем по умолчанию true
-) => {
-  // export const handleServerAppError = <D>(data: ResponsTodolistsType<D>, dispatch: Dispatch<SetAppErrorACType | SetAppStatusACType>) => {
-  if  (showError){
+){
+  if (showError) {
     if (data.messages.length) {
-      dispatch(appAction.setError({ error: data.messages[0] }));
-      // dispatch(setAppErrorAC(data.messages[0]));
+      yield put(appAction.setError({ error: data.messages[0] }));
     } else {
-      dispatch(appAction.setError({ error: "Some error occurred" }));
-      // dispatch(setAppErrorAC('Some error occurred'))
+      yield put(appAction.setError({ error: "Some error occurred" }));
     }
-    // dispatch(setAppStatusAC('failed'));
   }
-  dispatch(appAction.setStatus({ status: "failed" }));
-};
+  yield put(appAction.setStatus({ status: "failed" }));
+}
 
-
-export const handleServerNetworkError = (error: unknown, dispatch: AppDispatch): void => {
+// ---------------------------------------------------------------------------------------------
+export function* handleServerNetworkErrorSaga(error: unknown) {
   let errorMessage = "Some error occurred";
 
   // ❗Проверка на наличие axios ошибки
@@ -44,6 +38,6 @@ export const handleServerNetworkError = (error: unknown, dispatch: AppDispatch):
     errorMessage = JSON.stringify(error);
   }
 
-  dispatch(appAction.setError({ error: errorMessage }));
-  dispatch(appAction.setStatus({ status: "failed" }));
-};
+  yield put(appAction.setError({ error: errorMessage }));
+  yield put(appAction.setStatus({ status: "failed" }));
+}

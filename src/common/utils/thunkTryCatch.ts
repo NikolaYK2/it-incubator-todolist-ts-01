@@ -1,7 +1,7 @@
-import { handleServerNetworkError } from "common/utils/errorUtils";
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
 import { AppDispatch, AppRootStateType } from "app/model/store";
 import { BaseResponsTodolistsType } from "common/api/todolistsApi";
+import { handleServerNetworkErrorSaga } from "common/utils/errorUtils";
 
 export const thunkTryCatch = async <T>( //функция принимает два параметра
   //первым параметром принимает thunkAPI
@@ -11,12 +11,12 @@ export const thunkTryCatch = async <T>( //функция принимает дв
   // по этому fn должна быть async
   logic: () => Promise<T>
 ): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
-  const { dispatch, rejectWithValue } = thunkAPI;
+  const {rejectWithValue } = thunkAPI;
   // dispatch(appAction.setStatus({ status: "loading" }));//теперь это отрабатывает в экстраредьюсерах
   try {
     return await logic();
   } catch (e) {
-    handleServerNetworkError(e, dispatch);
+    handleServerNetworkErrorSaga(e);
     return rejectWithValue(null);
   }
   // finally {
