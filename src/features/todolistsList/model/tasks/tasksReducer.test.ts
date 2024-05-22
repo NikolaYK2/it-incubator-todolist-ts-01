@@ -1,12 +1,20 @@
-import { getTasksSaga, SET_TASKS, taskActions, TaskStateType } from "features/todolistsList/model/tasks/tasksReducer";
-import { TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
+import {
+  ADD_TASKS,
+  addTasksSaga,
+  getTasksSaga,
+  SET_TASKS,
+  taskActions,
+  TaskStateType,
+} from "features/todolistsList/model/tasks/tasksReducer";
+import { BaseResponsTodolistsType, ResultCode, TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 import { call, put } from "redux-saga/effects";
 import { appAction } from "app/model/appReducer";
 import { AxiosResponse } from "axios";
-import { GetTaskType, tasksApi } from "features/todolistsList/api/tasksApi";
+import { GetTaskType, tasksApi, TaskType } from "features/todolistsList/api/tasksApi";
 
 let tasks: TaskStateType;
-let meResponse: AxiosResponse<GetTaskType>;
+let meResponseError: AxiosResponse<GetTaskType>;
+let meResponseData: AxiosResponse<BaseResponsTodolistsType<{ item: TaskType }>>;
 beforeEach(() => {
   tasks = {
     todolistID_1: [
@@ -110,13 +118,21 @@ beforeEach(() => {
       },
     ],
   };
-  meResponse = {
+
+  meResponseError = {
     data: {
       error: "",
       totalCount: 1,
       items: tasks["todolistID_1"],
     },
   } as AxiosResponse<GetTaskType>;
+
+  meResponseData = {
+    data: {
+      data: {},
+      resultCode: ResultCode.Ok,
+    },
+  } as AxiosResponse<BaseResponsTodolistsType<{ item: TaskType }>>;
 });
 
 test("get tasks saga", () => {
@@ -127,7 +143,7 @@ test("get tasks saga", () => {
 
   expect(gen.next().value).toEqual(call(tasksApi.getTasks, todoId));
 
-  const res: AxiosResponse<GetTaskType> = meResponse;
+  const res = meResponseError;
   expect(gen.next(res).value).toEqual(put(taskActions.setTasksAction({ tasks: res.data.items, todoId: todoId })));
 
   expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "succeeded" })));
@@ -135,30 +151,33 @@ test("get tasks saga", () => {
   expect(gen.next().done).toBeTruthy();
 });
 
-// test("add task", () => {
-//   const newTasks = tasksReducer(tasks, {
-//     type: tasksThunk.addTasksTC.fulfilled.type,
-//     payload: {
-//       task: {
-//         id: "3",
-//         title: "He",
-//         status: TaskStatuses.New,
-//         addedDate: "",
-//         startDate: "",
-//         deadline: "",
-//         order: 0,
-//         priority: TodoTaskPriorities.Low,
-//         todoListId: "todolistID_2",
-//         description: ""
-//       }
-//     }
-//   });
-//
-//   expect(newTasks["todolistID_2"].length).toBe(5);
-//   expect(newTasks["todolistID_2"][0].title).toBe("He");
-//   expect(newTasks["todolistID_2"][0].id).toBeDefined();
-//   expect(newTasks["todolistID_2"][0].status).toBe(TaskStatuses.New);
-// });
+test("add task saga", () => {
+  const task = { todoId: "1", title: "hi" };
+  const gen = addTasksSaga({ type: ADD_TASKS, payload: task });
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(tasksApi.createTask, task));
+
+  expect(gen.next(meResponseData).value).toEqual(
+    put(taskActions.addTasksAction({ task: meResponseData.data.data.item }))
+  );
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "succeeded" })));
+});
+
+test("add task saga error", () => {
+  const task = { todoId: "1", title: "hi" };
+  const gen = addTasksSaga({ type: ADD_TASKS, payload: task });
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(tasksApi.createTask, task));
+
+  expect(gen.throw('some error').value).toEqual(put(appAction.setError({ error:  "\"some error\"" })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
+});
+
+
 
 // test("add todolist and null tasks", () => {
 //   const newTasks = tasksReducer(tasks, {
