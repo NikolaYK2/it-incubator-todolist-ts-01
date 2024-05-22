@@ -12,6 +12,7 @@ import {
 } from "features/todolistsList/api/tasksApi";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
+import { handleServerAppErrorSaga, handleServerNetworkErrorSaga } from "common/utils/errorUtils";
 
 //SAGAS WATCHER -------------------------------
 export function* tasksSagas() {
@@ -32,7 +33,7 @@ export function* getTasksSaga(action: ReturnType<typeof setTasksAction>) {
   yield put(appAction.setStatus({ status: "loading" }));
   const res: AxiosResponse<GetTaskType> = yield call(tasksApi.getTasks, action.payload.todoId);
   yield put(setTasksAction({ tasks: res.data.items, todoId: action.payload.todoId }));
-  return  put(appAction.setStatus({ status: "succeeded" }));
+  yield put(appAction.setStatus({ status: "succeeded" }));
 }
 
 // --------------------
@@ -43,18 +44,21 @@ const addTasksAction = createAction<{ task: TaskType }>(CREATE_TASKS);
 
 export function* addTasksSaga(action: ReturnType<typeof createTasksAction>) {
   yield put(appAction.setStatus({ status: "loading" }));
+  try {
+    const res: AxiosResponse<
+      BaseResponsTodolistsType<{
+        item: TaskType;
+      }>
+    > = yield call(tasksApi.createTask, action.payload);
 
-  const res: AxiosResponse<
-    BaseResponsTodolistsType<{
-      item: TaskType;
-    }>
-  > = yield call(tasksApi.createTask, action.payload);
-
-  if (res.data.resultCode === ResultCode.Ok) {
-    yield put(addTasksAction({ task: res.data.data.item }));
-    yield put(appAction.setStatus({ status: "succeeded" }));
-  } else {
-    // return rejectWithValue(res.data);
+    if (res.data.resultCode === ResultCode.Ok) {
+      yield put(addTasksAction({ task: res.data.data.item }));
+      yield put(appAction.setStatus({ status: "succeeded" }));
+    } else {
+      yield* handleServerAppErrorSaga(res.data);
+    }
+  } catch (e) {
+    yield* handleServerNetworkErrorSaga(e);
   }
 }
 
@@ -304,4 +308,5 @@ export const taskActions = {
   createTasksAction,
   updateTaskAction,
   setTasksAction,
+  addTasksAction,
 };
