@@ -12,7 +12,7 @@ import {
 } from "features/todolistsList/api/tasksApi";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
-import { handleServerAppErrorSaga } from "common/utils/errorUtils";
+import { handleServerAppErrorSaga, handleServerNetworkErrorSaga } from "common/utils/errorUtils";
 import sagaTryCatch from "common/utils/thunkTryCatch";
 
 //SAGAS WATCHER -------------------------------
@@ -60,6 +60,7 @@ export function* addTasksSaga(action: ReturnType<typeof createTasksAction>) {
   });
 }
 
+// -----------------------------------------------------------------------------------------
 export const REMOVE_TASKS = "tasks/deleteTask";
 export const REMOVE_TASKS_SUCCESS = "tasks/deleteTaskSuccess";
 
@@ -92,20 +93,6 @@ export function* deleteTasksSaga(action: ReturnType<typeof deleteTasksAction>) {
     yield put(deleteTasksSuccess({ todoId: action.payload.todoId, taskId: action.payload.taskId }));
   }
 }
-
-//extra --------
-// export const deleteTasksTC = createAppAsyncThunk(
-//   "tasks/deleteTask",
-//   async (arg: { todoId: string; taskId: string }, thunkAPI) => {
-//     const { dispatch } = thunkAPI;
-//     dispatch(taskActions.changeEntStatusTask({ taskId: arg.taskId, todoId: arg.todoId, status: "loading" }));
-//     const res = await tasksApi.deleteTask(arg.todoId, arg.taskId);
-//     if (res.data.resultCode === ResultCode.Ok) {
-//       dispatch(taskActions.changeEntStatusTask({ taskId: arg.taskId, todoId: arg.todoId, status: "idle" }));
-//       return { todoId: arg.todoId, taskId: arg.taskId };
-//     }
-//   }
-// );
 
 //UPD task ----------------------------------------------------------------
 export type UpdTaskTCType = Partial<UpdTaskType>;
@@ -161,49 +148,12 @@ function* updateTaskSaga(action: ReturnType<typeof updateTaskAction>) {
         })
       );
     } else {
-      // return rejectWithValue(res.data);
+      yield* handleServerAppErrorSaga(res.data);
     }
-  } catch (e: any) {}
+  } catch (e) {
+    yield* handleServerNetworkErrorSaga(e);
+  }
 }
-
-// export type UpdTaskTCType = Partial<UpdTaskType>;
-// const updateTaskTC = createAppAsyncThunk<ArgUpdateTaskType, ArgUpdateTaskType>(
-//   "tasks/updateTas",
-//   async (arg, thunkAPI) => {
-//     const { getState, dispatch, rejectWithValue } = thunkAPI;
-//
-//     const task = getState().tasks[arg.todoId].find((t) => t.id === arg.taskId); //Будет бежать по массиву только до первого совпадения
-//     dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "loading" }));
-//
-//     if (!task) {
-//       console.warn("task not found");
-//       return rejectWithValue(null);
-//     }
-//
-//     const apiModel: UpdTaskType = {
-//       title: task.title,
-//       description: task.description,
-//       status: task.status,
-//       priority: task.priority,
-//       startDate: task.startDate,
-//       deadline: task.deadline,
-//       // ...task - нельзя, отправим много чего лишнего
-//       ...arg.model
-//     };
-//     // return thunkTryCatch(thunkAPI, async () => {
-//     const res = await tasksApi.updateTask(arg, apiModel);
-//     if (res.data.resultCode === ResultCode.Ok) {
-//       dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "succeeded" }));
-//       // return { todoId: arg.todoId, taskId: arg.taskId, model: apiModel };
-//       return arg;
-//     } else {
-//       return rejectWithValue(res.data);
-//     }
-//     // }).finally(() => {
-//     //   dispatch(taskActions.changeEntStatusTask({ todoId: arg.todoId, taskId: arg.taskId, status: "idle" }));
-//     // });
-//   }
-// );
 
 //reducer --------------------------------------------------------
 export type EntStatusType = {
@@ -292,6 +242,7 @@ export const taskActions = {
   ...slice.actions,
   requestTasksAction,
   deleteTasksAction,
+  deleteTasksSuccess,
   createTasksAction,
   updateTaskAction,
   setTasksAction,
