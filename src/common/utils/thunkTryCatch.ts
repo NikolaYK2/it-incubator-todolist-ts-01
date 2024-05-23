@@ -1,25 +1,16 @@
-import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
-import { AppDispatch, AppRootStateType } from "app/model/store";
-import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 import { handleServerNetworkErrorSaga } from "common/utils/errorUtils";
+import { put } from "redux-saga/effects";
+import { appAction } from "app/model/appReducer";
 
-export const thunkTryCatch = async <T>( //функция принимает два параметра
-  //первым параметром принимает thunkAPI
-  //BaseThunkAPI<S-state app, E-extra arg, D- dispatch, rejectValue>
-  thunkAPI: BaseThunkAPI<AppRootStateType, unknown, AppDispatch, null | BaseResponsTodolistsType>,
-  //logic - наша логика с которой мы работаем, которая будет выполняться и она будет возвращать промис,
-  // по этому fn должна быть async
-  logic: () => Promise<T>
-): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
-  const {rejectWithValue } = thunkAPI;
-  // dispatch(appAction.setStatus({ status: "loading" }));//теперь это отрабатывает в экстраредьюсерах
+function* sagaTryCatch<T>(logic: () => Generator<any, T, any>): Generator {
+  yield put(appAction.setStatus({ status: "loading" }));
   try {
-    return await logic();
+    yield* logic();
   } catch (e) {
-    handleServerNetworkErrorSaga(e);
-    return rejectWithValue(null);
+    yield* handleServerNetworkErrorSaga(e);
+  } finally {
+    yield put(appAction.setStatus({ status: "idle" }));
   }
-  // finally {
-  //   dispatch(appAction.setStatus({ status: "idle" }));
-  // }
-};
+}
+
+export default sagaTryCatch;

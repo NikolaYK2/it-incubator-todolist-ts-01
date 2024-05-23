@@ -12,7 +12,8 @@ import {
 } from "features/todolistsList/api/tasksApi";
 import { call, put, select, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
-import { handleServerAppErrorSaga, handleServerNetworkErrorSaga } from "common/utils/errorUtils";
+import { handleServerAppErrorSaga } from "common/utils/errorUtils";
+import sagaTryCatch from "common/utils/thunkTryCatch";
 
 //SAGAS WATCHER -------------------------------
 export function* tasksSagas() {
@@ -43,8 +44,7 @@ const createTasksAction = createAction<CreateTaskType>(ADD_TASKS);
 const addTasksAction = createAction<{ task: TaskType }>(CREATE_TASKS);
 
 export function* addTasksSaga(action: ReturnType<typeof createTasksAction>) {
-  yield put(appAction.setStatus({ status: "loading" }));
-  try {
+  yield* sagaTryCatch(function* () {
     const res: AxiosResponse<
       BaseResponsTodolistsType<{
         item: TaskType;
@@ -57,21 +57,8 @@ export function* addTasksSaga(action: ReturnType<typeof createTasksAction>) {
     } else {
       yield* handleServerAppErrorSaga(res.data);
     }
-  } catch (e) {
-    yield* handleServerNetworkErrorSaga(e);
-  }
+  });
 }
-
-//extra -----------------------------
-// const addTasksTC = createAppAsyncThunk<{ task: TaskType }, CreateTaskType>("tasks/addTasks", async (arg, thunkAPI) => {
-//   const { rejectWithValue } = thunkAPI;
-//   const res = await tasksApi.createTask(arg);
-//   if (res.data.resultCode === ResultCode.Ok) {
-//     return { task: res.data.data.item };
-//   } else {
-//     return rejectWithValue(res.data);
-//   }
-// });
 
 export const REMOVE_TASKS = "tasks/deleteTask";
 export const REMOVE_TASKS_SUCCESS = "tasks/deleteTaskSuccess";
