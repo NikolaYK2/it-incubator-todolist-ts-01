@@ -7,6 +7,8 @@ import {
   SET_TASKS,
   taskActions,
   TaskStateType,
+  UPD_TASK,
+  updateTaskSaga,
 } from "features/todolistsList/model/tasks/tasksReducer";
 import { BaseResponsTodolistsType, ResultCode, TaskStatuses, TodoTaskPriorities } from "common/api/todolistsApi";
 import { call, put } from "redux-saga/effects";
@@ -229,4 +231,26 @@ test("delete task saga un error", () => {
 
   meResponseData.data.resultCode = 1;
   expect(gen.next(meResponseData).value).toEqual(undefined);
+});
+
+test("upd task saga", () => {
+  const task = { payload: { todoId: "todolistID_1", taskId: "1", model: tasks } };
+  const gen = updateTaskSaga({ type: UPD_TASK, payload: task.payload });
+
+  // expect(gen.next().value).toEqual(
+  //   select((state) => state.tasks[task.payload.todoId].find((t: TaskType) => t.id === task.payload.taskId))
+  // );
+  // Проверяем следующий вызов, который должен сделать put
+  // // expect(gen.next().value).toEqual(
+  // //   put(
+  // //     taskActions.changeEntStatusTask({
+  // //       todoId: task.payload.todoId,
+  // //       taskId: task.payload.taskId,
+  // //       status: "loading",
+  // //     })
+  // //   )
+  // );
+
+  // Продолжайте тестирование вашей саги...
+  // expect(gen.next().value).toEqual(call(tasksApi.updateTask, task, selectEfect));
 });

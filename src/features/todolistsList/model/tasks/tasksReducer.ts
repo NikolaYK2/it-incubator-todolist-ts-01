@@ -97,12 +97,12 @@ export function* deleteTasksSaga(action: ReturnType<typeof deleteTasksAction>) {
 //UPD task ----------------------------------------------------------------
 export type UpdTaskTCType = Partial<UpdTaskType>;
 
-const UPD_TASK = "tasks/updateTasks";
+export const UPD_TASK = "tasks/updateTasks";
 const UPD_TASK_SUCCESS = "tasks/updateTaskSuccess";
 const updateTaskAction = createAction<ArgUpdateTaskType>(UPD_TASK);
 const updateTaskSuccessAction = createAction<ArgUpdateTaskType>(UPD_TASK_SUCCESS);
 
-function* updateTaskSaga(action: ReturnType<typeof updateTaskAction>) {
+export function* updateTaskSaga(action: ReturnType<typeof updateTaskAction>) {
   const task: TaskType = yield select((state) =>
     state.tasks[action.payload.todoId].find((t: TaskType) => t.id === action.payload.taskId)
   );
