@@ -6,7 +6,7 @@ import { CreateTaskType } from "features/todolistsList/api/tasksApi";
 import { call, put, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
 import sagaTryCatch from "common/utils/thunkTryCatch";
-import { handleServerAppErrorSaga } from "common/utils";
+import { handleServerAppErrorSaga, handleServerNetworkErrorSaga } from "common/utils";
 
 export function* todoListsSagas() {
   yield takeEvery(GET_TODO, setTodolistSaga);
@@ -48,18 +48,23 @@ export function* addTodoSaga(action: ReturnType<typeof addTodoTitleAction>) {
 
 //-------------------------------------
 const DELETE_TODO = "todoLists/deleteTodo";
-const DELETE_TODO_ID = "todoLists/deleteTodoId";
+export const DELETE_TODO_ID = "todoLists/deleteTodoId";
 const deleteTodoAction = createAction<{ todolistID: string }>(DELETE_TODO);
 const deleteTodoIdAction = createAction<string>(DELETE_TODO_ID);
 
-function* deleteTodoSaga(action: ReturnType<typeof deleteTodoIdAction>) {
-  yield put(todoActions.changeEntStatusTodo({ todoId: action.payload, status: "loading" }));
-  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(todolistsApi.deleteTodolists, action.payload);
-  if (res.data.resultCode === ResultCode.Ok) {
+export function* deleteTodoSaga(action: ReturnType<typeof deleteTodoIdAction>) {
+  try {
+    yield put(todoActions.changeEntStatusTodo({ todoId: action.payload, status: "loading" }));
+    const res: AxiosResponse<BaseResponsTodolistsType> = yield call(todolistsApi.deleteTodolists, action.payload);
+    if (res.data.resultCode === ResultCode.Ok) {
+      yield put(deleteTodoAction({ todolistID: action.payload }));
+    } else {
+      yield* handleServerAppErrorSaga(res.data);
+    }
+  } catch (e) {
+    yield* handleServerNetworkErrorSaga(e);
+  } finally {
     yield put(todoActions.changeEntStatusTodo({ todoId: action.payload, status: "idle" }));
-    yield put(deleteTodoAction({ todolistID: action.payload }));
-  } else {
-    // return rejectWithValue(res.data);
   }
 }
 

@@ -1,6 +1,8 @@
 import {
   addTodoSaga,
   CREATE_TODO,
+  DELETE_TODO_ID,
+  deleteTodoSaga,
   todoActions,
   TodoAppType,
   todoListsReducer,
@@ -86,14 +88,44 @@ test("add todolist saga error network", () => {
   expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
 });
 
-test("delete todolist", () => {
-  const newTodolist = todoListsReducer(todoLists, {
-    type: todoActions.deleteTodoAction.type,
-    payload: {
-      todolistID: "todolistID_1",
-    },
-  });
-  expect(newTodolist.length).toBe(1);
+test("delete todolist saga", () => {
+  const todoId = "todolistID_1";
+  const gen = deleteTodoSaga({ type: DELETE_TODO_ID, payload: todoId });
+
+  expect(gen.next().value).toEqual(put(todoActions.changeEntStatusTodo({ todoId: todoId, status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.deleteTodolists, todoId));
+
+  expect(gen.next(meResponse).value).toEqual(put(todoActions.deleteTodoAction({ todolistID: todoId })));
+
+  expect(gen.next().value).toEqual(put(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" })));
+});
+
+test("delete todolist saga error server", () => {
+  const todoId = "todolistID_1";
+  const gen = deleteTodoSaga({ type: DELETE_TODO_ID, payload: todoId });
+
+  expect(gen.next().value).toEqual(put(todoActions.changeEntStatusTodo({ todoId: todoId, status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.deleteTodolists, todoId));
+
+  meResponse.data.resultCode = 1;
+  expect(gen.next(meResponse).value).toEqual(put(appAction.setError({ error: meResponse.data.messages[0] })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
+});
+
+test("delete todolist saga error network", () => {
+  const todoId = "todolistID_1";
+  const gen = deleteTodoSaga({ type: DELETE_TODO_ID, payload: todoId });
+
+  expect(gen.next().value).toEqual(put(todoActions.changeEntStatusTodo({ todoId: todoId, status: "loading" })));
+
+  expect(gen.throw("error").value).toEqual(put(appAction.setError({ error: '"error"' })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
+
+  expect(gen.next().value).toEqual(put(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" })));
 });
 
 test("CHANGE TITLE TODO", () => {
