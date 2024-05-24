@@ -1,6 +1,18 @@
-import { todoActions, TodoAppType, todoListsReducer } from "features/todolistsList/model/todos/todoListsReducer";
+import {
+  addTodoSaga,
+  CREATE_TODO,
+  todoActions,
+  TodoAppType,
+  todoListsReducer,
+} from "features/todolistsList/model/todos/todoListsReducer";
+import { call, put } from "redux-saga/effects";
+import { appAction } from "app/model/appReducer";
+import { todolistsApi, TodolistType } from "features/todolistsList/api/todolistsApi";
+import { AxiosResponse } from "axios";
+import { BaseResponsTodolistsType } from "common/api/todolistsApi";
 
 let todoLists: TodoAppType[];
+let meResponse: AxiosResponse<BaseResponsTodolistsType>;
 beforeEach(() => {
   todoLists = [
     {
@@ -20,53 +32,78 @@ beforeEach(() => {
       entityStatus: "idle",
     },
   ];
+  meResponse = {
+    data: {
+      data: {},
+      resultCode: 0,
+      messages: ["error"],
+    },
+  } as AxiosResponse<BaseResponsTodolistsType>;
 });
-// test("add new todolist", () => {
-//   // const todoLists: TodolistType[] = [
-//   //     {id: todolistID_1, title: 'What to learn', filter: 'All'},
-//   //     {id: todolistID_2, title: 'What to buy', filter: 'All'},
-//   // ];
-//   const newTodolist = todoListsReducer(
-//     todoLists,
-//     {
-//       type: todoThunk.addTodo.fulfilled.type,
-//       payload:{
-//         todolist: {
-//           id: "todolistID_1",
-//           title: "What to learn",
-//           order: 0,
-//           addedDate: "",
-//         },
-//       }
-//     }
-//   );
-//   expect(newTodolist.length).toBe(3);
-//   expect(todoLists.length).toBe(2);
-// });
+
+test("add todolist saga", () => {
+  const title = "saga";
+  const gen = addTodoSaga({ type: CREATE_TODO, payload: title });
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.createTodolists, title));
+
+  const res: AxiosResponse<
+    BaseResponsTodolistsType<{
+      item: TodolistType;
+    }>
+  > = meResponse as AxiosResponse<BaseResponsTodolistsType<{ item: TodolistType }>>;
+
+  expect(gen.next(res).value).toEqual(put(todoActions.createTodoAction({ todolist: res.data.data.item })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "idle" })));
+});
+
+test("add todolist saga error server", () => {
+  const title = "saga";
+  const gen = addTodoSaga({ type: CREATE_TODO, payload: title });
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.createTodolists, title));
+
+  meResponse.data.resultCode = 1;
+  expect(gen.next(meResponse).value).toEqual(put(appAction.setError({ error: meResponse.data.messages[0] })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
+});
+
+test("add todolist saga error network", () => {
+  const title = "saga";
+  const gen = addTodoSaga({ type: CREATE_TODO, payload: title });
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.createTodolists, title));
+  expect(gen.throw("some error").value).toEqual(put(appAction.setError({ error: '"some error"' })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
+});
 
 test("delete todolist", () => {
-  const newTodolist = todoListsReducer(
-    todoLists,
-    {
+  const newTodolist = todoListsReducer(todoLists, {
     type: todoActions.deleteTodoAction.type,
     payload: {
-        todolistID: "todolistID_1"
-    }
+      todolistID: "todolistID_1",
+    },
   });
   expect(newTodolist.length).toBe(1);
 });
 
 test("CHANGE TITLE TODO", () => {
-  const newTodolist = todoListsReducer(
-    todoLists,
-    {
-      type: todoActions.changeTitleTodoAction.type,
-      payload: {
-        todoId: "todolistID_1",
-        title: "Hi",
-        }
-      }
-  );
+  const newTodolist = todoListsReducer(todoLists, {
+    type: todoActions.changeTitleTodoAction.type,
+    payload: {
+      todoId: "todolistID_1",
+      title: "Hi",
+    },
+  });
   expect(newTodolist[0].title).toBe("Hi");
 });
 test("CHANGE ENTITY STATUS TODO", () => {

@@ -5,6 +5,8 @@ import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { CreateTaskType } from "features/todolistsList/api/tasksApi";
 import { call, put, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
+import sagaTryCatch from "common/utils/thunkTryCatch";
+import { handleServerAppErrorSaga } from "common/utils";
 
 export function* todoListsSagas() {
   yield takeEvery(GET_TODO, setTodolistSaga);
@@ -25,21 +27,23 @@ function* setTodolistSaga() {
 
 // -------------------------
 const ADD_TODO = "todoLists/addTodo";
-const CREATE_TODO = "todoLists/createTodo";
+export const CREATE_TODO = "todoLists/createTodo";
 const createTodoAction = createAction<{ todolist: TodolistType }>(ADD_TODO);
 const addTodoTitleAction = createAction<string>(CREATE_TODO);
 
-function* addTodoSaga(action: ReturnType<typeof addTodoTitleAction>) {
-  const res: AxiosResponse<
-    BaseResponsTodolistsType<{
-      item: TodolistType;
-    }>
-  > = yield call(todolistsApi.createTodolists, action.payload);
-  if (res.data.resultCode === ResultCode.Ok) {
-    yield put(createTodoAction({ todolist: res.data.data.item }));
-  } else {
-    // return rejectWithValue(res.data);
-  }
+export function* addTodoSaga(action: ReturnType<typeof addTodoTitleAction>) {
+  yield* sagaTryCatch(function* () {
+    const res: AxiosResponse<
+      BaseResponsTodolistsType<{
+        item: TodolistType;
+      }>
+    > = yield call(todolistsApi.createTodolists, action.payload);
+    if (res.data.resultCode === ResultCode.Ok) {
+      yield put(createTodoAction({ todolist: res.data.data.item }));
+    } else {
+      yield* handleServerAppErrorSaga(res.data);
+    }
+  });
 }
 
 //-------------------------------------
@@ -85,7 +89,6 @@ export type TodoAppType = TodolistType & {
   entityStatus: StatusType;
 };
 const initialState: TodoAppType[] = [
-  //первым параметром принимаем редьюсер
   // {id: todolistID_1, title: 'What to learn', filter: 'All'},
   // {id: todolistID_2, title: 'What to buy', filter: 'All'},
 ];
@@ -119,21 +122,11 @@ const slice = createSlice({
         if (index !== -1) {
           state.splice(index, 1);
         }
-        // return state.filter(todos => todos.id !== action.payload.todolistID)
       })
       .addCase(changeTitleTodoAction, (state, action) => {
         const todo = state.find((todo) => todo.id === action.payload.todoId);
         if (todo) todo.title = action.payload.title;
       });
-
-    // .addCase(clearTodoTask, ()=>{
-    //   return []
-    // })
-    // .addMatcher(isAnyOf(todoThunk.deleteTodo.rejected),
-    // (state, action)=> {
-    //   debugger
-    // }
-    // )
   },
 });
 
