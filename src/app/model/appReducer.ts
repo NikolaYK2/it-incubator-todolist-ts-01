@@ -12,6 +12,8 @@ import { authApi } from "features/auth/api/authApi";
 import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { call, put, takeEvery } from "redux-saga/effects";
 import { AxiosResponse } from "axios";
+import { handleServerAppErrorSaga } from "common/utils";
+import sagaTryCatch from "common/utils/thunkTryCatch";
 
 //SAGAS WATCHER ------------------------------
 export function* appSagas() {
@@ -22,18 +24,16 @@ export const INITIALIZED_APP = "app/init";
 const initAppAction = createAction(INITIALIZED_APP);
 
 export function* initAppSaga() {
-  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.me);
-  //   .finally(() => {
-  //   put(appAction.initializedApp({ initialized: true }));
-  // });
-  if (res.data.resultCode === ResultCode.Ok) {
-    yield put(authActions.setIsLoggedIn({ isLoggedIn: true }));
-    yield put(appAction.setStatus({ status: "succeeded" }));
-  } else {
-    // error
-    //   yield put(res.data);
-  }
-  yield put(appAction.initializedApp({ initialized: true }));
+  yield* sagaTryCatch(function*(){
+    const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.me);
+    if (res.data.resultCode === ResultCode.Ok) {
+      yield put(authActions.setIsLoggedIn({ isLoggedIn: true }));
+      yield put(appAction.setStatus({ status: "succeeded" }));
+    } else {
+      yield* handleServerAppErrorSaga(res.data);
+    }
+    yield put(appAction.initializedApp({ initialized: true }));
+  })
 }
 
 // reducer -----------------------------------------------------
