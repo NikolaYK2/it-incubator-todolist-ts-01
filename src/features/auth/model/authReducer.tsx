@@ -36,13 +36,14 @@ const AUTH_LOGOUT = "auth/logout";
 const authLogoutAction = createAction<undefined>(AUTH_LOGOUT);
 
 export function* authLogoutSaga() {
-  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.logout);
-  if (res.data.resultCode === ResultCode.Ok) {
-    yield put(todoActions.clearData());
-    // yield put(authLogoutAction());
-  } else {
-    // handleServerAppError(res.data, dispatch);
-  }
+  yield* sagaTryCatch(function* () {
+    const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.logout);
+    if (res.data.resultCode === ResultCode.Ok) {
+      yield put(todoActions.clearData());
+    } else {
+      yield* handleServerAppErrorSaga(res.data);
+    }
+  });
 }
 
 // slice - редьюсеры создаем с помощью функции createSlice
@@ -74,9 +75,6 @@ const slice = createSlice({
       .addCase(authLogoutAction, (state) => {
         state.isLoggedIn = false;
       });
-    // .addCase(initializedApp.fulfilled, (state)=>{
-    //   state.isLoggedIn = true
-    // })
   },
 });
 
