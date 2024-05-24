@@ -1,5 +1,7 @@
 import {
   addTodoSaga,
+  changeTitleTodoSaga,
+  CREATE_TITLE_TODO,
   CREATE_TODO,
   DELETE_TODO_ID,
   deleteTodoSaga,
@@ -128,6 +130,55 @@ test("delete todolist saga error network", () => {
   expect(gen.next().value).toEqual(put(todoActions.changeEntStatusTodo({ todoId: todoId, status: "idle" })));
 });
 
+test("change title todolist saga", () => {
+  const todolist = { todoId: "todolistID_1", title: "saga" };
+  const gen = changeTitleTodoSaga({ type: CREATE_TITLE_TODO, payload: todolist });
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.updateTodolists, todolist.todoId, todolist.title));
+
+  expect(gen.next(meResponse).value).toEqual(
+    put(
+      todoActions.changeTitleTodoAction({
+        todoId: todolist.todoId,
+        title: todolist.title,
+      })
+    )
+  );
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "idle" })));
+});
+
+test("change title todolist saga error server", () => {
+  const todolist = { todoId: "todolistID_1", title: "saga" };
+  const gen = changeTitleTodoSaga({ type: CREATE_TITLE_TODO, payload: todolist });
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.updateTodolists, todolist.todoId, todolist.title));
+
+  meResponse.data.resultCode = 1;
+  expect(gen.next(meResponse).value).toEqual(put(appAction.setError({ error: meResponse.data.messages[0] })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
+});
+
+test("change title todolist saga error network", () => {
+  const todolist = { todoId: "todolistID_1", title: "saga" };
+  const gen = changeTitleTodoSaga({ type: CREATE_TITLE_TODO, payload: todolist });
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "loading" })));
+
+  expect(gen.next().value).toEqual(call(todolistsApi.updateTodolists, todolist.todoId, todolist.title));
+
+  expect(gen.throw("error").value).toEqual(put(appAction.setError({ error:  "\"error\"" })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "failed" })));
+
+  expect(gen.next().value).toEqual(put(appAction.setStatus({ status: "idle" })));
+});
+
 test("CHANGE TITLE TODO", () => {
   const newTodolist = todoListsReducer(todoLists, {
     type: todoActions.changeTitleTodoAction.type,
@@ -161,70 +212,10 @@ test("TASK FILTER TODO", () => {
   expect(newTodolist[0].filter).toBe("Active");
 });
 
-// test("SET TODO", () => {
-//   const newTodolist = todoListsReducer([], {
-//     type: todoThunk.setTodolistAction.fulfilled.type,
-//     payload: { todolist: todoLists },
-//   });
-//   expect(newTodolist.length).toBe(2);
-// });
-
-//===============================================================================================================================
-// test('add new todolist',()=>{
-//     const todolistID_1 = v1();
-//     const todolistID_2 = v1();
-//
-//     const todolistID = v1();
-//     const title = 'new title'
-//
-//     const todoLists: TodolistType[] = [
-//         {id: todolistID_1, title: 'What to learn', filter: 'All'},
-//         {id: todolistID_2, title: 'What to buy', filter: 'All'},
-//     ];
-//     const newTodolist = todoListsReducer(todoLists, {type: 'ADD-TODO', payload: {title, todolistID}});
-//     expect(newTodolist.length).toBe(3)
-//     expect(todoLists.length).toBe(2)
-// })
-//
-// test('delete Todolist',()=>{
-//     const todolistID_1 = v1();
-//     const todolistID_2 = v1();
-//
-//     const todolistID = v1();
-//
-//     const todoLists: TodolistType[] = [
-//         {id: todolistID_1, title: 'What to learn', filter: 'All'},
-//         {id: todolistID_2, title: 'What to buy', filter: 'All'},
-//     ];
-//     const newTodolist = todoListsReducer(todoLists, {type: 'DELETE-TODO', payload: {todolistID: todolistID_1}});
-//     expect(newTodolist.length).toBe(1)
-//     expect(todoLists.length).toBe(2)
-// })
-//
-// test('on Change Title Todolist',()=>{
-//     const todolistID_1 = v1();
-//     const todolistID_2 = v1();
-//
-//     const title = 'Hi'
-//
-//     const todoLists: TodolistType[] = [
-//         {id: todolistID_1, title: 'What to learn', filter: 'All'},
-//         {id: todolistID_2, title: 'What to buy', filter: 'All'},
-//     ];
-//     const newTodolist = todoListsReducer(todoLists, {type: 'CHANGE-TITLE-TODO', payload: {newValue: title, todoId: todolistID_1}});
-//     expect(newTodolist[0].title).toBe('Hi')
-// })
-//
-// test('change Tasks Filter',()=>{
-//     const todolistID_1 = v1();
-//     const todolistID_2 = v1();
-//
-//     const filter: filterValueType = 'Active'
-//
-//     const todoLists: TodolistType[] = [
-//         {id: todolistID_1, title: 'What to learn', filter: 'All'},
-//         {id: todolistID_2, title: 'What to buy', filter: 'All'},
-//     ];
-//     const newTodolist = todoListsReducer(todoLists, {type: 'TASK-FILTER-TODO', payload: {todoListsID: todolistID_2, filter}});
-//     expect(newTodolist[1].filter).toBe('Active')
-// })
+test("SET TODO", () => {
+  const newTodolist = todoListsReducer([], {
+    type: todoActions.setTodolistAction.type,
+    payload: { todolist: todoLists },
+  });
+  expect(newTodolist.length).toBe(2);
+});

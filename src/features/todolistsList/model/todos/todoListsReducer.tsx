@@ -70,21 +70,23 @@ export function* deleteTodoSaga(action: ReturnType<typeof deleteTodoIdAction>) {
 
 // -----------------------------------------
 const CHANGE_TITLE_TODO = "todoLists/changeTitleTodo";
-const CREATE_TITLE_TODO = "todoLists/createTitleTodo";
+export const CREATE_TITLE_TODO = "todoLists/createTitleTodo";
 const changeTitleTodoAction = createAction<CreateTaskType>(CHANGE_TITLE_TODO);
 const createTitleTodoAction = createAction<CreateTaskType>(CREATE_TITLE_TODO);
 
-function* changeTitleTodoSaga(action: ReturnType<typeof createTitleTodoAction>) {
-  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(
-    todolistsApi.updateTodolists,
-    action.payload.todoId,
-    action.payload.title
-  );
-  if (res.data.resultCode === ResultCode.Ok) {
-    yield put(changeTitleTodoAction({ todoId: action.payload.todoId, title: action.payload.title }));
-  } else {
-    // return rejectWithValue(res.data);
-  }
+export function* changeTitleTodoSaga(action: ReturnType<typeof createTitleTodoAction>) {
+  yield* sagaTryCatch(function* () {
+    const res: AxiosResponse<BaseResponsTodolistsType> = yield call(
+      todolistsApi.updateTodolists,
+      action.payload.todoId,
+      action.payload.title
+    );
+    if (res.data.resultCode === ResultCode.Ok) {
+      yield put(changeTitleTodoAction({ todoId: action.payload.todoId, title: action.payload.title }));
+    } else {
+      yield* handleServerAppErrorSaga(res.data);
+    }
+  })
 }
 
 //REDUCER ----------------------------------------------------------
