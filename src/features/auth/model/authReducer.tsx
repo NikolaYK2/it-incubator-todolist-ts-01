@@ -4,33 +4,38 @@ import { BaseResponsTodolistsType, ResultCode } from "common/api/todolistsApi";
 import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
 import { AxiosResponse } from "axios";
 import { call, put, takeEvery } from "redux-saga/effects";
+import { handleServerAppErrorSaga } from "common/utils";
+import sagaTryCatch from "common/utils/thunkTryCatch";
 
 export function* authSagas() {
   yield takeEvery(AUTH_LOGIN, authLoginSaga);
   yield takeEvery(AUTH_LOGOUT, authLogoutSaga);
 }
 
-const AUTH_LOGIN = "auth/login";
+export const AUTH_LOGIN = "auth/login";
 const AUTH_LOGIN_SUCCESS = "auth/loginSuccess";
 const authLoginAction = createAction<AuthLoginType>(AUTH_LOGIN);
 const authLoginSuccessAction = createAction<unknown>(AUTH_LOGIN_SUCCESS);
 
-function* authLoginSaga(action: ReturnType<typeof authLoginAction>) {
-  const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.authLogin, action.payload);
-  if (res.data.resultCode === ResultCode.Ok) {
-    yield put(authLoginSuccessAction(true));
-  } else if (res.data.resultCode === 10) {
-    const res: AxiosResponse<CaptchaUrl> = yield call(authApi.captcha);
-    yield put(authActions.captchaImgUrl({ captcha: res.data.url }));
-  }
-  // return rejectWithValue(res.data);
+export function* authLoginSaga(action: ReturnType<typeof authLoginAction>) {
+  yield* sagaTryCatch(function* () {
+    const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.authLogin, action.payload);
+    if (res.data.resultCode === ResultCode.Ok) {
+      yield put(authLoginSuccessAction(true));
+    } else if (res.data.resultCode === 10) {
+      const res: AxiosResponse<CaptchaUrl> = yield call(authApi.captcha);
+      yield put(authActions.captchaImgUrl({ captcha: res.data.url }));
+    } else {
+      yield* handleServerAppErrorSaga(res.data);
+    }
+  });
 }
 
 // --------------------------------------
 const AUTH_LOGOUT = "auth/logout";
 const authLogoutAction = createAction<undefined>(AUTH_LOGOUT);
 
-function* authLogoutSaga() {
+export function* authLogoutSaga() {
   const res: AxiosResponse<BaseResponsTodolistsType> = yield call(authApi.logout);
   if (res.data.resultCode === ResultCode.Ok) {
     yield put(todoActions.clearData());
@@ -76,4 +81,4 @@ const slice = createSlice({
 });
 
 export const authReducer = slice.reducer;
-export const authActions = { ...slice.actions, authLoginAction, authLogoutAction };
+export const authActions = { ...slice.actions, authLoginAction, authLogoutAction, authLoginSuccessAction };
