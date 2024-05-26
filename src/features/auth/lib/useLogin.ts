@@ -33,24 +33,16 @@ export const useLogin = () => {
       email: "",
       password: "",
       rememberMe: false,
-      captcha:false,
+      captcha: false,
     },
     onSubmit: (values, formikHelpers: FormikHelpers<AuthLoginType>) => {
       try {
-        dispatch(authActions.authLoginAction(values))
-      }catch (e:any){
-        e.fieldsErrors?.forEach((el:FieldsErrorsType) => formikHelpers.setFieldError(el.field, el.error));
-
+        dispatch(authActions.authLoginAction(values));
+      } catch (e: any) {
+        e.fieldsErrors?.forEach((el: FieldsErrorsType) => formikHelpers.setFieldError(el.field, el.error));
       }
-      // dispatch(authThunk.authLoginAction(values))
-      //   .unwrap()
-      //   .then(() => {})
-      //   .catch((e: BaseResponsTodolistsType) => {
-      //
-      //     e.fieldsErrors?.forEach((el) => formikHelpers.setFieldError(el.field, el.error));
-      //   });
     },
   });
 
-  return { formik, isLoggedIn,captchaSelect };
+  return { formik, isLoggedIn, captchaSelect };
 };

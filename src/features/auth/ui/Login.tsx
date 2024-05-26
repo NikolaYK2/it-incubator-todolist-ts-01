@@ -75,7 +75,6 @@ export const Login = () => {
                   <p>
                     To log in get registered
                     <a href={"https://social-network.samuraijs.com/"} target={"_blank"} rel="noreferrer">
-                      {" "}
                       here
                     </a>
                   </p>
@@ -86,7 +85,6 @@ export const Login = () => {
                 <FormGroup style={{ color: "brown" }}>
                   <ThemeProvider theme={theme}>
                     <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
-                    {/*<div style={{ height: "30px" }}>{formik.errors.email ? formik.errors.email : null}</div>*/}
                     <div style={{ height: "30px" }}>
                       {formik.touched.email && formik.errors.email ? formik.errors.email : null}
                     </div>
@@ -98,7 +96,6 @@ export const Login = () => {
                       margin="normal"
                       {...formik.getFieldProps("password")}
                     />
-                    {/*<div style={{ height: "30px" }}>{formik.errors.password ? formik.errors.password : null}</div>*/}
                     <div style={{ height: "30px" }}>
                       {formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     </div>

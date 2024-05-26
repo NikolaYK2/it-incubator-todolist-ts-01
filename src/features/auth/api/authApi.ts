@@ -12,11 +12,12 @@ export type AuthMeType = {
   id: number;
   email: string;
   login: string;
+  token: string;
 };
 
-export type CaptchaUrl ={
-  url:string
-}
+export type CaptchaUrl = {
+  url: string;
+};
 export const authApi = {
   authLogin(data: AuthLoginType) {
     return instance.post<BaseResponsTodolistsType<{ userId?: number }>>("auth/login", data);
@@ -29,5 +30,5 @@ export const authApi = {
   },
   captcha() {
     return instance.get<CaptchaUrl>("security/get-captcha-url");
-  }
+  },
 };
