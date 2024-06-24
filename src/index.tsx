@@ -2,14 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import AppRedux from "app/ui/AppRedux";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "app/model/store";
+import AppRedux from "app/ui/AppRedux";
+
+export const BASE_ROUT = '/it-incubator-todolist-ts-01'
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
   root.render(
-    <BrowserRouter>
+    <BrowserRouter basename={BASE_ROUT}>
       <Provider store={store}>
         <AppRedux />
       </Provider>
