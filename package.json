@@ -98,6 +98,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "babel-plugin-named-exports-order": "^0.0.2",
     "chromatic": "^6.14.0",
     "eslint-plugin-storybook": "^0.6.15",
