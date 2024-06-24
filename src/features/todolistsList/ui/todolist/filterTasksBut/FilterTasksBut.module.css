@@ -4,8 +4,7 @@
   margin: 5px 0 0;
 }
 .active {
-  background: url("https://phonoteka.org/uploads/posts/2022-01/1642990537_71-phonoteka-org-p-krasnii-fon-abstraktsiya-71.jpg")
-  center center/cover no-repeat;
+  background: dodgerblue;
   border-radius: 0 5px 0 5px;
   border: none;
   transform: scale(0.95);

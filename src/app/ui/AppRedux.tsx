@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "app/ui/App.css";
 import { TodolistsList } from "features/todolistsList/ui/TodolistsList";
 import { Login } from "features/auth/ui/Login";
 import { Navigate, Route, Routes } from "react-router-dom";
