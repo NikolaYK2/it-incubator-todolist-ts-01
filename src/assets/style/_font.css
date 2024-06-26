@@ -1,0 +1,7 @@
+:root {
+  /*font-size ----------------*/
+  --font-s-small: 1rem;/*16*/
+  --font-s-p: clamp(1.0625rem, 5vw, 1.125rem);/*18*/
+  --font-s-h2: clamp(1.125rem, 5vw, 1.625rem)/*//26px*/;
+  /*--font-s-h2:clamp();*/
+}
