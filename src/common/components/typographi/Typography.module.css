@@ -1,0 +1,19 @@
+.small {
+  font-size: var(--font-s-small);
+}
+
+.p {
+  font-size: var(--font-s-p);
+}
+
+.a {
+  all: unset;
+  font-size: var(--font-s-p);
+}
+
+.h1 {
+}
+
+.h2 {
+  font-size: var(--font-s-h2);
+}
