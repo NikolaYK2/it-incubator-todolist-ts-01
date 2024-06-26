@@ -1,5 +1,6 @@
 import React, { memo, useCallback } from "react";
 import s from "common/components/button/Button.module.css";
+import { Typography } from "common/components/typographi/Typography";
 
 type ButtonType = {
   name?: string;
@@ -18,7 +19,9 @@ export const Button: React.FC<ButtonType> = memo(({ name, ...props }) => {
         className={`${props.style} ${s.button} ${props.disabled && s.disabled}`}
         disabled={props.disabled}
       >
-        {name}
+        <Typography variant={"p"}>
+          {name}
+        </Typography>
       </button>
     </div>
   );

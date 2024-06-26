@@ -8,7 +8,6 @@ import { appSelector } from "app/model/appSelector";
 import { ButtonAppBar } from "common/components";
 import { useActions } from "common/hooks/useActions";
 import { appAction } from "app/model/appReducer";
-import { BASE_ROUT } from "index";
 
 type AppReduxType = {
   demo?: boolean;
@@ -39,7 +38,7 @@ function AppRedux({ demo = false }: AppReduxType) {
   }
 
   return (
-    <div>
+    <>
       <ButtonAppBar />
       <Routes>
         <Route path="/" element={<TodolistsList demo={demo} />} />
@@ -47,19 +46,8 @@ function AppRedux({ demo = false }: AppReduxType) {
         <Route path="/404" element={<h1 style={{ color: "brown", textAlign: "center" }}>404: PAGE NOT FOUND</h1>} />
         <Route path="*" element={<Navigate to="/404" />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
 export default AppRedux;
-// <div>
-//   <ButtonAppBar />
-//   <Routes>
-//     {/*<Route path="/it-incubator-todolist-ts-01" element={<Navigate to={"/"} />} />*/}
-//     <Route path={`${BASE_ROUT}`} element={<TodolistsList demo={demo} />} />
-//     <Route path={`${BASE_ROUT}/auth`}"/auth" element={<Login />} />
-//     <Route path={`${BASE_ROUT}`}"/404"
-//            element={<h1 style={{ color: "brown", textAlign: "center" }}>404: PAGE NOT FOUND</h1>} />
-//     <Route path="*" element={<Navigate to={{`${BASE_ROUT}`}"/404"} />} />
-//   </Routes>
-// </div>
