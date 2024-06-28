@@ -9,6 +9,8 @@ import { ButtonAppBar } from "common/components";
 import { useActions } from "common/hooks/useActions";
 import { appAction } from "app/model/appReducer";
 
+export const BASE_ROUT = "/it-incubator-todolist-ts-01";
+
 type AppReduxType = {
   demo?: boolean;
 };
@@ -41,7 +43,8 @@ function AppRedux({ demo = false }: AppReduxType) {
     <>
       <ButtonAppBar />
       <Routes>
-        <Route path="/" element={<TodolistsList demo={demo} />} />
+        <Route path="/" element={<Navigate to={BASE_ROUT} replace />} />
+        <Route path={BASE_ROUT} element={<TodolistsList demo={demo} />} />
         <Route path="/auth" element={<Login />} />
         <Route path="/404" element={<h1 style={{ color: "brown", textAlign: "center" }}>404: PAGE NOT FOUND</h1>} />
         <Route path="*" element={<Navigate to="/404" />} />

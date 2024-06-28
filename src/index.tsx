@@ -7,11 +7,9 @@ import { store } from "app/model/store";
 import AppRedux from "app/ui/AppRedux";
 import "assets/style/index.css";
 
-export const BASE_ROUT = "/it-incubator-todolist-ts-01";
-
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
-  <BrowserRouter basename={BASE_ROUT}>
+  <BrowserRouter>
     <Provider store={store}>
       <AppRedux />
     </Provider>

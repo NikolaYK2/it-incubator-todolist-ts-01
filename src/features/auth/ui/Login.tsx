@@ -125,6 +125,7 @@ export const Login = () => {
                   type={"submit"}
                   size={'large'}
                   sx={{ background: "var(--color-medium-900)" }}
+                  color={'success'}
                   variant={"contained"}
                   style={{ maxWidth: "30%" }}
                 >

@@ -86,7 +86,7 @@ export function* changeTitleTodoSaga(action: ReturnType<typeof createTitleTodoAc
     } else {
       yield* handleServerAppErrorSaga(res.data);
     }
-  })
+  });
 }
 
 //REDUCER ----------------------------------------------------------

@@ -9,6 +9,8 @@ import { FilterTasksBut } from "features/todolistsList/ui/todolist/filterTasksBu
 import { Tasks } from "features/todolistsList/ui/todolist/tasks/Tasks";
 import { TodoTitle } from "features/todolistsList/ui/todolist/todoTitle/TodoTitle";
 import { taskActions } from "features/todolistsList/model/tasks/tasksReducer";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 
 type TodolistProps = {
   todolist: TodoAppType;
@@ -16,31 +18,41 @@ type TodolistProps = {
 };
 
 export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) => {
-
   const { id } = props.todolist;
 
   const status = useAppSelector(statusSelector);
 
-  const { createTasksAction, requestTasksAction  } = useActions(taskActions);
+  const { createTasksAction, requestTasksAction } = useActions(taskActions);
 
   useEffect(() => {
-    requestTasksAction ({ todoId: id });
+    requestTasksAction({ todoId: id });
   }, []);
 
-  const addTask = useCallback((title: string) => {
+  const addTask = useCallback(
+    (title: string) => {
       return createTasksAction({ todoId: id, title: title });
-    }, [createTasksAction, id]);
+    },
+    [createTasksAction, id]
+  );
 
   return (
-    <>
-      <TodoTitle todolist={props.todolist} />
-      <div className={s.block}>
-        <FullInput addItem={addTask} disabled={status === "loading"} />
-      </div>
-      <ul>
-        <Tasks todolist={props.todolist} />
-      </ul>
-      <FilterTasksBut todo={props.todolist} />
-    </>
+    <Grid item key={id}>
+      <Paper
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          boxShadow: "1px 1px 10px grey",
+          padding: "10px",
+        }}
+      >
+        <TodoTitle todolist={props.todolist} />
+        <div className={s.block}>
+          <FullInput addItem={addTask} disabled={status === "loading"} />
+        </div>
+        <ul>
+          <Tasks todolist={props.todolist} />
+        </ul>
+        <FilterTasksBut todo={props.todolist} />
+      </Paper>
+    </Grid>
   );
 });

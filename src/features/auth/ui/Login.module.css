@@ -1,9 +1,10 @@
 .captchaImg {
-  width: 100%;
-  max-height: 200px;
+    width: 100%;
+    max-height: 200px;
 }
-.captchaImg>img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+
+.captchaImg > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
