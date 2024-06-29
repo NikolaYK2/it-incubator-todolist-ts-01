@@ -49,7 +49,7 @@ export const Task = memo((props: Props) => {
         style={{ color: "darkred" }}
         disabled={props.task.entityStatus === "loading"}
       />
-      <EditableSpan title={props.task.title} onChange={onChangeTitleHandler} />
+      <EditableSpan valueTitle={props.task.title} onChange={onChangeTitleHandler} />
     </>
   );
 });
