@@ -1,11 +1,14 @@
 :root {
-  /*light--------------*/
-  --color-light-900: #fff;
+    /*light--------------*/
+    --color-light-900: #fff;
 
-  /*medium------------*/
-  --color-medium-100: #f2fbf6;
-  --color-medium-900: #26ae61;
+    /*medium------------*/
+    --color-medium-100: #f2fbf6;
+    --color-medium-900: #26ae61;
 
-  /*darck----------------*/
-  --color-dark-900: #999;
+    /*darck----------------*/
+    --color-dark-900: #999;
+
+    /*/error*/
+    --color-error: red;
 }
