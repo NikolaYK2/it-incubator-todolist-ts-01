@@ -1,28 +1,67 @@
-.container{
-  display: flex;
-  justify-content: space-between;
-  margin: 5px 0 0;
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin: 5% 0 0;
 }
-.active {
-  background: dodgerblue;
-  border-radius: 0 5px 0 5px;
-  border: none;
-  transform: scale(0.95);
-  list-style-type: none;
-  transition: transform  0.3s ease, background 0.3s ease;
-  will-change: transform;
+
+
+.default {
+    position: relative;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+}
+
+.default:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+    display: flex;
+    width: 0;
+    height: 100%;
+    border-bottom: 1px solid var(--color-dark-900);
+    border-top: 1px solid var(--color-dark-900);
+    border-radius: 0 5px 0 5px;
+    transition: width .3s ease 0s, border-bottom .3s ease 0s, border-top .3s ease 0s, border-radius .3s ease 0s;
+}
+
+.default:hover:before {
+    width: 100%;
+    transition: width .3s ease 0s;
+}
+
+.iconAll {
+    > div > svg path {
+        fill: var(--color-dark-900);
+    }
+}
+
+.iconActive {
+    > div > svg path {
+        fill: var(--color-error);
+    }
 
 }
-.default{
-  transform: scale(1);
-  transition: transform  0.3s ease;
-  will-change: transform;
+
+.iconCompleted {
+    > div > svg g g path {
+        fill: var(--color-medium-900);
+    }
 }
-.default:hover {
-  box-shadow: 2px 2px 5px brown;
-  transform: scale(1.08);
-  transition: all 0.3s ease;
-  will-change: transform;
-  overflow: hidden;
+
+.iconAll,
+.iconActive,
+.iconCompleted {
+    border-bottom: 1px solid var(--color-medium-900);
+    border-top: 1px solid var(--color-medium-900);
+    margin: 5% 10px;
+
+    transition: border-bottom .3s ease 0s, border-top .3s ease 0s;
+
+    > div > svg path {
+        transition: fill .3s ease 0s;
+    }
 }
 
