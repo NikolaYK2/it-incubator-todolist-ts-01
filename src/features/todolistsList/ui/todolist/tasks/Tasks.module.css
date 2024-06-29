@@ -7,14 +7,36 @@ li {
     opacity: 0.6;
 }
 
-.tasksNull {
+.tasksEmpty {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    background: url("https://i09.fotocdn.net/s114/c2b44597d216de02/public_pin_l/2573276787.jpg") center center/ contain no-repeat;
-    height: 90px;
-    box-shadow: inset 0 0 4px 3px var(--color-dark-900);
-    color: brown;
-    font-weight: 800;
+    margin: 0 auto;
+    width: 50%;
+    height: 50%;
+
+    > svg path {
+        stroke-dasharray: 0 10000;
+        fill: transparent;
+        stroke: red;
+        stroke-width: 50px;
+        animation: svgDraw 2s linear forwards;
+    }
+
+}
+
+@keyframes svgDraw {
+    50% {
+        stroke-dasharray: 6000 0;
+        stroke: red;
+        fill: transparent;
+        /*stroke-width: 10px;*/
+    }
+    100% {
+        stroke-dasharray: 6000 0;
+        stroke: red;
+        fill: red;
+        /*stroke-width: 100px;*/
+    }
 }
 

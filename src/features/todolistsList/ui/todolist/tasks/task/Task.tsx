@@ -39,7 +39,7 @@ export const Task = memo((props: Props) => {
   );
 
   return (
-    <>
+    <div className={s.containerTask}>
       <Button callBack={deleteTaskHandler} className={s.dellTask} disabled={props.task.entityStatus === "loading"} />
       <Checkbox
         checked={props.task.status === TaskStatuses.Completed}
@@ -50,6 +50,6 @@ export const Task = memo((props: Props) => {
         disabled={props.task.entityStatus === "loading"}
       />
       <EditableSpan valueTitle={props.task.title} onChange={onChangeTitleHandler} />
-    </>
+    </div>
   );
 });
