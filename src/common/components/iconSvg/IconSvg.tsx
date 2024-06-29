@@ -1,10 +1,18 @@
 import React from "react";
 
 export type IconSvgType = {
-  iconName: "btnAll" | "btnActive" | "btnCompleted" | null;
+  iconName: "btnAll" | "btnActive" | "btnCompleted" | "add" | null;
 };
 export const IconSvg = ({ iconName }: IconSvgType) => {
   switch (iconName) {
+    case "add": {
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 48 48">
+          <path fill="none" d="M0 0h48v48H0z"></path>
+          <path d="M28 20H4v4h24v-4zm0-8H4v4h24v-4zm8 16v-8h-4v8h-8v4h8v8h4v-8h8v-4h-8zM4 32h16v-4H4v4z"></path>
+        </svg>
+      );
+    }
     case "btnCompleted": {
       return (
         <svg
