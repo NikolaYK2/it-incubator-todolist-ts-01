@@ -10,7 +10,6 @@
     border: none;
     cursor: pointer;
     border-radius: 0 5px 0 5px;
-    background: var(--color-light-900);
 }
 
 .disabled {
