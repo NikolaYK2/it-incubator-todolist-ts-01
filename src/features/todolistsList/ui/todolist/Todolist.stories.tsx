@@ -15,7 +15,7 @@ type Story = StoryObj;
 
 const todolist: TodoAppType[] = [
   {
-    title: "123",
+    title: "story-book",
     id: "1",
     addedDate: "1",
     entityStatus: "idle",
@@ -28,7 +28,7 @@ export const TodolistFUll: Story = {
   render: () => {
     return (
       <Grid container spacing={4}>
-        <Todolist todolist={todolist[0]} />;
+        <Todolist todolist={todolist[0]} />
       </Grid>
     );
   },
