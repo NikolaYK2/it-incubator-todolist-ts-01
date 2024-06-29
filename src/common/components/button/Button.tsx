@@ -6,18 +6,22 @@ import { IconSvg, IconSvgType } from "../iconSvg/IconSvg";
 type ButtonType = {
   name?: string;
   callBack: () => void;
-  style?: string;
+  className?: string;
   disabled?: boolean;
   iconBtn?: IconSvgType;
 };
-export const Button: React.FC<ButtonType> = memo(({ iconBtn, name, callBack, disabled, style }: ButtonType) => {
+export const Button: React.FC<ButtonType> = memo(({ iconBtn, name, callBack, disabled, className }: ButtonType) => {
   const onclickHandler = useCallback(() => {
     callBack();
   }, [callBack]);
 
   return (
     <div className={s.universalButton}>
-      <button onClick={onclickHandler} className={`${style} ${s.button} ${disabled && s.disabled}`} disabled={disabled}>
+      <button
+        onClick={onclickHandler}
+        className={`${s.button} ${className} ${disabled && s.disabled}`}
+        disabled={disabled}
+      >
         {iconBtn && (
           <div className={`${s.iconBtn}`}>
             <IconSvg iconName={iconBtn.iconName} />
