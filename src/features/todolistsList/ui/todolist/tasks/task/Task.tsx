@@ -40,7 +40,7 @@ export const Task = memo((props: Props) => {
 
   return (
     <>
-      <Button callBack={deleteTaskHandler} style={s.dellTask} disabled={props.task.entityStatus === "loading"} />
+      <Button callBack={deleteTaskHandler} className={s.dellTask} disabled={props.task.entityStatus === "loading"} />
       <Checkbox
         checked={props.task.status === TaskStatuses.Completed}
         onChange={changeTaskStatusHandler}
