@@ -39,9 +39,8 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) =
     <Grid item key={id}>
       <Paper
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.7)",
-          boxShadow: "1px 1px 10px grey",
-          padding: "10px",
+          boxShadow: "0 0 12px rgb(0 0 0 / 10%)",
+          padding: "24px",
         }}
       >
         <TodoTitle todolist={props.todolist} />
