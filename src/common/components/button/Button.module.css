@@ -1,14 +1,28 @@
 .universalButton {
-  display: inline-block;
+    display: inline-block;
 }
 
 .button {
-  padding: 5px 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 0 5px 0 5px;
+    all: unset;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 0 5px 0 5px;
+    background: var(--color-light-900);
 }
 
 .disabled {
-  opacity: 0.3;
+    opacity: 0.3;
+}
+
+.iconBtn {
+    width: 30px;
+    height: 30px;
+    margin: 0 10px 0 0;
+    transition: border .3s ease 0s;
+    >svg>path{
+        transition: fill .3s ease 0s;
+    }
 }
