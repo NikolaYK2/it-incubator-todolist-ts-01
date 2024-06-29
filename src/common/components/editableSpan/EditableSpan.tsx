@@ -3,24 +3,25 @@ import React, { ChangeEvent, KeyboardEvent, memo, useCallback, useState } from "
 import { TextField } from "@mui/material";
 
 type EditableSpanType = {
-  title: string;
+  valueTitle: string;
   onChange: (newValue: string) => void;
   disabled?: boolean;
+  className?: string;
 };
 //Делаем спан инпутом когданужно=========================================================
-export const EditableSpan = /*React.*/ memo((props: EditableSpanType) => {
+export const EditableSpan = /*React.*/ memo(({ valueTitle, className, disabled, onChange }: EditableSpanType) => {
   //==Делаем управление не из вне, а state управление самой компонентой
   //=====CONTROL EDITSPAN TASK=====================================================================
   let [editMode, setEditMode] = useState(false);
   //=====CONTROL VALUE=====================================================================
-  let [title, setTitle] = useState(props.title); //props.title cо старта будет то значение котрое приходит в пропсах
+  let [title, setTitle] = useState(valueTitle); //props.title cо старта будет то значение котрое приходит в пропсах
 
   const switching = useCallback(() => {
     if (title !== "") {
       setEditMode(!editMode);
     }
-    props.onChange(title);
-  }, [props, title, editMode]);
+    onChange(title);
+  }, [onChange, title, editMode]);
 
   const onChangeHandlerValue = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
@@ -40,19 +41,20 @@ export const EditableSpan = /*React.*/ memo((props: EditableSpanType) => {
       label={title === "" ? "add & dell" : ""}
       error={!title}
       value={title}
+      color="primary"
       size="small"
       variant="filled"
-      disabled={props.disabled}
+      disabled={disabled}
       onChange={onChangeHandlerValue}
       onBlur={switching}
       onKeyDown={onKeyDownHandlerValue}
       autoFocus
       sx={{
-        input: { color: "#f5f5f5", maxWidth: "150px", padding: "10px 0 0 0" },
+        input: { maxWidth: "500px", padding: "10px 0 0 0" },
       }}
     />
   ) : (
-    <span className={s.text} onDoubleClick={switching}>
+    <span className={`${s.text} ${className}`} onDoubleClick={switching}>
       {title}
     </span>
   );

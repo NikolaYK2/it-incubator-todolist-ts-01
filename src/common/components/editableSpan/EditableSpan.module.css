@@ -1,10 +1,13 @@
 .text__input {
-  color: black;
-  outline: none;
-  max-width: 80px;
-  opacity: initial;
+    color: black;
+    outline: none;
+    max-width: 80px;
+    opacity: initial;
 }
+
 /*//==============text tasks===============================*/
 .text {
-  color: aliceblue;
+    font-size: var(--font-s-small);
+    /*text-transform: uppercase;*/
+    /*color: aliceblue;*/
 }
