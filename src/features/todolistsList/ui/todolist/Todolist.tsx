@@ -40,16 +40,14 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) =
       <Paper
         style={{
           boxShadow: "0 0 12px rgb(0 0 0 / 10%)",
-          padding: "24px",
+          padding: "11px",
         }}
       >
         <TodoTitle todolist={props.todolist} />
         <div className={s.block}>
           <FullInput addItem={addTask} disabled={status === "loading"} />
         </div>
-        <ul>
-          <Tasks todolist={props.todolist} />
-        </ul>
+        <Tasks todolist={props.todolist} />
         <FilterTasksBut todo={props.todolist} />
       </Paper>
     </Grid>

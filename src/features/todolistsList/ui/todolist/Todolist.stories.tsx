@@ -24,7 +24,7 @@ const todolist: TodoAppType[] = [
   },
 ];
 
-export const TodolistFUll: Story = {
+export const TodolistAll: Story = {
   render: () => {
     return (
       <Grid container spacing={4}>
