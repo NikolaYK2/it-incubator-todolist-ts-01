@@ -4,6 +4,7 @@ import { IconButton } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { useActions } from "common/hooks/useActions";
 import { TodoAppType, todoActions } from "features/todolistsList/model/todos/todoListsReducer";
+import s from "./TodoTitle.module.css";
 
 type Props = {
   todolist: TodoAppType;
@@ -25,10 +26,8 @@ export const TodoTitle = memo((props: Props) => {
   );
 
   return (
-    <>
-      <h3>
-        <EditableSpan title={title} onChange={onChangeHandlerTitleTodolist} />
-      </h3>
+    <div className={s.containerTodoTitle}>
+      <EditableSpan className={s.title} valueTitle={title} onChange={onChangeHandlerTitleTodolist} />
       <IconButton
         onClick={onClickHandlerDeleteTodolist}
         color={"error"}
@@ -36,6 +35,6 @@ export const TodoTitle = memo((props: Props) => {
       >
         <Delete />
       </IconButton>
-    </>
+    </div>
   );
 });

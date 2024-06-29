@@ -1,0 +1,12 @@
+.containerTodoTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-transform: uppercase;
+
+    .title {
+        font-size: var(--font-s-h2);
+        font-weight: 900;
+        color: var(--color-dark-900);
+    }
+}
