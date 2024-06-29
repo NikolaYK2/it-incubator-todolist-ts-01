@@ -38,7 +38,7 @@ export const FilterTasksBut = ({ todo }: Props) => {
         <Button
           name={btn.buttonName}
           callBack={() => changeTasksFilterHandler(btn.buttonName)}
-          style={buttonStyle(btn.buttonName, btn.className)}
+          className={buttonStyle(btn.buttonName, btn.className)}
           iconBtn={{ iconName: btn.iconName }}
         />
       ))}
