@@ -11,4 +11,8 @@
 
     /*/error*/
     --color-error: red;
+
+
+    /*Expectation----------------*/
+    --color-expectation: #ffc400;
 }
