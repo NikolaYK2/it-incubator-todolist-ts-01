@@ -11,6 +11,10 @@
         height: 40px;
     }
 
+    > div > svg > path {
+        fill: transparent;
+    }
+
     > div > svg > path:last-child {
         fill: var(--color-medium-900)
     }

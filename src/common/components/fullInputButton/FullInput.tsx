@@ -26,19 +26,17 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
   //=====================================================================================
 
   return (
-    <>
-      <div className={s.containerFullInput}>
-        <UniversalInput
-          setAddTitle={setAddTitle}
-          addTitle={addTitle}
-          callback={handlerAddTask}
-          setError={setError}
-          style={errorStop}
-          error={error}
-          disabled={disabled}
-        />
-        <Button iconBtn={{ iconName: "add" }} callBack={handlerAddTask} className={s.addTask} disabled={disabled} />
-      </div>
-    </>
+    <div className={s.containerFullInput}>
+      <UniversalInput
+        setAddTitle={setAddTitle}
+        addTitle={addTitle}
+        callback={handlerAddTask}
+        setError={setError}
+        style={errorStop}
+        error={error}
+        disabled={disabled}
+      />
+      <Button iconBtn={{ iconName: "add" }} callBack={handlerAddTask} className={s.addTask} disabled={disabled} />
+    </div>
   );
 });
