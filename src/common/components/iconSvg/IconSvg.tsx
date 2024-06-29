@@ -1,11 +1,11 @@
 import React from "react";
 
-type Props = {
-  name: "taskAll" | "taskActive" | "taskComplete";
+export type IconSvgType = {
+  iconName: "btnAll" | "btnActive" | "btnCompleted" | null;
 };
-export const IconSvg = ({ name }: Props) => {
-  switch (name) {
-    case "taskComplete": {
+export const IconSvg = ({ iconName }: IconSvgType) => {
+  switch (iconName) {
+    case "btnCompleted": {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,7 @@ export const IconSvg = ({ name }: Props) => {
         </svg>
       );
     }
-    case "taskAll": {
+    case "btnAll": {
       return (
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 16 16">
           <path
@@ -37,7 +37,7 @@ export const IconSvg = ({ name }: Props) => {
         </svg>
       );
     }
-    case "taskActive": {
+    case "btnActive": {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export const IconSvg = ({ name }: Props) => {
       );
     }
     default: {
-      return <svg></svg>;
+      return null;
     }
   }
 };
