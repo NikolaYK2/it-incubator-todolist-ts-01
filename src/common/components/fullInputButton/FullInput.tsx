@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { UniversalInput } from "common/components/input/UniversalInput";
-import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { Button } from "common/components/button/Button";
+import s from "./FullInput.module.css";
 
 type FullInputType = {
   addItem: (addTitle: string) => any;
@@ -19,7 +19,6 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
     if (addTitle.trim() !== "") {
       props.addItem(addTitle.trim());
       setAddTitle("");
-
     } else {
       setError("Заполни полe Чувак!");
     }
@@ -28,7 +27,7 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
 
   return (
     <>
-      <div className={s.input__block}>
+      <div className={s.containerFullInput}>
         <UniversalInput
           setAddTitle={setAddTitle}
           addTitle={addTitle}
@@ -38,7 +37,7 @@ export const FullInput = React.memo(({ disabled = false, ...props }: FullInputTy
           error={error}
           disabled={disabled}
         />
-        <Button callBack={handlerAddTask} style={s.addTask} disabled={disabled} />
+        <Button iconBtn={{ iconName: "add" }} callBack={handlerAddTask} className={s.addTask} disabled={disabled} />
       </div>
     </>
   );

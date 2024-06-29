@@ -1,0 +1,31 @@
+.containerFullInput {
+    display: flex;
+    align-items: center;
+}
+
+.addTask {
+    position: relative;
+
+    > div {
+        width: 40px;
+        height: 40px;
+    }
+
+    > div > svg > path:last-child {
+        fill: var(--color-medium-900)
+    }
+
+    &:hover div svg {
+        filter: drop-shadow(1px 1px 1px var(--color-dark-900));
+        transform: scale(1.1);
+        transition: transform .3s ease 0s, filter .2s ease 0s;
+    }
+
+    > div > svg,
+    &:active div svg {
+        filter: drop-shadow(0px 0px 0px transparent);
+        transform: scale(1);
+        transition: all .2s ease;
+    }
+
+}
