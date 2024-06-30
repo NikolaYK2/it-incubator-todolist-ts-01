@@ -5,7 +5,7 @@ import { TaskStatuses } from "common/api/todolistsApi";
 import { Task } from "features/todolistsList/ui/todolist/tasks/task/Task";
 import { TodoAppType } from "features/todolistsList/model/todos/todoListsReducer";
 import s from "./Tasks.module.css";
-import { IconSvg } from "../../../../../common/components/iconSvg/IconSvg";
+import { IconSvg } from "common/components/iconSvg/IconSvg";
 import { m, LazyMotion, domAnimation, AnimatePresence } from "framer-motion";
 
 type Props = {
@@ -29,7 +29,7 @@ export const Tasks = React.memo((props: Props) => {
       x: 0,
       opacity: 1,
     },
-    exit: { x: 30, opacity: 0 }, // анимация при удалении
+    exit: { x: 30, opacity: 0 },
   };
   return (
     <LazyMotion features={domAnimation}>
