@@ -36,6 +36,7 @@ export const FilterTasksBut = ({ todo }: Props) => {
     <div className={s.container}>
       {buttons.map((btn) => (
         <Button
+          key={btn.buttonName}
           name={btn.buttonName}
           callBack={() => changeTasksFilterHandler(btn.buttonName)}
           className={buttonStyle(btn.buttonName, btn.className)}
