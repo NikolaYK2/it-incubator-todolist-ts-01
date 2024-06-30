@@ -8,6 +8,7 @@ import { appSelector } from "app/model/appSelector";
 import { ButtonAppBar } from "common/components";
 import { useActions } from "common/hooks/useActions";
 import { appAction } from "app/model/appReducer";
+import Container from "@mui/material/Container";
 
 export const BASE_ROUT = "/it-incubator-todolist-ts-01";
 
@@ -42,13 +43,15 @@ function AppRedux({ demo = false }: AppReduxType) {
   return (
     <>
       <ButtonAppBar />
-      <Routes>
-        <Route path="/" element={<Navigate to={BASE_ROUT} replace />} />
-        <Route path={BASE_ROUT} element={<TodolistsList demo={demo} />} />
-        <Route path="/auth" element={<Login />} />
-        <Route path="/404" element={<h1 style={{ color: "brown", textAlign: "center" }}>404: PAGE NOT FOUND</h1>} />
-        <Route path="*" element={<Navigate to="/404" />} />
-      </Routes>
+      <Container fixed sx={{ marginTop: "150px" }}>
+        <Routes>
+          <Route path="/" element={<Navigate to={BASE_ROUT} replace />} />
+          <Route path={BASE_ROUT} element={<TodolistsList demo={demo} />} />
+          <Route path="/auth" element={<Login />} />
+          <Route path="/404" element={<h1 style={{ color: "brown", textAlign: "center" }}>404: PAGE NOT FOUND</h1>} />
+          <Route path="*" element={<Navigate to="/404" />} />
+        </Routes>
+      </Container>
     </>
   );
 }
