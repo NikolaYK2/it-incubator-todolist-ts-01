@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { todoActions } from "features/todolistsList/model/todos/todoListsReducer";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { Todolist } from "features/todolistsList/ui/todolist/Todolist";
 import { Navigate } from "react-router-dom";
@@ -31,12 +30,10 @@ export const TodolistsList: React.FC<TodolistsListType> = ({ demo = false }) => 
   }
 
   return (
-    <Container fixed sx={{ marginTop: "150px" }}>
-      <Grid container spacing={3} justifyContent={"center"} width={"100%"}>
-        {todoLists.map((tl) => (
-          <Todolist key={tl.id} todolist={tl} demo={demo} />
-        ))}
-      </Grid>
-    </Container>
+    <Grid container spacing={3} justifyContent={"center"}>
+      {todoLists.map((tl) => (
+        <Todolist key={tl.id} todolist={tl} demo={demo} />
+      ))}
+    </Grid>
   );
 };
