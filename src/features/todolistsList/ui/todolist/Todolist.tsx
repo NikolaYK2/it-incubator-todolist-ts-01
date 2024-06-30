@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from "react";
-import s from "features/todolistsList/ui/todolist/Todolist.module.css";
 import { FullInput } from "common/components/fullInputButton/FullInput";
 import { TodoAppType } from "features/todolistsList/model/todos/todoListsReducer";
 import { useAppSelector } from "app/model/store";
@@ -19,11 +18,9 @@ type TodolistProps = {
 
 export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) => {
   const { id } = props.todolist;
-
   const status = useAppSelector(statusSelector);
 
   const { createTasksAction, requestTasksAction } = useActions(taskActions);
-
   useEffect(() => {
     requestTasksAction({ todoId: id });
   }, []);
@@ -38,15 +35,13 @@ export const Todolist = React.memo(({ demo = false, ...props }: TodolistProps) =
   return (
     <Grid item key={id}>
       <Paper
-        style={{
+        sx={{
           boxShadow: "0 0 12px rgb(0 0 0 / 10%)",
           padding: "11px",
         }}
       >
         <TodoTitle todolist={props.todolist} />
-        <div className={s.block}>
-          <FullInput addItem={addTask} disabled={status === "loading"} />
-        </div>
+        <FullInput addItem={addTask} disabled={status === "loading"} />
         <Tasks todolist={props.todolist} />
         <FilterTasksBut todo={props.todolist} />
       </Paper>
