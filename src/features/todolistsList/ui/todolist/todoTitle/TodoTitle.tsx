@@ -9,14 +9,13 @@ import s from "./TodoTitle.module.css";
 type Props = {
   todolist: TodoAppType;
 };
-export const TodoTitle = memo((props: Props) => {
-  const { id, title } = props.todolist;
-
+export const TodoTitle = memo(({ todolist }: Props) => {
+  const { id, title } = todolist;
   const { deleteTodoIdAction, createTitleTodoAction } = useActions(todoActions);
 
   const onClickHandlerDeleteTodolist = useCallback(() => {
-    deleteTodoIdAction(props.todolist.id);
-  }, [deleteTodoIdAction, props.todolist.id]);
+    deleteTodoIdAction(todolist.id);
+  }, [deleteTodoIdAction, todolist.id]);
 
   const onChangeHandlerTitleTodolist = useCallback(
     (newValue: string) => {
@@ -28,11 +27,7 @@ export const TodoTitle = memo((props: Props) => {
   return (
     <div className={s.containerTodoTitle}>
       <EditableSpan className={s.title} valueTitle={title} onChange={onChangeHandlerTitleTodolist} />
-      <IconButton
-        onClick={onClickHandlerDeleteTodolist}
-        color={"error"}
-        disabled={props.todolist.entityStatus === "loading"}
-      >
+      <IconButton onClick={onClickHandlerDeleteTodolist} color={"error"} disabled={todolist.entityStatus === "loading"}>
         <Delete />
       </IconButton>
     </div>
