@@ -48,9 +48,6 @@ export const UniversalInput = React.memo((props: UniversalInputType) => {
         onKeyDown={onKeyDownHandler}
         style={{ maxWidth: "180px" }}
         className={`${props.style} ${s.modified}`}
-        sx={{
-          input: { color: "#e0e0e0", backgroundColor: "rgba(110,106,106,0.6)" },
-        }}
       />
     </div>
   );
