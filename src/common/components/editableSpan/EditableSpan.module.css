@@ -7,7 +7,22 @@
 
 /*//==============text tasks===============================*/
 .text {
+    display: flex;
+    align-items: center;
     font-size: var(--font-s-small);
-    /*text-transform: uppercase;*/
-    /*color: aliceblue;*/
+    cursor: text;
+
+    .icon {
+        width: 30px;
+        height: 30px;
+        margin: 0 0 0 5px;
+
+        > svg > path:first-child {
+            fill: var(--color-medium-900);
+        }
+    }
+}
+
+.isActiveText {
+    text-decoration: line-through;
 }
