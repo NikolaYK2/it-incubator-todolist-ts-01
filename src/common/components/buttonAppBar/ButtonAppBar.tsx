@@ -61,15 +61,17 @@ export function ButtonAppBar() {
                 Task Flow
               </Typography>
 
-              <div className={s.input}>
-                <FullInput addItem={addTodolist} disabled={status === "loading"} />
-              </div>
-
               {isLoggedIn ? (
-                <Button color="inherit" onClick={logoutHandle}>
-                  <MeetingRoomIcon />
-                  <Typography variant={"p"}>Log out</Typography>
-                </Button>
+                <>
+                  <div className={s.input}>
+                    <FullInput addItem={addTodolist} disabled={status === "loading"} />
+                  </div>
+
+                  <Button color="inherit" onClick={logoutHandle}>
+                    <MeetingRoomIcon />
+                    <Typography variant={"p"}>Log out</Typography>
+                  </Button>
+                </>
               ) : (
                 <Button color="inherit">
                   <AppRegistrationIcon />
